@@ -12,7 +12,6 @@ describe("object test", () => {
         getJsonBorn._three = 3;
         assert.equal(3, getJsonBorn._three);
     });
-
     it("test2", () => {
         const getJsonBorn = new Test();
         getJsonBorn._three = 6;
