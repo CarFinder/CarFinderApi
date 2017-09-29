@@ -9,7 +9,8 @@
         "start": "ts-node src/server.ts",
         "test": "mocha -r ts-node/register spec/**/*.ts",
         "test:coverage":
-            "nyc  mocha -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls"
+            "nyc  mocha -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+        "coverage": "nyc  mocha -r ts-node/register spec/**/*.ts"
     },
     "nyc": {
         "include": ["src/**/*.ts"],
