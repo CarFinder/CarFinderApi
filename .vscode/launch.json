@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceRoot}/src/server.ts",
-      "outFiles": ["${workspaceRoot}/dist/src/*"],
+      "outFiles": ["${workspaceRoot}/dist/src/*.js"],
       "protocol": "inspector",
       "sourceMaps": true
     }
