@@ -72,6 +72,13 @@
   dependencies:
     "@types/koa" "*"
 
+"@types/koa-passport@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@types/koa-passport/-/koa-passport-2.0.4.tgz#481ee16d31b8f965f5458f3be6a2e3f93571f47b"
+  dependencies:
+    "@types/koa" "*"
+    "@types/passport" "*"
+
 "@types/koa-router@^7.0.23":
   version "7.0.23"
   resolved "https://registry.yarnpkg.com/@types/koa-router/-/koa-router-7.0.23.tgz#aa0309d28e9e1cd5723b0350841380dd749e8400"
@@ -144,6 +151,12 @@
     "@types/nodemailer-ses-transport" "*"
     "@types/nodemailer-smtp-transport" "*"
     aws-sdk "^2.37.0"
+
+"@types/passport@*":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@types/passport/-/passport-0.3.4.tgz#82929c7427091ba73273fcb963fdef8056bddbe7"
+  dependencies:
+    "@types/express" "*"
 
 "@types/serve-static@*":
   version "1.7.32"
@@ -2145,6 +2158,12 @@ koa-logger@^3.0.1:
     humanize-number "0.0.2"
     passthrough-counter "^1.0.0"
 
+koa-passport@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/koa-passport/-/koa-passport-4.0.1.tgz#ffe41c62d3bbdc5f7c49c375dcf9606e9297a337"
+  dependencies:
+    passport "^0.4.0"
+
 koa-router@^7.2.1:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/koa-router/-/koa-router-7.2.1.tgz#b40a4ab3c6adb4b40895debd00a9c640304e3039"
@@ -3043,6 +3062,17 @@ parseurl@^1.3.0:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
+passport-strategy@1.x.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
+
+passport@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.0.tgz#c5095691347bd5ad3b5e180238c3914d16f05811"
+  dependencies:
+    passport-strategy "1.x.x"
+    pause "0.0.1"
+
 passthrough-counter@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passthrough-counter/-/passthrough-counter-1.0.0.tgz#1967d9e66da572b5c023c787db112a387ab166fa"
@@ -3104,6 +3134,10 @@ pause-stream@0.0.11:
   resolved "https://registry.yarnpkg.com/pause-stream/-/pause-stream-0.0.11.tgz#fe5a34b0cbce12b5aa6a2b403ee2e73b602f1445"
   dependencies:
     through "~2.3"
+
+pause@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
 
 performance-now@^0.2.0:
   version "0.2.0"

@@ -5,6 +5,7 @@ const FilterSchema = {
     type: String,
   },
   markId: {
+    required: true,
     type: String,
   },
   maxMileFrom: {
@@ -26,7 +27,6 @@ const FilterSchema = {
     type: Number,
   },
   modelId: {
-    required: true,
     type: String,
   },
   userId: {
