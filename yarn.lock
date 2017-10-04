@@ -152,6 +152,21 @@
     "@types/nodemailer-smtp-transport" "*"
     aws-sdk "^2.37.0"
 
+"@types/passport-local@^1.0.31":
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/@types/passport-local/-/passport-local-1.0.31.tgz#804df8caa3bd8520a9ed9c7f204d132290664a0e"
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+    "@types/passport-strategy" "*"
+
+"@types/passport-strategy@*":
+  version "0.2.31"
+  resolved "https://registry.yarnpkg.com/@types/passport-strategy/-/passport-strategy-0.2.31.tgz#458049fc962580eaee6a836ad8c09f9256e77e68"
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+
 "@types/passport@*":
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/@types/passport/-/passport-0.3.4.tgz#82929c7427091ba73273fcb963fdef8056bddbe7"
@@ -3061,6 +3076,12 @@ parse-passwd@^1.0.0:
 parseurl@^1.3.0:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
+
+passport-local@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/passport-local/-/passport-local-1.0.0.tgz#1fe63268c92e75606626437e3b906662c15ba6ee"
+  dependencies:
+    passport-strategy "1.x.x"
 
 passport-strategy@1.x.x:
   version "1.0.0"
