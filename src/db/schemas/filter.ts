@@ -2,7 +2,6 @@ import * as mongoose from 'mongoose';
 
 const FilterSchema = {
   bodyTypeId: {
-    required: true,
     type: String,
   },
   markId: {
@@ -27,6 +26,7 @@ const FilterSchema = {
     type: Number,
   },
   modelId: {
+    required: true,
     type: String,
   },
   userId: {

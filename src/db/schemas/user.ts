@@ -11,6 +11,11 @@ const UserSchema = {
   image: {
     type: String,
   },
+  interfaceLang: {
+    default: 'ru',
+    required: true,
+    type: String,
+  },
   name: {
     required: true,
     type: String,
