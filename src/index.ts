@@ -1,10 +1,16 @@
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as logger from 'koa-logger';
+import * as mongoose from 'mongoose'; 
+
+import { db } from './config/config';
 
 import routes from './routes';
 
 const server = new Koa();
+
+mongoose.connect(db, { useMongoClient: true });
+mongoose.set('debug', true);
 
 server.use(bodyParser());
 server.use(logger());
