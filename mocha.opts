@@ -1,0 +1,7 @@
+--ui mocha-typescript
+--require source-map-support/register
+--require ts-node/register
+--full-trace
+--bail
+--watch-extensions ts
+ spec/**/*.ts
