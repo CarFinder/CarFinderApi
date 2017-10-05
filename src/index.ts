@@ -1,8 +1,9 @@
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
+import * as jwt from 'koa-jwt'; 
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
-import * as mongoose from 'mongoose'; 
+import * as mongoose from 'mongoose';
 
 import Bluebird = require("bluebird");
 
@@ -16,7 +17,6 @@ mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
 
 (mongoose as any).Promise = Bluebird;
-
 
 server.use(bodyParser());
 server.use(passport.initialize());

@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 import { IUser } from '../../interfaces/index';
 
 export interface IUserModel extends IUser, mongoose.Document {
-  comparePassword(candidatePassword: string): boolean;
+  comparePassword(candidatePassword: string, callback: any): any;
 }
 
 const UserSchema = new mongoose.Schema({
@@ -39,8 +39,8 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.methods.comparePassword = (candidatePassword: string): boolean => {
-  return true;
+UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) => {
+  callback(null, true);
 }
 
-export const User: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', UserSchema);
+export { UserSchema };

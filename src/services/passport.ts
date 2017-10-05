@@ -2,14 +2,14 @@ import * as Koa from 'koa';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { IUserModel, User } from '../db/schemas/user';
+import { UserService } from './index';
+
+import { IUserModel } from '../db/index';
+import { IUser } from '../interfaces/index';
 
 passport.use(new LocalStrategy({
   passwordField: 'password',
   usernameField: 'email',
-}, (username, password, done) => {
-  User.findOne({ email: username }, (err: mongoose.Error, user: IUserModel) => {
-    user.comparePassword(password);
-  })
-  done(null, {});
+}, async (username, password, done) => {
+  UserService.comparePassword(username, password, done);
 }));
