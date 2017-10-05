@@ -2,7 +2,7 @@ import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
-import * as mongoose from 'mongoose'; 
+import * as mongoose from 'mongoose';
 
 import { db } from './config/config';
 
