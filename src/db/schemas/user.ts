@@ -1,12 +1,20 @@
+import * as bcrypt from 'bcrypt-nodejs';
 import * as mongoose from 'mongoose';
 
-const UserSchema = {
+import { IUser } from '../../interfaces/index';
+
+export interface IUserModel extends IUser, mongoose.Document {
+  comparePassword(candidatePassword: string): boolean;
+}
+
+const UserSchema = new mongoose.Schema({
   confirmed: {
     type: Boolean,
   },
   email: {
     required: true,
     type: String,
+    unique: true,
   },
   image: {
     type: String,
@@ -29,8 +37,10 @@ const UserSchema = {
     required: true,
     type: Boolean,
   },
-};
+});
 
-const User = mongoose.model('User', new mongoose.Schema(UserSchema));
+UserSchema.methods.comparePassword = (candidatePassword: string): boolean => {
+  return true;
+}
 
-export default User;
+export const User: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', UserSchema);

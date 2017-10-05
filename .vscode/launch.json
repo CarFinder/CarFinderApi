@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceRoot}/src/server.ts",
+      "program": "${workspaceRoot}/src/index.ts",
       "outFiles": ["${workspaceRoot}/dist/src/*.js"],
       "protocol": "inspector",
       "sourceMaps": true
