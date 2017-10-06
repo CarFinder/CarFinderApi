@@ -1,24 +1,29 @@
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
+import * as jwt from 'koa-jwt';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 
-import { db } from '../src/config/config';
-import router from '../src/routes/index';
+import Bluebird = require('bluebird');
 
-let app: any;
+import { db } from '../src/config/config';
+
+import routes from '../src/routes';
+
 const server = new Koa();
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
 
+(mongoose as any).Promise = Bluebird;
+
 server.use(bodyParser());
 server.use(passport.initialize());
 server.use(logger());
 
-server.use(router.routes());
+server.use(routes.routes());
 
-app = server.listen(3004);
+const app: any = server.listen(3000);
 
 export default app;
