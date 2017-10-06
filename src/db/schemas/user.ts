@@ -39,8 +39,11 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) => {
-  callback(null, true);
+UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) { callback(err); }
+    callback(null, isMatch);
+  });
 }
 
 export { UserSchema };

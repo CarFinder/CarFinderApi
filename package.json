@@ -52,6 +52,7 @@
     "dependencies": {
         "@types/bcrypt-nodejs": "^0.0.30",
         "@types/bluebird": "^3.5.12",
+        "@types/jsonwebtoken": "^7.2.3",
         "@types/koa": "^2.0.39",
         "@types/koa-bodyparser": "^3.0.25",
         "@types/koa-logger": "^2.0.2",
@@ -63,6 +64,7 @@
         "@types/passport-local": "^1.0.31",
         "bcrypt-nodejs": "^0.0.3",
         "bluebird": "^3.5.0",
+        "jsonwebtoken": "^8.0.1",
         "koa": "2.x",
         "koa-bodyparser": "^4.2.0",
         "koa-jwt": "^3.2.2",

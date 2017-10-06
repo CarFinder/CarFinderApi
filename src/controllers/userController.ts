@@ -1,7 +1,10 @@
 import * as Koa from 'koa';
 
+import { getToken } from '../utils/index';
+
 export const signin = async (ctx: Koa.Context) => {
-  console.log(ctx.state.user);
-  const { email } = ctx.request.body;
-  ctx.body = { email };
+  ctx.body = { 
+    message: 'Login successful!',
+    token: getToken(ctx.state.user),
+  };
 }
