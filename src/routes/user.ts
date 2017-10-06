@@ -4,10 +4,8 @@ import '../services/passport';
 
 import { signin } from '../controllers/userController';
 
-const requireLogin = passport.authenticate('local', { session: false });
-
 const router = new Router();
 
-router.post('/signin', requireLogin, signin);
+router.post('/signin', signin);
 
 export default router;
