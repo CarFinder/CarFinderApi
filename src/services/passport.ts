@@ -5,11 +5,16 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { UserService } from './index';
 
 import { IUserModel } from '../db/index';
-import { IUser } from '../interfaces/index';
+import { IUser } from '../interfaces/';
 
-passport.use(new LocalStrategy({
-  passwordField: 'password',
-  usernameField: 'email',
-}, async (username, password, done) => {
-  UserService.comparePassword(username, password, done);
-}));
+passport.use(
+  new LocalStrategy(
+    {
+      passwordField: 'password',
+      usernameField: 'email'
+    },
+    async (username, password, done) => {
+      UserService.comparePassword(username, password, done);
+    }
+  )
+);

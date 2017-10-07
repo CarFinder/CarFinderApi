@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt-nodejs';
 import * as mongoose from 'mongoose';
 
-import { IUser } from '../../interfaces/index';
+import { IUser } from '../../interfaces/';
 
 export interface IUserModel extends IUser, mongoose.Document {
   comparePassword(candidatePassword: string, callback: any): any;
@@ -9,41 +9,43 @@ export interface IUserModel extends IUser, mongoose.Document {
 
 const UserSchema = new mongoose.Schema({
   confirmed: {
-    type: Boolean,
+    type: Boolean
   },
   email: {
     required: true,
     type: String,
-    unique: true,
+    unique: true
   },
   image: {
-    type: String,
+    type: String
   },
   interfaceLang: {
     default: 'ru',
     required: true,
-    type: String,
+    type: String
   },
   name: {
     required: true,
-    type: String,
+    type: String
   },
   password: {
     required: true,
-    type: String,
+    type: String
   },
   subscription: {
     default: true,
     required: true,
-    type: Boolean,
-  },
+    type: Boolean
+  }
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) { callback(err); }
+    if (err) {
+      callback(err);
+    }
     callback(null, isMatch);
   });
-}
+};
 
 export { UserSchema };

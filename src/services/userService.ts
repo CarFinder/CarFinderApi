@@ -1,6 +1,6 @@
 import { get } from '../repositories/userRepository';
 
-import { IUser } from '../interfaces/index';
+import { IUser } from '../interfaces/';
 
 export const comparePassword = (email: string, password: string, done: any) => {
   get(email)
