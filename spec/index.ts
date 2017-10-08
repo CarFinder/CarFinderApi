@@ -14,7 +14,6 @@ import routes from '../src/routes';
 const server = new Koa();
 
 mongoose.connect(db, { useMongoClient: true });
-mongoose.set('debug', true);
 
 (mongoose as any).Promise = Bluebird;
 

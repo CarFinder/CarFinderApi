@@ -43,4 +43,22 @@ UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) 
   callback(null, true);
 }
 
+UserSchema.pre('save', function (next) {
+  const user = this;
+
+  bcrypt.genSalt(10, (err, salt) => {
+      if (err) { return next(err); }
+
+      bcrypt.hash(user.password, salt, null, (err:any, hash:any) => {
+          if (err) { return next(err); }
+
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          user.password = hash;
+          next();
+      });
+  });
+});
+
 export { UserSchema };
