@@ -1,10 +1,19 @@
+import { IErrorData } from '../../interfaces';
+
 export default class DatabaseError extends Error {
-  public message: string;
+  public data: IErrorData;
 
   constructor(code: number, ...params: any[]) {
     super(...params);
-    if (code === 11000) {
-      this.message = 'Account with this email already exist';
+    switch (code) {
+      case 11000:
+        this.data = {
+          code: 409,
+          enMessage: 'Email is already in use',
+          ruMessage: 'Пользователь с таким email уже зарегистрирован',
+          type: 'Registration Error'
+        };
+        break;
     }
   }
 }

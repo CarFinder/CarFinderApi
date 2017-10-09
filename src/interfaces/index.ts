@@ -7,3 +7,9 @@ export interface IUser {
   password: string;
   subscription: boolean;
 }
+export interface IErrorData {
+  type: string;
+  code: number;
+  enMessage: string;
+  ruMessage: string;
+}

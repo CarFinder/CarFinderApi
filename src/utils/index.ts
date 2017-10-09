@@ -1,6 +1,8 @@
 import nodemailer = require('nodemailer');
 import { config, url } from '../config/config';
 
+// config should be in evn
+
 const transport = nodemailer.createTransport({
   auth: {
     pass: '61eb5425e14605',

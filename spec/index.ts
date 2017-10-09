@@ -1,7 +1,6 @@
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as jwt from 'koa-jwt';
-import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 
@@ -19,7 +18,6 @@ mongoose.connect(db, { useMongoClient: true });
 
 server.use(bodyParser());
 server.use(passport.initialize());
-server.use(logger());
 
 server.use(routes.routes());
 
