@@ -7,3 +7,8 @@ export const registerUser = async (payload: IUser) => {
   }
   await register(payload);
 };
+
+export const confirmUserEmail = async (payload: any) => {
+  // here token distruct ( function in utils )
+  // call userservice confirm
+};

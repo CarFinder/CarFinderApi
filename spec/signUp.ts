@@ -4,6 +4,7 @@ import chaiHttp = require('chai-http');
 import { promisify } from 'util';
 import { User } from '../src/db/index';
 import { IUser } from '../src/interfaces';
+import { confirm } from '../src/services/userService';
 import { errors } from '../src/utils/errors';
 import app from './index';
 
@@ -171,5 +172,33 @@ describe('Sign up logic', () => {
     assert.equal(user.name, testedUser.name);
     assert.equal(user.subscription, testedUser.subscription);
     await User.remove({ email: 'test@mail.com' });
+  });
+});
+
+describe('Confirm user logic', () => {
+  it('should set confirmed field to "true"', async () => {
+    const user = {
+      confirmed: false,
+      email: 'pupkin@mail.com',
+      image: 'lint to s3',
+      interfaceLang: 'en',
+      name: 'Ivan',
+      password: 'Real Man',
+      subscription: false
+    };
+
+    const newcomer = new User(user);
+
+    await newcomer.save(err => {
+      return err;
+    });
+
+    await confirm(user.email);
+
+    await User.findOne({ email: user.email }, (err, res) => {
+      assert.equal(true, res.confirmed);
+    });
+
+    await User.remove({ email: 'pupkin@mail.com' });
   });
 });

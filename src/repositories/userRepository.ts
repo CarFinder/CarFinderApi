@@ -7,3 +7,7 @@ export const create = async (user: IUser) => {
     return error as any;
   });
 };
+
+export const update = async (email: string, payload: any) => {
+  await User.update({ email }, payload);
+};

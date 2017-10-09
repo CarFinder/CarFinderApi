@@ -1,7 +1,7 @@
 import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
 import { IUser } from '../interfaces/index';
-import { registerUser } from '../services/index';
+import { confirmUserEmail, registerUser } from '../services/index';
 
 export const signUp = async (ctx: Koa.Context) => {
   if (!ctx) {
@@ -16,5 +16,18 @@ export const signUp = async (ctx: Koa.Context) => {
     ctx.body = {
       error: err.data
     };
+  }
+};
+
+export const confirmEmail = async (ctx: Koa.Context) => {
+  if (!ctx) {
+    return;
+  }
+
+  try {
+    await confirmUserEmail(ctx.request.body);
+    // forming  token
+  } catch (error) {
+    global.console.log(error);
   }
 };
