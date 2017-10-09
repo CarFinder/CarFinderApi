@@ -6,7 +6,7 @@ export interface IModelModel extends IModel, mongoose.Document {}
 
 const ModelSchema = new mongoose.Schema({
   markId: {
-    reuired: true,
+    required: true,
     type: String
   },
   name: {

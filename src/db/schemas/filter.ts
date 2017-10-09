@@ -33,6 +33,10 @@ const FilterSchema = new mongoose.Schema({
   modelId: {
     type: String
   },
+  name: {
+    required: true,
+    type: String
+  },
   userId: {
     required: true,
     type: String
