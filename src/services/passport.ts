@@ -1,10 +1,12 @@
 import * as Koa from 'koa';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { UserService } from './index';
 
-import { IUserModel } from '../db/index';
+import { jwtSecret } from '../config/config';
+import { IUserModel } from '../db/';
 import { IUser } from '../interfaces/';
 
 passport.use(
@@ -17,4 +19,15 @@ passport.use(
       UserService.comparePassword(username, password, done);
     }
   )
+);
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+  secretOrKey: jwtSecret
+};
+
+passport.use(
+  new JwtStrategy(jwtOptions, (payload, done) => {
+    UserService.getUser(payload.email, done);
+  })
 );

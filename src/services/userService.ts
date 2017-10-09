@@ -15,9 +15,7 @@ export const comparePassword = (email: string, password: string, done: any) => {
           }
 
           return done(null, {
-            confirmed: user.confirmed,
             email: user.email,
-            id: user._id,
             image: user.image,
             interfaceLang: user.interfaceLang,
             name: user.name,
@@ -26,6 +24,20 @@ export const comparePassword = (email: string, password: string, done: any) => {
         });
       } else {
         return done(null, false, 'Incorrect email');
+      }
+    })
+    .catch(err => {
+      done(err);
+    });
+};
+
+export const getUser = (email: string, done: any) => {
+  get(email)
+    .then(user => {
+      if (user) {
+        done(null, user);
+      } else {
+        done('Error');
       }
     })
     .catch(err => {
