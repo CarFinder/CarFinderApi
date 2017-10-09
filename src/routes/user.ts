@@ -6,11 +6,11 @@ import { jwtLogin, localLogin } from '../services/passportMiddleware';
 
 import { getToken } from '../utils/';
 
-import { signin } from '../controllers/userController';
+import { custom, signin } from '../controllers/userController';
 
 const router = new Router();
 
 router.post('/signin', localLogin, signin);
-router.post('/custom', jwtLogin);
+router.post('/custom', jwtLogin, custom);
 
 export default router;
