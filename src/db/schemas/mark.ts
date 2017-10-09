@@ -1,12 +1,14 @@
 import * as mongoose from 'mongoose';
 
-const MarkSchema = {
+import { IMark } from '../../interfaces';
+
+export interface IMarkModel extends IMark, mongoose.Document {}
+
+const MarkSchema = new mongoose.Schema({
   name: {
     required: true,
-    type: String,
-  },
-};
+    type: String
+  }
+});
 
-const Mark = mongoose.model('Mark', new mongoose.Schema(MarkSchema));
-
-export default Mark;
+export { MarkSchema };

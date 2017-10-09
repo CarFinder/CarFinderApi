@@ -1,7 +1,16 @@
+import * as Koa from 'koa';
+import * as passport from 'koa-passport';
 import * as Router from 'koa-router';
+import '../services/passport';
+import { jwtLogin, localLogin } from '../services/passportMiddleware';
+
+import { getToken } from '../utils/';
+
+import { custom, signin } from '../controllers/userController';
 
 const router = new Router();
 
-router.get('/', async () => global.console.log('do something'));
+router.post('/signin', localLogin, signin);
+router.post('/custom', jwtLogin, custom);
 
 export default router;
