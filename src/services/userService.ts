@@ -7,6 +7,9 @@ export const comparePassword = (email: string, password: string, done: any) => {
   get(email)
     .then(user => {
       if (user) {
+        if (!user.confirmed) {
+          done(null, false);
+        }
         user.comparePassword(password, (error: any, isMatch: boolean) => {
           if (error) {
             return done(error);
