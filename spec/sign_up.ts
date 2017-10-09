@@ -8,7 +8,6 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('User Registartion', () => {
-  
   afterEach(done => {
     User.remove({ email: 'pupkin@mail.com' }).then(done());
   });
@@ -68,6 +67,26 @@ describe('User Registartion', () => {
       })
       .end((err, res) => {
         test();
+      });
+  });
+
+  it('should be succes if users email is not used yet', done => {
+    chai
+      .request(app)
+      .post('/user/register')
+      .set('content-type', 'application/json')
+      .send({
+        confirmed: false,
+        email: 'ilya.bobr.thj@gmail.com',
+        image: 'lint to s3',
+        interfaceLang: 'en',
+        name: 'Ivan',
+        password: 'Real Man',
+        subscription: false
+      })
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
       });
   });
 });

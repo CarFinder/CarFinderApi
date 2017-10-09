@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 import * as mongoose from 'mongoose';
 
 import { IUser } from '../../interfaces/index';
+import { sendMail } from '../../utils';
 
 export interface IUserModel extends IUser, mongoose.Document {
   comparePassword(candidatePassword: string, callback: any): any;
@@ -9,56 +10,65 @@ export interface IUserModel extends IUser, mongoose.Document {
 
 const UserSchema = new mongoose.Schema({
   confirmed: {
-    type: Boolean,
+    type: Boolean
   },
   email: {
     required: true,
     type: String,
-    unique: true,
+    unique: true
   },
   image: {
-    type: String,
+    type: String
   },
   interfaceLang: {
     default: 'ru',
     required: true,
-    type: String,
+    type: String
   },
   name: {
     required: true,
-    type: String,
+    type: String
   },
   password: {
     required: true,
-    type: String,
+    type: String
   },
   subscription: {
     default: true,
     required: true,
-    type: Boolean,
-  },
+    type: Boolean
+  }
 });
 
 UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) => {
   callback(null, true);
-}
+};
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   const user = this;
 
   bcrypt.genSalt(10, (err, salt) => {
-      if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
 
-      bcrypt.hash(user.password, salt, null, (err:any, hash:any) => {
-          if (err) { return next(err); }
+    bcrypt.hash(user.password, salt, null, (error: any, hash: any) => {
+      if (error) {
+        return next(error);
+      }
 
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
-          user.password = hash;
-          next();
-      });
+      user.password = hash;
+      next();
+    });
   });
+});
+
+UserSchema.post('save', function() {
+  const user = this;
+  sendMail(this.email, this.name);
 });
 
 export { UserSchema };
