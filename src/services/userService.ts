@@ -1,3 +1,4 @@
+import { codeErrors } from '../config/config';
 import { get } from '../repositories/userRepository';
 
 import { IUser } from '../interfaces/';
@@ -11,7 +12,7 @@ export const comparePassword = (email: string, password: string, done: any) => {
             return done(error);
           }
           if (!isMatch) {
-            return done(null, false, 'Incorrect password');
+            return done(null, false);
           }
 
           return done(null, {
@@ -23,7 +24,7 @@ export const comparePassword = (email: string, password: string, done: any) => {
           });
         });
       } else {
-        return done(null, false, 'Incorrect email');
+        return done(null, false);
       }
     })
     .catch(err => {
