@@ -1,40 +1,42 @@
 import * as mongoose from 'mongoose';
 
-const FilterSchema = {
+import { IFilter } from '../../interfaces';
+
+export interface IFilterModel extends IFilter, mongoose.Document {}
+
+const FilterSchema = new mongoose.Schema({
   bodyTypeId: {
-    type: String,
+    type: String
   },
   markId: {
     required: true,
-    type: String,
+    type: String
   },
   maxMileFrom: {
-    type: String,
+    type: Number
   },
   maxPrice: {
-    type: Number,
+    type: Number
   },
   maxYear: {
-    type: Number,
+    type: Number
   },
   minMileFrom: {
-    type: Number,
+    type: Number
   },
   minPrice: {
-    type: Number,
+    type: Number
   },
   minYear: {
-    type: Number,
+    type: Number
   },
   modelId: {
-    type: String,
+    type: String
   },
   userId: {
     required: true,
-    type: String,
-  },
-};
+    type: String
+  }
+});
 
-const Filter = mongoose.model('Filter', new mongoose.Schema(FilterSchema));
-
-export default Filter;
+export { FilterSchema };

@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema({
   },
   interfaceLang: {
     default: 'ru',
-    required: true,
     type: String
   },
   name: {
@@ -34,7 +33,6 @@ const UserSchema = new mongoose.Schema({
   },
   subscription: {
     default: true,
-    required: true,
     type: Boolean
   }
 });

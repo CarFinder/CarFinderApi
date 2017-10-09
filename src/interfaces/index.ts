@@ -14,3 +14,42 @@ export interface IErrorData {
   enMessage: string;
   ruMessage: string;
 }
+
+export interface IModel {
+  markId: string;
+  name: string;
+}
+
+export interface IMark {
+  name: string;
+}
+
+export interface IFilter {
+  bodyTypeId?: string;
+  markId: string;
+  maxMileFrom?: number;
+  maxPrice?: number;
+  maxYear?: number;
+  minMileFrom?: number;
+  minPrice?: number;
+  minYear?: number;
+  modelId?: string;
+  userId: string;
+}
+
+export interface IBodyType {
+  name: string;
+}
+
+export interface IAd {
+  bodyTypeId: string;
+  description?: string;
+  images?: string[];
+  markId: string;
+  milesFrom?: number;
+  modelId: string;
+  price?: number;
+  sourceName: string;
+  sourceUrl: string;
+  year: number;
+}
