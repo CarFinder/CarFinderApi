@@ -15,11 +15,36 @@ describe('SignIn', () => {
     });
   });
   describe('API', () => {
-    // afterEach(done => {
-    //   User.remove({ email: 'email@email.com' }).then(() => done());
-    // });
+    after(done => {
+      User.remove({ email: 'email@email.com' }).then(() => done());
+    });
+
+    before(done => {
+      const user = new User({
+        email: 'email@email.com',
+        name: 'Name',
+        password: 'password'
+      });
+
+      user.save(() => done());
+    });
 
     it('should be receive failed status if user does not exist', done => {
+      chai
+        .request(app)
+        .post('/api/user/signin')
+        .set('content-type', 'application/json')
+        .send({
+          email: 'test@email.com',
+          password: 'password'
+        })
+        .end((err, res) => {
+          chai.assert.equal(101, res.body.error.code);
+          res.should.have.status(401);
+          done();
+        });
+    });
+    it('should be receive failed status if user does not activated', done => {
       chai
         .request(app)
         .post('/api/user/signin')
@@ -29,34 +54,44 @@ describe('SignIn', () => {
           password: 'password'
         })
         .end((err, res) => {
+          chai.assert.equal(103, res.body.error.code);
+          res.should.have.status(401);
+          done();
+        });
+    });
+    it('should be receive failed status if incorrect password', done => {
+      chai
+        .request(app)
+        .post('/api/user/signin')
+        .set('content-type', 'application/json')
+        .send({
+          email: 'email@email.com',
+          password: 'password1'
+        })
+        .end((err, res) => {
           chai.assert.equal(101, res.body.error.code);
           res.should.have.status(401);
           done();
         });
     });
-    // it('should be receive failed status if user does not activated', async () => {
-    //   const user = new User({
-    //     email: 'email@email.com',
-    //     name: 'Name',
-    //     password: 'password'
+    // it('should be receive succes status if login is succesed', done => {
+    //   User.findOneAndUpdate(
+    //     { email: 'email@email.com' },
+    //     { $set: { confirmed: true } }
+    //   ).then(() => {
+    //     chai
+    //       .request(app)
+    //       .post('/api/user/signin')
+    //       .set('content-type', 'application/json')
+    //       .send({
+    //         email: 'email@email.com',
+    //         password: 'password'
+    //       })
+    //       .end((err, res) => {
+    //         res.should.have.status(200);
+    //         done();
+    //       });
     //   });
-
-    //   await user.save(err => {
-    //     return err;
-    //   });
-
-    //   chai
-    //     .request(app)
-    //     .post('/api/user/signin')
-    //     .set('content-type', 'application/json')
-    //     .send({
-    //       email: 'email@email.com',
-    //       password: 'password'
-    //     })
-    //     .end((err, res) => {
-    //       chai.assert.equal(103, res.body.error.code);
-    //       res.should.have.status(401);
-    //     });
     // });
   });
 });
