@@ -155,5 +155,29 @@ describe('Database Models', () => {
         done();
       });
     });
+
+    it('should be able to compare passswords', async () => {
+      const user = new User({
+        email: 'test@email.com',
+        name: 'Name',
+        password: 'password'
+      });
+
+      await user.save(err => {
+        return err;
+      });
+
+      await user.comparePassword('password', (err: any, isMatch: boolean) => {
+        chai.assert.isTrue(isMatch);
+      });
+
+      await user.comparePassword('password1', (err: any, isMatch: boolean) => {
+        chai.assert.isNotTrue(isMatch);
+      });
+    });
+
+    after(async () => {
+      await User.remove({ email: 'test@email.com' });
+    });
   });
 });

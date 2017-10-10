@@ -20,7 +20,7 @@ describe('User Registartion', () => {
   it('should be succes if users email is not used yet', done => {
     chai
       .request(app)
-      .post('/user/register')
+      .post('/api/user/register')
       .set('content-type', 'application/json')
       .send({
         email: 'pupkin@mail.com',
@@ -39,7 +39,7 @@ describe('User Registartion', () => {
     const test = () =>
       chai
         .request(app)
-        .post('/user/register')
+        .post('/api/user/register')
         .set('content-type', 'application/json')
         .send({
           email: 'pupkin@mail.com',
@@ -54,7 +54,7 @@ describe('User Registartion', () => {
 
     chai
       .request(app)
-      .post('/user/register')
+      .post('/api/user/register')
       .set('content-type', 'application/json')
       .send({
         email: 'pupkin@mail.com',
@@ -72,7 +72,7 @@ describe('User Registartion', () => {
     const test = () =>
       chai
         .request(app)
-        .post('/user/register')
+        .post('/api/user/register')
         .set('content-type', 'application/json')
         .send({
           email: 'pupkin@mail.com',
@@ -90,7 +90,7 @@ describe('User Registartion', () => {
 
     chai
       .request(app)
-      .post('/user/register')
+      .post('/api/user/register')
       .set('content-type', 'application/json')
       .send({
         email: 'pupkin@mail.com',

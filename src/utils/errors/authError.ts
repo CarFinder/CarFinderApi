@@ -25,7 +25,7 @@ export default class AuthError extends Error {
         break;
       case 103:
         this.data = {
-          code: 102,
+          code: 103,
           enMessage: 'Account not activated',
           ruMessage: 'Аккаунт не активирован',
           type: 'Auth error'
