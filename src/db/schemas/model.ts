@@ -1,16 +1,18 @@
 import * as mongoose from 'mongoose';
 
-const ModelSchema = {
+import { IModel } from '../../interfaces';
+
+export interface IModelModel extends IModel, mongoose.Document {}
+
+const ModelSchema = new mongoose.Schema({
   markId: {
-    reuired: true,
+    required: true,
     type: String
   },
   name: {
     required: true,
     type: String
   }
-};
+});
 
-const Model = mongoose.model('Model', new mongoose.Schema(ModelSchema, { timestamps: true }));
-
-export default Model;
+export { ModelSchema };

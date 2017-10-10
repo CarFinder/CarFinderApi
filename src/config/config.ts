@@ -11,3 +11,7 @@ export const config = {
 };
 
 export const url = 'localhost:3001';
+export const codeErrors = {
+  AUTH_ERROR: 102,
+  INCORRECT_EMAIL_OR_PASS: 101
+};

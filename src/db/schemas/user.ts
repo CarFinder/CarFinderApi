@@ -8,6 +8,7 @@ export interface IUserModel extends IUser, mongoose.Document {
   comparePassword(candidatePassword: string, callback: any): any;
 }
 
+
 const UserSchema = new mongoose.Schema(
   {
     confirmed: {
@@ -43,9 +44,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) => {
-  callback(null, true);
-};
 
 UserSchema.pre('save', function(next) {
   const user = this;
@@ -73,5 +71,16 @@ UserSchema.post('save', function() {
   const user = this;
   sendMail(this.email, this.name);
 });
+
+
+UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) {
+      callback(err);
+    }
+    callback(null, isMatch);
+  });
+};
+
 
 export { UserSchema };

@@ -1,5 +1,6 @@
 import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
+import * as passport from 'koa-passport';
 import { IUser } from '../interfaces/index';
 import { confirmUserEmail, registerUser } from '../services/index';
 import { getToken } from '../utils';
@@ -36,4 +37,9 @@ export const confirmEmail = async (ctx: Koa.Context) => {
     ctx.status = HttpStatus.UNAUTHORIZED;
     ctx.body = error.message;
   }
+};
+
+export const signin = async (ctx: Koa.Context) => {
+  ctx.status = HttpStatus.OK;
+  ctx.body = { token: getToken(ctx.state.user) };
 };
