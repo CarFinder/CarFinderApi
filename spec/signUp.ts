@@ -5,6 +5,7 @@ import { promisify } from 'util';
 import { User } from '../src/db/index';
 import { IUser } from '../src/interfaces';
 import { confirm } from '../src/services/userService';
+import { decodeToken, getToken } from '../src/utils';
 import { errors } from '../src/utils/errors';
 import app from './index';
 
@@ -31,7 +32,7 @@ describe('User Registartion', () => {
         subscription: false
       })
       .end((err, res) => {
-        res.should.have.status(200);
+        res.should.have.status(201);
         assert.equal('OK', res.text);
         done();
       });
@@ -200,5 +201,22 @@ describe('Confirm user logic', () => {
     });
 
     await User.remove({ email: 'pupkin@mail.com' });
+  });
+});
+
+describe('Confirm user logic', () => {
+  it('shoul create correct token', () => {
+    const token = getToken({ email: 'pupkin@mail.com' });
+    assert.equal(
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4',
+      token
+    );
+  });
+
+  it('should decode token', () => {
+    const decoded = decodeToken(
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+    );
+    assert.equal('pupkin@mail.com', decoded.email);
   });
 });

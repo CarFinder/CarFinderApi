@@ -11,3 +11,7 @@ export const create = async (user: IUser) => {
 export const update = async (email: string, payload: any) => {
   await User.update({ email }, payload);
 };
+
+export const get = async (email: string): Promise<IUser> => {
+  return await User.findOne({ email });
+};

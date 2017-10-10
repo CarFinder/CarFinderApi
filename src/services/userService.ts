@@ -1,5 +1,5 @@
 import { IUser } from '../interfaces/index';
-import { create, update } from '../repositories/userRepository';
+import { create, get, update } from '../repositories/userRepository';
 import { errors } from '../utils/errors';
 
 export const register = async (payload: IUser) => {
@@ -17,14 +17,22 @@ export const confirm = async (email: string) => {
   if (!email) {
     return;
   }
-  try {
-    const payload = {
-      $set: {
-        confirmed: true
-      }
-    };
-    await update(email, payload);
-  } catch (error) {
-    global.console.log(error);
+  const payload = {
+    $set: {
+      confirmed: true
+    }
+  };
+  await update(email, payload);
+};
+
+export const getUser = async (email: string): Promise<IUser> => {
+  if (!email) {
+    return;
   }
+  const user = await get(email);
+  return {
+    confirmed: user.confirmed,
+    email: user.email,
+    name: user.name,
+  } as any;
 };

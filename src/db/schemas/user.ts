@@ -8,37 +8,40 @@ export interface IUserModel extends IUser, mongoose.Document {
   comparePassword(candidatePassword: string, callback: any): any;
 }
 
-const UserSchema = new mongoose.Schema({
-  confirmed: {
-    type: Boolean
+const UserSchema = new mongoose.Schema(
+  {
+    confirmed: {
+      type: Boolean
+    },
+    email: {
+      required: true,
+      type: String,
+      unique: true
+    },
+    image: {
+      type: String
+    },
+    interfaceLang: {
+      default: 'ru',
+      required: true,
+      type: String
+    },
+    name: {
+      required: true,
+      type: String
+    },
+    password: {
+      required: true,
+      type: String
+    },
+    subscription: {
+      default: true,
+      required: true,
+      type: Boolean
+    }
   },
-  email: {
-    required: true,
-    type: String,
-    unique: true
-  },
-  image: {
-    type: String
-  },
-  interfaceLang: {
-    default: 'ru',
-    required: true,
-    type: String
-  },
-  name: {
-    required: true,
-    type: String
-  },
-  password: {
-    required: true,
-    type: String
-  },
-  subscription: {
-    default: true,
-    required: true,
-    type: Boolean
-  }
-});
+  { timestamps: true }
+);
 
 UserSchema.methods.comparePassword = (candidatePassword: string, callback: any) => {
   callback(null, true);
