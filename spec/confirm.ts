@@ -11,23 +11,22 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('Confirm user logic', () => {
-  it('should set confirmed field to "true"', async () => {
-    const user = {
-      confirmed: false,
-      email: 'pupkin@mail.com',
-      image: 'lint to s3',
-      interfaceLang: 'en',
-      name: 'Ivan',
-      password: 'Real Man',
-      subscription: false
-    };
+  const user = {
+    email: 'pupkin@mail.com',
+    interfaceLang: 'en',
+    name: 'Ivan',
+    password: 'Real Man'
+  };
 
+  before(async () => {
     const newcomer = new User(user);
 
     await newcomer.save(err => {
       return err;
     });
+  });
 
+  it('should set confirmed field to "true"', async () => {
     await confirm(user.email);
 
     await User.findOne({ email: user.email }, (err, res) => {
