@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 
-import { getToken } from '../src/utils/index';
+import { getToken } from '../src/utils/';
 
 describe('SignIn', () => {
   describe('JWT', () => {

@@ -23,6 +23,14 @@ export default class AuthError extends Error {
           type: 'Auth error'
         };
         break;
+      case 103:
+        this.data = {
+          code: 102,
+          enMessage: 'Account not activated',
+          ruMessage: 'Аккаунт не активирован',
+          type: 'Auth error'
+        };
+        break;
     }
   }
 }

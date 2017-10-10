@@ -15,6 +15,9 @@ export const jwtLogin = async (ctx: Koa.Context, next: any) => {
           throw new AuthError(codeErrors.AUTH_ERROR);
         }
         if (user) {
+          if (!user.confirmed) {
+            throw new AuthError(codeErrors.ACCOUNT_NOT_ACTIVATED);
+          }
           await next();
         } else {
           throw new AuthError(codeErrors.AUTH_ERROR);

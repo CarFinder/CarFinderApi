@@ -1,8 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
 import * as passport from 'koa-passport';
-import { IUser } from '../interfaces/index';
-import { confirmUserEmail, registerUser } from '../services/index';
+import { IUser } from '../interfaces/';
+import { confirmUserEmail, registerUser } from '../services/';
 import { getToken } from '../utils';
 
 export const signUp = async (ctx: Koa.Context) => {
