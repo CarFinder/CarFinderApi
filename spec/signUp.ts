@@ -23,13 +23,10 @@ describe('User Registartion', () => {
       .post('/user/register')
       .set('content-type', 'application/json')
       .send({
-        confirmed: false,
         email: 'pupkin@mail.com',
-        image: 'lint to s3',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man',
-        subscription: false
+        password: 'Real Man'
       })
       .end((err, res) => {
         res.should.have.status(201);
@@ -45,13 +42,10 @@ describe('User Registartion', () => {
         .post('/user/register')
         .set('content-type', 'application/json')
         .send({
-          confirmed: false,
           email: 'pupkin@mail.com',
-          image: 'lint to s3',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man',
-          subscription: false
+          password: 'Real Man'
         })
         .end((err, res) => {
           res.should.have.status(409);
@@ -63,13 +57,10 @@ describe('User Registartion', () => {
       .post('/user/register')
       .set('content-type', 'application/json')
       .send({
-        confirmed: false,
         email: 'pupkin@mail.com',
-        image: 'lint to s3',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man',
-        subscription: false
+        password: 'Real Man'
       })
       .end((err, res) => {
         test();
@@ -84,13 +75,10 @@ describe('User Registartion', () => {
         .post('/user/register')
         .set('content-type', 'application/json')
         .send({
-          confirmed: false,
           email: 'pupkin@mail.com',
-          image: 'lint to s3',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man',
-          subscription: false
+          password: 'Real Man'
         })
         .end((err, res) => {
           assert.equal(error.data.code, res.body.error.code);
@@ -105,13 +93,10 @@ describe('User Registartion', () => {
       .post('/user/register')
       .set('content-type', 'application/json')
       .send({
-        confirmed: false,
         email: 'pupkin@mail.com',
-        image: 'lint to s3',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man',
-        subscription: false
+        password: 'Real Man'
       })
       .end((err, res) => {
         test();
@@ -122,13 +107,10 @@ describe('User Registartion', () => {
 describe('Sign up logic', () => {
   it('should insert correct user data', async () => {
     let user = {
-      confirmed: false,
       email: 'pupkin@mail.com',
-      image: 'lint to s3',
       interfaceLang: 'en',
       name: 'Ivan',
-      password: 'Real Man',
-      subscription: false
+      password: 'Real Man'
     };
 
     let newUser = new User(user);
@@ -137,25 +119,20 @@ describe('Sign up logic', () => {
       return err;
     });
 
-    let testedUser: IUser;
     await User.findOne({ email: user.email }, (err, res) => {
-      testedUser = res;
+      assert.equal(user.email, res.email);
+      assert.equal(user.interfaceLang, res.interfaceLang);
+      assert.equal(user.name, res.name);
+      assert.equal(true, res.subscription);
     });
 
-    assert.equal(user.email, testedUser.email);
-    assert.equal(user.interfaceLang, testedUser.interfaceLang);
-    assert.equal(user.name, testedUser.name);
-    assert.equal(user.subscription, testedUser.subscription);
     await User.remove({ email: 'pupkin@mail.com' });
 
     user = {
-      confirmed: false,
       email: 'test@mail.com',
-      image: 'lint to s3',
-      interfaceLang: 'ru',
-      name: 'Test',
-      password: '1',
-      subscription: false
+      interfaceLang: 'en',
+      name: 'Ivan',
+      password: 'Real Man'
     };
 
     newUser = new User(user);
@@ -165,13 +142,12 @@ describe('Sign up logic', () => {
     });
 
     await User.findOne({ email: user.email }, (err, res) => {
-      testedUser = res;
+      assert.equal(user.email, res.email);
+      assert.equal(user.interfaceLang, res.interfaceLang);
+      assert.equal(user.name, res.name);
+      assert.equal(true, res.subscription);
     });
 
-    assert.equal(user.email, testedUser.email);
-    assert.equal(user.interfaceLang, testedUser.interfaceLang);
-    assert.equal(user.name, testedUser.name);
-    assert.equal(user.subscription, testedUser.subscription);
     await User.remove({ email: 'test@mail.com' });
   });
 });
