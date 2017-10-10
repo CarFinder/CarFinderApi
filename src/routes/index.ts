@@ -6,9 +6,8 @@ import user from './user';
 
 const router = new Router();
 
-router.use('/ad', ad.routes());
-router.use('/filter', filter.routes());
-router.use('/user', user.routes());
-
+router.use('/api/ad', ad.routes());
+router.use('/api/filter', filter.routes());
+router.use('/api/user', user.routes());
 
 export default router;
