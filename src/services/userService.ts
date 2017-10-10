@@ -33,6 +33,9 @@ export const getUser = async (email: string): Promise<IUser> => {
   return {
     confirmed: user.confirmed,
     email: user.email,
+    image: user.image,
+    interfaceLang: user.interfaceLang,
     name: user.name,
+    subscription: user.subscription
   } as any;
 };
