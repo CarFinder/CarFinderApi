@@ -8,8 +8,3 @@ export const signin = async (ctx: Koa.Context) => {
   ctx.status = HttpStatus.OK;
   ctx.body = { token: getToken(ctx.state.user) };
 };
-
-export const custom = async (ctx: Koa.Context) => {
-  ctx.status = HttpStatus.OK;
-  ctx.body = { message: 'ok' };
-};
