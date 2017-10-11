@@ -40,7 +40,13 @@ export const localLogin = async (ctx: Koa.Context, next: any) => {
         if (!user.confirmed) {
           throw new AuthError(codeErrors.ACCOUNT_NOT_ACTIVATED);
         }
-        ctx.state.user = user;
+        ctx.state.user = {
+          email: user.email,
+          image: user.image,
+          interfaceLang: user.interfaceLang,
+          name: user.name,
+          subscription: user.subscription
+        };
         await next();
       }
     } catch (err) {

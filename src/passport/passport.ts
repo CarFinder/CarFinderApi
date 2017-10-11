@@ -3,7 +3,7 @@ import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { UserService } from './index';
+import { UserService } from '../services';
 
 import { jwtSecret } from '../config/config';
 import { IUserModel } from '../db/';

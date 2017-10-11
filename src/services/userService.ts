@@ -38,7 +38,7 @@ export const getUserData = async (email: string): Promise<IUser> => {
     interfaceLang: user.interfaceLang,
     name: user.name,
     subscription: user.subscription
-  } as any;
+  } as IUser;
 };
 
 export const comparePassword = (email: string, password: string, done: any) => {
@@ -53,14 +53,7 @@ export const comparePassword = (email: string, password: string, done: any) => {
             return done(null, false);
           }
 
-          return done(null, {
-            confirmed: user.confirmed,
-            email: user.email,
-            image: user.image,
-            interfaceLang: user.interfaceLang,
-            name: user.name,
-            subscription: user.subscription
-          });
+          return done(null, user);
         });
       } else {
         return done(null, false);
