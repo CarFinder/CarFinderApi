@@ -10,8 +10,6 @@ export default class DatabaseError extends Error {
       case codeErrors.MONGO_DUPLICATE_ERROR:
         this.data = {
           code: 409,
-          enMessage: 'Email is already in use',
-          ruMessage: 'Пользователь с таким email уже зарегистрирован',
           type: 'Registration Error'
         };
         break;
