@@ -11,8 +11,6 @@ export interface IUser {
 export interface IErrorData {
   type: string;
   code: number;
-  enMessage: string;
-  ruMessage: string;
 }
 
 export interface IModel {

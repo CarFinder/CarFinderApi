@@ -114,8 +114,6 @@ describe('Token generation and decoding', () => {
       .end((err, res) => {
         res.should.have.status(401);
         assert.equal(104, res.body.error.code);
-        assert.equal('Token is invalid', res.body.error.enMessage);
-        assert.equal('Токен не валиден', res.body.error.ruMessage);
         assert.equal('Secure error', res.body.error.type);
         done();
       });

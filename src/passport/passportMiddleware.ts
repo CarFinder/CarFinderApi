@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import * as passport from 'koa-passport';
 
 import { codeErrors } from '../config/config';
+import { emailRegExp, passwordRegExp } from '../utils';
 import { SecureError } from '../utils/errors';
 
 export const jwtLogin = async (ctx: Koa.Context, next: any) => {
@@ -28,6 +29,15 @@ export const jwtLogin = async (ctx: Koa.Context, next: any) => {
 };
 
 export const localLogin = async (ctx: Koa.Context, next: any) => {
+  try {
+    const userData = ctx.request.body;
+    if (!emailRegExp.test(userData.email) || !passwordRegExp.test(userData.password)) {
+      throw new SecureError(codeErrors.VALIDATION_ERROR);
+    }
+  } catch (err) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: err.data };
+  }
   return passport.authenticate('local', { session: false }, async (err: any, user?: any) => {
     try {
       if (err) {

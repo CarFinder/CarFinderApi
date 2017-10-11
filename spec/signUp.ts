@@ -26,7 +26,7 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
         res.should.have.status(201);
@@ -45,7 +45,7 @@ describe('User Registartion', () => {
           email: 'pupkin@mail.com',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man'
+          password: 'Password1@'
         })
         .end((err, res) => {
           res.should.have.status(409);
@@ -60,7 +60,7 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
         test();
@@ -78,12 +78,10 @@ describe('User Registartion', () => {
           email: 'pupkin@mail.com',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man'
+          password: 'Password1@'
         })
         .end((err, res) => {
           assert.equal(error.data.code, res.body.error.code);
-          assert.equal(error.data.enMessage, res.body.error.enMessage);
-          assert.equal(error.data.ruMessage, res.body.error.ruMessage);
           assert.equal(error.data.type, res.body.error.type);
           done();
         });
@@ -96,7 +94,7 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
         test();
@@ -110,7 +108,7 @@ describe('Sign up logic', () => {
       email: 'pupkin@mail.com',
       interfaceLang: 'en',
       name: 'Ivan',
-      password: 'Real Man'
+      password: 'Password1@'
     };
 
     let newUser = new User(user);
@@ -132,7 +130,7 @@ describe('Sign up logic', () => {
       email: 'test@mail.com',
       interfaceLang: 'en',
       name: 'Ivan',
-      password: 'Real Man'
+      password: 'Password1@'
     };
 
     newUser = new User(user);
