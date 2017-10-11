@@ -1,15 +1,17 @@
-export const db = 'mongodb://Admin:passwordforadmin531@ds163494.mlab.com:63494/car-finder';
-export const jwtSecret = 'superjwtsecretkey';
+export const db = process.env.DB;
+export const jwtSecret = process.env.JWT_SECRET;
+
+console.log(2);
 
 export const mail = {
   auth: {
-    pass: 'gfhjkm123',
-    user: 'carfinder.it@gmail.com'
+    pass: process.env.MAIL_PASS,
+    user: process.env.MAIL_USER
   },
   service: 'Gmail'
 };
 
-export const url = 'localhost:3001';
+export const url = process.env.DEV_CLIENT_HOST_URL;
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,

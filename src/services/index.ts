@@ -3,6 +3,8 @@ import { decodeToken } from '../utils';
 import { confirm, getUserData, register } from './userService';
 import * as UserService from './userService';
 
+
+
 export const registerUser = async (payload: IUser) => {
   if (!payload) {
     return;
