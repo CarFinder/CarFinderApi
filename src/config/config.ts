@@ -1,13 +1,12 @@
 export const db = 'mongodb://Admin:passwordforadmin531@ds163494.mlab.com:63494/car-finder';
 export const jwtSecret = 'superjwtsecretkey';
 
-export const config = {
+export const mail = {
   auth: {
-    pass: 'fb01bc344c4423',
-    user: '621e1cadbbc695'
+    pass: 'gfhjkm123',
+    user: 'carfinder.it@gmail.com'
   },
-  host: 'smtp.mailtrap.io',
-  port: 2525
+  service: 'Gmail'
 };
 
 export const url = 'localhost:3001';
