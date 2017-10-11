@@ -18,9 +18,8 @@ describe('Confirm user logic', () => {
     password: 'Real Man'
   };
 
-  before(async () => {
+  beforeEach(async () => {
     const newcomer = new User(user);
-
     await newcomer.save(err => {
       return err;
     });
@@ -28,11 +27,31 @@ describe('Confirm user logic', () => {
 
   it('should set confirmed field to "true"', async () => {
     await confirm(user.email);
-
     await User.findOne({ email: user.email }, (err, res) => {
       assert.equal(true, res.confirmed);
     });
+  });
 
+  it('sould be succes if user exist', done => {
+    chai
+      .request(app)
+      .post('/api/user/confirm')
+      .set('content-type', 'application/json')
+      .send({
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+      })
+      .end((err, res) => {
+        res.should.have.status(200);
+        assert.equal(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25maXJtZWQiOnRydWUsImVtYWlsIjoicHVwa2luQG1haWwuY29tIiwiaW1hZ2UiOiIiLCJpbnRlcmZhY2VMYW5nIjoiZW4iLCJuYW1lIjoiSXZhbiIsInN1YnNjcmlwdGlvbiI6dHJ1ZX0.gpgESzsa4rQJdHp4RvQ76U-ezVaFTVhyxjpSG8GqiOA',
+          res.body.token
+        );
+        done();
+      });
+  });
+
+  afterEach(async () => {
     await User.remove({ email: 'pupkin@mail.com' });
   });
 });
