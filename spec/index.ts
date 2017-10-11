@@ -1,3 +1,9 @@
+import * as dotenv from 'dotenv';
+before(done => {
+  dotenv.config();
+  done();
+});
+
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as jwt from 'koa-jwt';

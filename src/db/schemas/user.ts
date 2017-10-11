@@ -76,8 +76,9 @@ UserSchema.methods.comparePassword = function(candidatePassword: string, callbac
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) {
       callback(err);
+    } else {
+      callback(null, isMatch);
     }
-    callback(null, isMatch);
   });
 };
 

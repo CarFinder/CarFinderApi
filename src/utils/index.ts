@@ -11,12 +11,13 @@ export const sendMail = (email: string, name: string): void => {
   const html = generateEmail(name, email, token);
   transport.sendMail(
     {
-      from: 'Car Fdinder',
+      from: 'Car Finder',
       html,
-      subject: 'Confirma registration',
+      subject: 'Confirm registration',
       to: email
     },
-    err => {
+    (err, info) => {
+      global.console.log(`The mail sent to ${email}`);
       if (err) {
         throw err;
       }
