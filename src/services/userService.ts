@@ -54,6 +54,7 @@ export const comparePassword = (email: string, password: string, done: any) => {
           }
 
           return done(null, {
+            confirmed: user.confirmed,
             email: user.email,
             image: user.image,
             interfaceLang: user.interfaceLang,

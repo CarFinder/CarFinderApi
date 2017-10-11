@@ -176,8 +176,8 @@ describe('Database Models', () => {
       });
     });
 
-    after(async () => {
-      await User.remove({ email: 'test@email.com' });
+    after(done => {
+      User.remove({ email: 'test@email.com' }).then(() => done());
     });
   });
 });

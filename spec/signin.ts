@@ -16,17 +16,23 @@ describe('SignIn', () => {
   });
   describe('API', () => {
     after(done => {
-      User.remove({ email: 'email@email.com' }).then(() => done());
+      User.remove({ email: { $in: ['email@email.com', 'email1@email.com'] } }).then(() => done());
     });
 
     before(done => {
-      const user = new User({
+      const user = {
         email: 'email@email.com',
         name: 'Name',
         password: 'password'
-      });
+      };
+      const confirmedUser = {
+        confirmed: true,
+        email: 'email1@email.com',
+        name: 'Name',
+        password: 'password'
+      };
 
-      user.save(() => done());
+      User.create([confirmedUser, user], () => done());
     });
 
     it('should be receive failed status if user does not exist', done => {
@@ -39,8 +45,9 @@ describe('SignIn', () => {
           password: 'password'
         })
         .end((err, res) => {
-          chai.assert.equal(101, res.body.error.code);
           res.should.have.status(401);
+          res.body.should.have.property('error');
+          chai.assert.equal(101, res.body.error.code);
           done();
         });
     });
@@ -54,8 +61,9 @@ describe('SignIn', () => {
           password: 'password'
         })
         .end((err, res) => {
-          chai.assert.equal(103, res.body.error.code);
           res.should.have.status(401);
+          res.body.should.have.property('error');
+          chai.assert.equal(103, res.body.error.code);
           done();
         });
     });
@@ -69,29 +77,26 @@ describe('SignIn', () => {
           password: 'password1'
         })
         .end((err, res) => {
-          chai.assert.equal(101, res.body.error.code);
           res.should.have.status(401);
+          res.body.should.have.property('error');
+          chai.assert.equal(res.body.error.code, 101);
           done();
         });
     });
-    // it('should be receive succes status if login is succesed', done => {
-    //   User.findOneAndUpdate(
-    //     { email: 'email@email.com' },
-    //     { $set: { confirmed: true } }
-    //   ).then(() => {
-    //     chai
-    //       .request(app)
-    //       .post('/api/user/signin')
-    //       .set('content-type', 'application/json')
-    //       .send({
-    //         email: 'email@email.com',
-    //         password: 'password'
-    //       })
-    //       .end((err, res) => {
-    //         res.should.have.status(200);
-    //         done();
-    //       });
-    //   });
-    // });
+    it('should be receive succes status if login is succesed', done => {
+      chai
+        .request(app)
+        .post('/api/user/signin')
+        .set('content-type', 'application/json')
+        .send({
+          email: 'email1@email.com',
+          password: 'password'
+        })
+        .end((err, res) => {
+          res.body.should.have.property('token');
+          res.should.have.status(200);
+          done();
+        });
+    });
   });
 });
