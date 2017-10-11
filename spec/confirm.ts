@@ -56,7 +56,7 @@ describe('Confirm user logic', () => {
   });
 });
 
-describe('Confirm user logic', () => {
+describe('Token generation and decoding', () => {
   it('shoul create correct token', () => {
     const token = getToken({ email: 'pupkin@mail.com' });
     assert.equal(
@@ -70,5 +70,58 @@ describe('Confirm user logic', () => {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
     );
     assert.equal('pupkin@mail.com', decoded.email);
+  });
+});
+
+describe('Token generation and decoding', () => {
+  before(async () => {
+    const user = {
+      email: 'pupkin@mail.com',
+      interfaceLang: 'en',
+      name: 'Ivan',
+      password: 'Real Man'
+    };
+    const newcomer = new User(user);
+    await newcomer.save(err => {
+      return err;
+    });
+  });
+
+  it('shoult trow error if token invalid', done => {
+    chai
+      .request(app)
+      .post('/api/user/confirm')
+      .set('content-type', 'application/json')
+      .send({
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLhNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+  it('shoult return custom error if token invalid', done => {
+    chai
+      .request(app)
+      .post('/api/user/confirm')
+      .set('content-type', 'application/json')
+      .send({
+        token:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLhNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+      })
+      .end((err, res) => {
+        res.should.have.status(401);
+        assert.equal(104, res.body.error.code);
+        assert.equal('Token is invalid', res.body.error.enMessage);
+        assert.equal('Токен не валиден', res.body.error.ruMessage);
+        assert.equal('Secure error', res.body.error.type);
+        done();
+      });
+  });
+
+  after(async () => {
+    await User.remove({ email: 'pupkin@mail.com' });
   });
 });

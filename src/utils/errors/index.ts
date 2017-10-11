@@ -1,8 +1,4 @@
 import DatabaseError from './databaseError';
+import SecureError from './secureError';
 
-export const errors = {
-  DatabaseError
-};
-import AuthError from './authError';
-
-export { AuthError };
+export { SecureError, DatabaseError };

@@ -1,34 +1,43 @@
+import { codeErrors } from '../../config/config';
 import { IErrorData } from '../../interfaces';
 
-export default class AuthError extends Error {
+export default class SecureError extends Error {
   public data: IErrorData;
 
   constructor(code?: number) {
     super();
 
     switch (code) {
-      case 101:
+      case codeErrors.INCORRECT_EMAIL_OR_PASS:
         this.data = {
-          code: 101,
+          code: codeErrors.INCORRECT_EMAIL_OR_PASS,
           enMessage: 'Invalid email or password',
           ruMessage: 'Неверное имя пользователя или пароль',
           type: 'Auth error'
         };
         break;
-      case 102:
+      case codeErrors.AUTH_ERROR:
         this.data = {
-          code: 102,
+          code: codeErrors.AUTH_ERROR,
           enMessage: 'Authorization error',
           ruMessage: 'Ошибка авторизации',
           type: 'Auth error'
         };
         break;
-      case 103:
+      case codeErrors.ACCOUNT_NOT_ACTIVATED:
         this.data = {
-          code: 103,
+          code: codeErrors.ACCOUNT_NOT_ACTIVATED,
           enMessage: 'Account not activated',
           ruMessage: 'Аккаунт не активирован',
           type: 'Auth error'
+        };
+        break;
+      case codeErrors.JWT_DECODE_ERROR:
+        this.data = {
+          code: codeErrors.JWT_DECODE_ERROR,
+          enMessage: 'Token is invalid',
+          ruMessage: 'Токен не валиден',
+          type: 'Secure error'
         };
         break;
     }

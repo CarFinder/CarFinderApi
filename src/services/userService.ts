@@ -1,7 +1,7 @@
 import { codeErrors } from '../config/config';
 import { IUser } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
-import { errors } from '../utils/errors';
+import { DatabaseError } from '../utils/errors';
 
 export const register = async (payload: IUser) => {
   if (!payload) {
@@ -10,7 +10,7 @@ export const register = async (payload: IUser) => {
   try {
     await create(payload);
   } catch (error) {
-    throw new errors.DatabaseError(error.code);
+    throw new DatabaseError(error.code);
   }
 };
 

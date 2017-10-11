@@ -35,7 +35,7 @@ export const confirmEmail = async (ctx: Koa.Context) => {
     };
   } catch (error) {
     ctx.status = HttpStatus.UNAUTHORIZED;
-    ctx.body = error.message;
+    ctx.body = { error: error.data };
   }
 };
 

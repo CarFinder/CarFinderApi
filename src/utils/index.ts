@@ -1,6 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
 import { jwtSecret, mail, url } from '../config/config';
+import { codeErrors } from '../config/config';
+import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
@@ -40,7 +42,7 @@ export const decodeToken = (token: string) => {
   let decoded: any | null = null;
   jwt.verify(token, jwtSecret, (err, res: string) => {
     if (err) {
-      throw new Error("aaaaaa oh my God I don't know what tot do !!!");
+      throw new SecureError(codeErrors.JWT_DECODE_ERROR);
     }
     decoded = res;
   });

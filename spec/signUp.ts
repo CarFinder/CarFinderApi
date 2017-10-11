@@ -2,11 +2,11 @@ import assert = require('assert');
 import chai = require('chai');
 import chaiHttp = require('chai-http');
 import { promisify } from 'util';
-import { User } from '../src/db/index';
+import { User } from '../src/db/';
 import { IUser } from '../src/interfaces';
 import { confirm } from '../src/services/userService';
 import { decodeToken, getToken } from '../src/utils';
-import { errors } from '../src/utils/errors';
+import { DatabaseError } from '../src/utils/errors';
 import app from './index';
 
 const should = chai.should();
@@ -68,7 +68,7 @@ describe('User Registartion', () => {
   });
 
   it('should return custom error if email in use', done => {
-    const error = new errors.DatabaseError(11000);
+    const error = new DatabaseError(11000);
     const test = () =>
       chai
         .request(app)

@@ -1,3 +1,4 @@
+import { codeErrors } from '../../config/config';
 import { IErrorData } from '../../interfaces';
 
 export default class DatabaseError extends Error {
@@ -6,7 +7,7 @@ export default class DatabaseError extends Error {
   constructor(code: number, ...params: any[]) {
     super(...params);
     switch (code) {
-      case 11000:
+      case codeErrors.MONGO_DUPLICATE_ERROR:
         this.data = {
           code: 409,
           enMessage: 'Email is already in use',
