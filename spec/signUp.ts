@@ -1,6 +1,7 @@
 import assert = require('assert');
 import chai = require('chai');
 import chaiHttp = require('chai-http');
+import * as HttpStatus from "http-status-codes"
 import { promisify } from 'util';
 import { User } from '../src/db/';
 import { IUser } from '../src/interfaces';
@@ -29,8 +30,7 @@ describe('User Registartion', () => {
         password: 'Password1@'
       })
       .end((err, res) => {
-        res.should.have.status(201);
-        assert.equal('OK', res.text);
+        res.should.have.status(HttpStatus.CREATED);
         done();
       });
   });
@@ -48,7 +48,7 @@ describe('User Registartion', () => {
           password: 'Password1@'
         })
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(HttpStatus.CONFLICT);
           done();
         });
 
@@ -82,7 +82,6 @@ describe('User Registartion', () => {
         })
         .end((err, res) => {
           assert.equal(error.data.code, res.body.error.code);
-          assert.equal(error.data.type, res.body.error.type);
           done();
         });
 

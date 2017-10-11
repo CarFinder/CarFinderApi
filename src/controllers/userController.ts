@@ -19,7 +19,6 @@ export const signUp = async (ctx: Koa.Context) => {
     }
     await registerUser(ctx.request.body);
     ctx.status = HttpStatus.CREATED;
-    ctx.body = 'OK';
   } catch (err) {
     ctx.status = HttpStatus.CONFLICT;
     ctx.body = {

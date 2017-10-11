@@ -1,6 +1,6 @@
+import * as HttpStatus  from "http-status-codes";
 import { codeErrors } from '../../config/config';
 import { IErrorData } from '../../interfaces';
-
 export default class DatabaseError extends Error {
   public data: IErrorData;
 
@@ -9,7 +9,7 @@ export default class DatabaseError extends Error {
     switch (code) {
       case codeErrors.MONGO_DUPLICATE_ERROR:
         this.data = {
-          code: 409,
+          code: HttpStatus.CONFLICT,
           type: 'Registration Error'
         };
         break;
