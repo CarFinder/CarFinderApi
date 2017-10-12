@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt-nodejs';
 import * as mongoose from 'mongoose';
 
+import { emailActions } from '../../config/config';
 import { IUser } from '../../interfaces/index';
 import { sendMail } from '../../utils';
 
@@ -69,7 +70,7 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.post('save', function() {
   const user = this;
-  sendMail(this.email, this.name);
+  sendMail(this.email, this.name, emailActions.CONFIRM_REGISTRATION);
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {
