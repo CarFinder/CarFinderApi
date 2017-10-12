@@ -120,14 +120,14 @@ describe('User Registartion', () => {
 
 describe('Sign up logic', () => {
   it('should insert correct user data', async () => {
-    let user = {
+    const user = {
       email: 'pupkin@mail.com',
       interfaceLang: 'en',
       name: 'Ivan',
       password: 'Password1@'
     };
 
-    let newUser = new User(user);
+    const newUser = new User(user);
 
     await newUser.save(err => {
       return err;
@@ -141,27 +141,5 @@ describe('Sign up logic', () => {
     });
 
     await User.remove({ email: 'pupkin@mail.com' });
-
-    user = {
-      email: 'test@mail.com',
-      interfaceLang: 'en',
-      name: 'Ivan',
-      password: 'Password1@'
-    };
-
-    newUser = new User(user);
-
-    await newUser.save(err => {
-      return err;
-    });
-
-    await User.findOne({ email: user.email }, (err, res) => {
-      assert.equal(user.email, res.email);
-      assert.equal(user.interfaceLang, res.interfaceLang);
-      assert.equal(user.name, res.name);
-      assert.equal(true, res.subscription);
-    });
-
-    await User.remove({ email: 'test@mail.com' });
   });
 });
