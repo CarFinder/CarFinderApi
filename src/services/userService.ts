@@ -36,11 +36,11 @@ export const comparePassword = async (email: string, password: string, done: any
   const user = await get(email);
 
   if (user) {
-    user.comparePassword(password, (error: any, isMatch: boolean) => {
+    user.comparePassword(password, (error: any, isMatching: boolean) => {
       if (error) {
         return done(error);
       }
-      if (!isMatch) {
+      if (!isMatching) {
         return done(null, false);
       }
 
