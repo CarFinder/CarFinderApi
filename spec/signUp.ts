@@ -1,6 +1,7 @@
 import assert = require('assert');
 import chai = require('chai');
 import chaiHttp = require('chai-http');
+import * as HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
 import { User } from '../src/db/';
 import { IUser } from '../src/interfaces';
@@ -26,11 +27,10 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
-        res.should.have.status(201);
-        assert.equal('OK', res.text);
+        res.should.have.status(HttpStatus.CREATED);
         done();
       });
   });
@@ -45,10 +45,10 @@ describe('User Registartion', () => {
           email: 'pupkin@mail.com',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man'
+          password: 'Password1@'
         })
         .end((err, res) => {
-          res.should.have.status(409);
+          res.should.have.status(HttpStatus.CONFLICT);
           done();
         });
 
@@ -60,7 +60,7 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
         test();
@@ -78,13 +78,10 @@ describe('User Registartion', () => {
           email: 'pupkin@mail.com',
           interfaceLang: 'en',
           name: 'Ivan',
-          password: 'Real Man'
+          password: 'Password1@'
         })
         .end((err, res) => {
           assert.equal(error.data.code, res.body.error.code);
-          assert.equal(error.data.enMessage, res.body.error.enMessage);
-          assert.equal(error.data.ruMessage, res.body.error.ruMessage);
-          assert.equal(error.data.type, res.body.error.type);
           done();
         });
 
@@ -96,10 +93,27 @@ describe('User Registartion', () => {
         email: 'pupkin@mail.com',
         interfaceLang: 'en',
         name: 'Ivan',
-        password: 'Real Man'
+        password: 'Password1@'
       })
       .end((err, res) => {
         test();
+      });
+  });
+  it('should be receive failed status if user sent invalid data', done => {
+    chai
+      .request(app)
+      .post('/api/user/register')
+      .set('content-type', 'application/json')
+      .send({
+        email: 'email1email.com',
+        name: '...',
+        password: 'password'
+      })
+      .end((err, res) => {
+        res.should.have.status(HttpStatus.CONFLICT);
+        res.body.should.have.property('error');
+        chai.assert.equal(res.body.error.code, 105);
+        done();
       });
   });
 });
@@ -110,7 +124,7 @@ describe('Sign up logic', () => {
       email: 'pupkin@mail.com',
       interfaceLang: 'en',
       name: 'Ivan',
-      password: 'Real Man'
+      password: 'Password1@'
     };
 
     let newUser = new User(user);
@@ -132,7 +146,7 @@ describe('Sign up logic', () => {
       email: 'test@mail.com',
       interfaceLang: 'en',
       name: 'Ivan',
-      password: 'Real Man'
+      password: 'Password1@'
     };
 
     newUser = new User(user);

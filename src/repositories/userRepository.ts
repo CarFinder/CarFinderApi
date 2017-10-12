@@ -14,5 +14,5 @@ export const update = async (email: string, payload: any) => {
 };
 
 export const get = async (email: string): Promise<IUserModel> => {
-  return (await User.findOne({ email }, { __v: 0 })) as IUserModel;
+  return (await User.findOne({ email })) as IUserModel;
 };

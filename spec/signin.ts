@@ -1,5 +1,6 @@
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
+import * as HttpStatus from 'http-status-codes';
 import app from './index';
 
 import { User } from '../src/db';
@@ -23,13 +24,13 @@ describe('SignIn', () => {
       const user = {
         email: 'email@email.com',
         name: 'Name',
-        password: 'password'
+        password: 'Password1@'
       };
       const confirmedUser = {
         confirmed: true,
         email: 'email1@email.com',
         name: 'Name',
-        password: 'password'
+        password: 'Password1@'
       };
 
       User.create([confirmedUser, user], () => done());
@@ -42,10 +43,10 @@ describe('SignIn', () => {
         .set('content-type', 'application/json')
         .send({
           email: 'test@email.com',
-          password: 'password'
+          password: 'Password1@'
         })
         .end((err, res) => {
-          res.should.have.status(401);
+          res.should.have.status(HttpStatus.UNAUTHORIZED);
           res.body.should.have.property('error');
           chai.assert.equal(101, res.body.error.code);
           done();
@@ -58,10 +59,10 @@ describe('SignIn', () => {
         .set('content-type', 'application/json')
         .send({
           email: 'email@email.com',
-          password: 'password'
+          password: 'Password1@'
         })
         .end((err, res) => {
-          res.should.have.status(401);
+          res.should.have.status(HttpStatus.UNAUTHORIZED);
           res.body.should.have.property('error');
           chai.assert.equal(103, res.body.error.code);
           done();
@@ -74,27 +75,43 @@ describe('SignIn', () => {
         .set('content-type', 'application/json')
         .send({
           email: 'email@email.com',
-          password: 'password1'
+          password: 'Password12@'
         })
         .end((err, res) => {
-          res.should.have.status(401);
+          res.should.have.status(HttpStatus.UNAUTHORIZED);
           res.body.should.have.property('error');
           chai.assert.equal(res.body.error.code, 101);
           done();
         });
     });
-    it('should be receive succes status if login is succesed', done => {
+    it('should be receive succes status if signin is succesed', done => {
       chai
         .request(app)
         .post('/api/user/signin')
         .set('content-type', 'application/json')
         .send({
           email: 'email1@email.com',
-          password: 'password'
+          password: 'Password1@'
         })
         .end((err, res) => {
           res.body.should.have.property('token');
-          res.should.have.status(200);
+          res.should.have.status(HttpStatus.OK);
+          done();
+        });
+    });
+    it('should be receive failed status if user sent invalid data', done => {
+      chai
+        .request(app)
+        .post('/api/user/signin')
+        .set('content-type', 'application/json')
+        .send({
+          email: 'email1email.com',
+          password: 'password'
+        })
+        .end((err, res) => {
+          res.should.have.status(HttpStatus.UNAUTHORIZED);
+          res.body.should.have.property('error');
+          chai.assert.equal(res.body.error.code, 105);
           done();
         });
     });
