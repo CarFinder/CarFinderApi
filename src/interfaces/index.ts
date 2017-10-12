@@ -32,8 +32,8 @@ export interface IFilter {
   minPrice?: number;
   minYear?: number;
   modelId?: string;
-  name: string;
-  userId: string;
+  name?: string;
+  userId?: string;
 }
 
 export interface IBodyType {

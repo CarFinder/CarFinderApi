@@ -23,7 +23,7 @@ passport.use(
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: jwtSecret
+  secretOrKey: process.env.JWT_SECRET
 };
 
 passport.use(

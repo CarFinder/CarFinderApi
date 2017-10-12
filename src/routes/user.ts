@@ -4,7 +4,7 @@ import * as Router from 'koa-router';
 import { confirmEmail, signUp } from '../controllers/userController';
 import { signin } from '../controllers/userController';
 import '../passport/passport';
-import { jwtLogin, localLogin } from '../passport/passportMiddleware';
+import { localLogin } from '../passport/passportMiddleware';
 import { getToken } from '../utils/';
 
 const router = new Router();
