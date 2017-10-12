@@ -52,7 +52,7 @@ const getEmailSubject = (action: string) => {
   switch (action) {
     case emailActions.CONFIRM_REGISTRATION:
       return 'Confirm your registration';
-    case emailActions.CONFIRM_REGISTRATION:
+    case emailActions.RESTORE_PASSWORD:
       return 'CarFinder Password Reset';
   }
 };

@@ -1,7 +1,8 @@
-import { codeErrors } from '../config/config';
+import { codeErrors, emailActions } from '../config/config';
 import { IUser } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError } from '../utils/errors';
+import { sendMail } from '../utils/index';
 
 export const register = async (payload: IUser) => {
   try {
@@ -63,4 +64,17 @@ export const getUser = (email: string, done: any) => {
     .catch(err => {
       done(err);
     });
+};
+
+export const sendPasswordEmail = async (email: string) => {
+  try {
+    const user = await get(email);
+    if (user) {
+      sendMail(user.email, user.name, emailActions.RESTORE_PASSWORD);
+    } else {
+      throw new Error('Invalid email');
+    }
+  } catch (error) {
+    throw new DatabaseError(error.code);
+  }
 };
