@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
 import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
@@ -41,7 +42,7 @@ const generateEmail = (name: string, email: string, token: string, action: strin
        <h1>Hi, ${name}!</h1>
        <p>TYou are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
        <p>Please click on the following link, or paste this into your browser to complete the process</p>
-       <a href="http://${url}/confirmation/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Restore password</a>
+       <a href="http://${url}/restore/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Restore password</a>
        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
     </div>
     `;
@@ -70,6 +71,14 @@ export const decodeToken = (token: string) => {
     decoded = res;
   });
   return decoded;
+};
+
+export const encryptPassword = async (password: string) => {
+  let encryptedPassword: string;
+  let salt: string;
+  salt = bcrypt.genSaltSync(10);
+  encryptedPassword = bcrypt.hashSync(password, salt);
+  return encryptedPassword;
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
