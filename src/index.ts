@@ -1,4 +1,3 @@
-console.log(1);
 import Bluebird = require('bluebird');
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +7,7 @@ import * as jwt from 'koa-jwt';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
+import config from './config/test';
 import routes from './routes';
 
 const server = new Koa();
@@ -23,4 +23,4 @@ server.use(logger());
 
 server.use(routes.routes());
 
-export const app: any = server.listen(3000);
+export const app: any = server.listen(process.env.PORT || config.port);

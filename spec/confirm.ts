@@ -1,6 +1,8 @@
 import assert = require('assert');
 import chai = require('chai');
 import chaiHttp = require('chai-http');
+import * as HttpStatus from 'http-status-codes';
+import { codeErrors } from '../src/config/config';
 import { User } from '../src/db/index';
 import { IUser } from '../src/interfaces';
 import { confirm } from '../src/services/userService';
@@ -12,10 +14,10 @@ chai.use(chaiHttp);
 
 describe('Confirm user logic', () => {
   const user = {
-    email: 'pupkin@mail.com',
+    email: 'test@mail.com',
     interfaceLang: 'en',
     name: 'Ivan',
-    password: 'Real Man'
+    password: 'Password1@'
   };
 
   beforeEach(async () => {
@@ -33,42 +35,38 @@ describe('Confirm user logic', () => {
   });
 
   it('sould be succes if user exist', done => {
+    const authToken = getToken({ email: 'test@mail.com' });
+    const token = getToken({
+      confirmed: true,
+      email: 'test@mail.com',
+      image: '',
+      interfaceLang: 'en',
+      name: 'Ivan',
+      subscription: true
+    });
     chai
       .request(app)
       .post('/api/user/confirm')
       .set('content-type', 'application/json')
       .send({
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+        token: authToken
       })
       .end((err, res) => {
-        res.should.have.status(200);
-        assert.equal(
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25maXJtZWQiOnRydWUsImVtYWlsIjoicHVwa2luQG1haWwuY29tIiwiaW1hZ2UiOiIiLCJpbnRlcmZhY2VMYW5nIjoiZW4iLCJuYW1lIjoiSXZhbiIsInN1YnNjcmlwdGlvbiI6dHJ1ZX0.gpgESzsa4rQJdHp4RvQ76U-ezVaFTVhyxjpSG8GqiOA',
-          res.body.token
-        );
+        res.should.have.status(HttpStatus.OK);
+        assert.equal(token, res.body.token);
         done();
       });
   });
 
   afterEach(async () => {
-    await User.remove({ email: 'pupkin@mail.com' });
+    await User.remove({ email: 'test@mail.com' });
   });
 });
 
 describe('Token generation and decoding', () => {
-  it('shoul create correct token', () => {
+  it('should create and decode token', () => {
     const token = getToken({ email: 'pupkin@mail.com' });
-    assert.equal(
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4',
-      token
-    );
-  });
-
-  it('should decode token', () => {
-    const decoded = decodeToken(
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
-    );
+    const decoded = decodeToken(token);
     assert.equal('pupkin@mail.com', decoded.email);
   });
 });
@@ -88,16 +86,16 @@ describe('Token generation and decoding', () => {
   });
 
   it('shoult trow error if token invalid', done => {
+    const token = getToken({ email: `abcd` });
     chai
       .request(app)
       .post('/api/user/confirm')
       .set('content-type', 'application/json')
       .send({
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLhNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+        token
       })
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(HttpStatus.UNAUTHORIZED);
         done();
       });
   });
@@ -109,13 +107,10 @@ describe('Token generation and decoding', () => {
       .set('content-type', 'application/json')
       .send({
         token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLhNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4'
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cktpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm44s45CzP7kx3jG4y9OLdGcv4'
       })
       .end((err, res) => {
-        res.should.have.status(401);
-        assert.equal(104, res.body.error.code);
-        assert.equal('Token is invalid', res.body.error.enMessage);
-        assert.equal('Токен не валиден', res.body.error.ruMessage);
+        assert.equal(codeErrors.JWT_DECODE_ERROR, res.body.error.code);
         assert.equal('Secure error', res.body.error.type);
         done();
       });

@@ -11,12 +11,13 @@ export const sendMail = (email: string, name: string): void => {
   const html = generateEmail(name, email, token);
   transport.sendMail(
     {
-      from: 'Car Fdinder',
+      from: 'Car Finder',
       html,
-      subject: 'Confirma registration',
+      subject: 'Confirm registration',
       to: email
     },
-    err => {
+    (err, info) => {
+      global.console.log(`The mail sent to ${email}`);
       if (err) {
         throw err;
       }
@@ -48,3 +49,7 @@ export const decodeToken = (token: string) => {
   });
   return decoded;
 };
+
+export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
+export const passwordRegExp = new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$');
+export const emailRegExp = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$');

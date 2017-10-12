@@ -1,18 +1,24 @@
 import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
 import * as passport from 'koa-passport';
+import { codeErrors } from '../config/config';
 import { IUser } from '../interfaces/';
 import { confirmUserEmail, registerUser } from '../services/';
-import { getToken } from '../utils';
+import { emailRegExp, getToken, nameRegExp, passwordRegExp } from '../utils';
+import { SecureError } from '../utils/errors';
 
 export const signUp = async (ctx: Koa.Context) => {
-  if (!ctx) {
-    return;
-  }
   try {
+    const userData = ctx.request.body;
+    if (
+      !emailRegExp.test(userData.email) ||
+      !nameRegExp.test(userData.name) ||
+      !passwordRegExp.test(userData.password)
+    ) {
+      throw new SecureError(codeErrors.VALIDATION_ERROR);
+    }
     await registerUser(ctx.request.body);
     ctx.status = HttpStatus.CREATED;
-    ctx.body = 'OK';
   } catch (err) {
     ctx.status = HttpStatus.CONFLICT;
     ctx.body = {
@@ -22,10 +28,6 @@ export const signUp = async (ctx: Koa.Context) => {
 };
 
 export const confirmEmail = async (ctx: Koa.Context) => {
-  if (!ctx) {
-    return;
-  }
-
   try {
     const user = await confirmUserEmail(ctx.request.body);
     const token = getToken(user);

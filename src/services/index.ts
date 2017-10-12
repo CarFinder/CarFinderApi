@@ -6,9 +6,6 @@ import * as UserService from './userService';
 
 
 export const registerUser = async (payload: IUser) => {
-  if (!payload) {
-    return;
-  }
   await register(payload);
 };
 

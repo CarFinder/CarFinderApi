@@ -4,9 +4,6 @@ import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError } from '../utils/errors';
 
 export const register = async (payload: IUser) => {
-  if (!payload) {
-    return;
-  }
   try {
     await create(payload);
   } catch (error) {
@@ -15,9 +12,6 @@ export const register = async (payload: IUser) => {
 };
 
 export const confirm = async (email: string) => {
-  if (!email) {
-    return;
-  }
   const payload = {
     $set: {
       confirmed: true
@@ -27,9 +21,6 @@ export const confirm = async (email: string) => {
 };
 
 export const getUserData = async (email: string): Promise<IUser> => {
-  if (!email) {
-    return;
-  }
   const user = await get(email);
   return {
     confirmed: user.confirmed,
@@ -41,27 +32,23 @@ export const getUserData = async (email: string): Promise<IUser> => {
   } as IUser;
 };
 
-export const comparePassword = (email: string, password: string, done: any) => {
-  get(email)
-    .then(user => {
-      if (user) {
-        user.comparePassword(password, (error: any, isMatch: boolean) => {
-          if (error) {
-            return done(error);
-          }
-          if (!isMatch) {
-            return done(null, false);
-          }
+export const comparePassword = async (email: string, password: string, done: any) => {
+  const user = await get(email);
 
-          return done(null, user);
-        });
-      } else {
+  if (user) {
+    user.comparePassword(password, (error: any, isMatching: boolean) => {
+      if (error) {
+        return done(error);
+      }
+      if (!isMatching) {
         return done(null, false);
       }
-    })
-    .catch(err => {
-      done(err);
+
+      return done(null, user);
     });
+  } else {
+    return done(null, false);
+  }
 };
 
 export const getUser = (email: string, done: any) => {

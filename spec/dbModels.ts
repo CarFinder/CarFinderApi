@@ -167,12 +167,12 @@ describe('Database Models', () => {
         return err;
       });
 
-      await user.comparePassword('password', (err: any, isMatch: boolean) => {
-        chai.assert.isTrue(isMatch);
+      await user.comparePassword('password', (err: any, isMatching: boolean) => {
+        chai.assert.isTrue(isMatching);
       });
 
-      await user.comparePassword('password1', (err: any, isMatch: boolean) => {
-        chai.assert.isNotTrue(isMatch);
+      await user.comparePassword('password1', (err: any, isMatching: boolean) => {
+        chai.assert.isNotTrue(isMatching);
       });
     });
 
