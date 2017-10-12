@@ -1,16 +1,18 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "declaration": true,
-        "sourceMap": true,
-        "outDir": "./dist",
-        "rootDir": ".",
-        "removeComments": true,
-        "strict": true,
-        "lib": ["es2015"],
-        "experimentalDecorators": true
-    },
-    "include": ["src/**/*", "spec/**/*.ts"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "removeComments": true,
+    "strict": true,
+    "lib": [ "es2015" ],
+    "experimentalDecorators": true,
+    "noImplicitThis": false,
+    "strictNullChecks": false
+  },
+  "include": [ "src/**/*", "spec/**/*.ts" ],
+  "exclude": [ "node_modules" ]
 }

@@ -1,12 +1,14 @@
 import * as mongoose from 'mongoose';
 
-const BodyTypeSchema = {
+import { IBodyType } from '../../interfaces';
+
+export interface IBodyTypeModel extends IBodyType, mongoose.Document {}
+
+const BodyTypeSchema = new mongoose.Schema({
   name: {
     required: true,
-    type: String,
-  },
-};
+    type: String
+  }
+});
 
-const BodyType = mongoose.model('BodyType', new mongoose.Schema(BodyTypeSchema));
-
-export default BodyType;
+export { BodyTypeSchema };

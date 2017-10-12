@@ -1,44 +1,46 @@
 import * as mongoose from 'mongoose';
 
-const AdSchema = {
+import { IAd } from '../../interfaces';
+
+export interface IAdModel extends IAd, mongoose.Document {}
+
+const AdSchema = new mongoose.Schema({
   bodyTypeId: {
     required: true,
-    type: String,
+    type: String
   },
   description: {
-    type: String,
+    type: String
   },
   images: {
-    type: Array,
+    type: Array
   },
   markId: {
     required: true,
-    type: String,
+    type: String
   },
   milesFrom: {
-    type: Number,
+    type: Number
   },
   modelId: {
     required: true,
-    type: String,
+    type: String
   },
   price: {
-    type: Number,
+    type: Number
   },
   sourceName: {
     required: true,
-    type: String,
+    type: String
   },
   sourceUrl: {
     required: true,
-    type: String,
+    type: String
   },
   year: {
     required: true,
-    type: Number,
+    type: Number
   }
-};
+});
 
-const Ad = mongoose.model('Ad', new mongoose.Schema(AdSchema));
-
-export default Ad;
+export { AdSchema };
