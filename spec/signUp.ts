@@ -1,7 +1,7 @@
 import assert = require('assert');
 import chai = require('chai');
 import chaiHttp = require('chai-http');
-import * as HttpStatus from "http-status-codes"
+import * as HttpStatus from 'http-status-codes';
 import { promisify } from 'util';
 import { User } from '../src/db/';
 import { IUser } from '../src/interfaces';
@@ -97,6 +97,23 @@ describe('User Registartion', () => {
       })
       .end((err, res) => {
         test();
+      });
+  });
+  it('should be receive failed status if user sent invalid data', done => {
+    chai
+      .request(app)
+      .post('/api/user/register')
+      .set('content-type', 'application/json')
+      .send({
+        email: 'email1email.com',
+        name: '...',
+        password: 'password'
+      })
+      .end((err, res) => {
+        res.should.have.status(HttpStatus.CONFLICT);
+        res.body.should.have.property('error');
+        chai.assert.equal(res.body.error.code, 105);
+        done();
       });
   });
 });

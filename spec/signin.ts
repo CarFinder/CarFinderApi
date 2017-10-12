@@ -84,7 +84,7 @@ describe('SignIn', () => {
           done();
         });
     });
-    it('should be receive succes status if login is succesed', done => {
+    it('should be receive succes status if signin is succesed', done => {
       chai
         .request(app)
         .post('/api/user/signin')
@@ -96,6 +96,22 @@ describe('SignIn', () => {
         .end((err, res) => {
           res.body.should.have.property('token');
           res.should.have.status(HttpStatus.OK);
+          done();
+        });
+    });
+    it('should be receive failed status if user sent invalid data', done => {
+      chai
+        .request(app)
+        .post('/api/user/signin')
+        .set('content-type', 'application/json')
+        .send({
+          email: 'email1email.com',
+          password: 'password'
+        })
+        .end((err, res) => {
+          res.should.have.status(HttpStatus.UNAUTHORIZED);
+          res.body.should.have.property('error');
+          chai.assert.equal(res.body.error.code, 105);
           done();
         });
     });
