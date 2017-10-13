@@ -5,16 +5,16 @@ import { AdService } from '../services/';
 
 export const getAds = async (ctx: Koa.Context) => {
   try {
-    const { filter, limit, skip } = ctx.request.body;
+    const { filter, limit, skip, sort } = ctx.request.body;
 
     if (!filter.markId) {
       throw new Error();
     }
 
-    const ads = await AdService.getAds(filter, limit, skip);
+    const ads = await AdService.getAdsByFilter(filter, limit, skip, sort);
     ctx.status = HttpStatus.OK;
     ctx.body = ads;
-  } catch {
+  } catch (err) {
     ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
   }
 };

@@ -19,7 +19,7 @@ const AdSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  milesFrom: {
+  mileFrom: {
     type: Number
   },
   modelId: {

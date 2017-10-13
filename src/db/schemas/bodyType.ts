@@ -7,7 +7,8 @@ export interface IBodyTypeModel extends IBodyType, mongoose.Document {}
 const BodyTypeSchema = new mongoose.Schema({
   name: {
     required: true,
-    type: String
+    type: String,
+    unique: true
   }
 });
 
