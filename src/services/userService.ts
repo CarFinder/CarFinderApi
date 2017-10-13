@@ -85,6 +85,6 @@ export const restorePassword = async (password: string, email: string) => {
     };
     await update(email, payload);
   } catch (error) {
-    throw new DatabaseError(error.code);
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
 };
