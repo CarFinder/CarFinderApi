@@ -67,7 +67,7 @@ export const forgotPassword = async (ctx: Koa.Context) => {
 };
 
 export const restorePassword = async (ctx: Koa.Context) => {
-  const userData = ctx.request.body;
+  const userData = ctx.request.body.data;
   try {
     if (!passwordRegExp.test(userData.password)) {
       throw new SecureError(codeErrors.VALIDATION_ERROR);
