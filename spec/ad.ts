@@ -78,7 +78,7 @@ describe('Ad', () => {
       await Model.remove({ name: 'ModelTest' });
       await Mark.remove({ name: 'MarkTest' });
     });
-    describe.only('Services', () => {
+    describe('Services', () => {
       it('should be return array of ads', async () => {
         const mark = await Mark.findOne();
         const ads = await AdService.getAdsByFilter({
