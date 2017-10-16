@@ -14,6 +14,8 @@ describe('Ad', () => {
   describe('Filter results', () => {
     let passportStub: any;
     let markId: string;
+    let bodyTypeId: string;
+    let modelId: string;
     before(async () => {
       passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
         await next();
@@ -26,12 +28,14 @@ describe('Ad', () => {
         name: 'MarkTest'
       };
       const body = await BodyType.create(bodyObj);
+      bodyTypeId = body._id;
       const mark = await Mark.create(markObj);
       const modelObj = {
         markId: mark._id,
         name: 'ModelTest'
       };
       const model = await Model.create(modelObj);
+      modelId = model._id;
       const ads = [
         {
           bodyTypeId: body._id,
@@ -74,11 +78,13 @@ describe('Ad', () => {
       await Model.remove({ name: 'ModelTest' });
       await Mark.remove({ name: 'MarkTest' });
     });
-    describe('Services', () => {
+    describe.only('Services', () => {
       it('should be return array of ads', async () => {
         const mark = await Mark.findOne();
         const ads = await AdService.getAdsByFilter({
-          markId: mark._id.toString()
+          bodyTypeId: bodyTypeId.toString(),
+          markId: mark._id.toString(),
+          modelId: modelId.toString()
         });
         ads[1].should.have.property('mark').equal('MarkTest');
         ads[1].should.have.property('model').equal('ModelTest');

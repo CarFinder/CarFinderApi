@@ -9,9 +9,6 @@ export const getAdsByFilter = async (
   sort?: string
 ): Promise<IAdModel[]> => {
   const searchFilter: any = {};
-  if (!filter) {
-    return await getByFilter(filter, limit, skip, sort);
-  }
   if (filter.bodyTypeId) {
     searchFilter.bodyTypeId = filter.bodyTypeId;
   }
