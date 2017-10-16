@@ -1,9 +1,9 @@
-import * as jwt from "jsonwebtoken";
-import nodemailer = require("nodemailer");
-import { jwtSecret, mail, url } from "../config/config";
-import { codeErrors } from "../config/config";
-import { Api } from "../parsers/";
-import { SecureError } from "./errors";
+import * as jwt from 'jsonwebtoken';
+import nodemailer = require('nodemailer');
+import { jwtSecret, mail, url } from '../config/config';
+import { codeErrors } from '../config/config';
+import { Api } from '../parsers/';
+import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
@@ -12,9 +12,9 @@ export const sendMail = (email: string, name: string): void => {
   const html = generateEmail(name, email, token);
   transport.sendMail(
     {
-      from: "Car Finder",
+      from: 'Car Finder',
       html,
-      subject: "Confirm registration",
+      subject: 'Confirm registration',
       to: email
     },
     (err, info) => {
@@ -60,8 +60,8 @@ export const decodeToken = (token: string) => {
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
 export const passwordRegExp = new RegExp(
-  "^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$"
+  '^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$'
 );
 export const emailRegExp = new RegExp(
-  "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$"
+  '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$'
 );
