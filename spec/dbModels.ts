@@ -163,9 +163,7 @@ describe('Database Models', () => {
         password: 'password'
       });
 
-      await user.save(err => {
-        return err;
-      });
+      await user.save();
 
       await user.comparePassword('password', (err: any, isMatching: boolean) => {
         chai.assert.isTrue(isMatching);
@@ -174,10 +172,8 @@ describe('Database Models', () => {
       await user.comparePassword('password1', (err: any, isMatching: boolean) => {
         chai.assert.isNotTrue(isMatching);
       });
-    });
 
-    after(done => {
-      User.remove({ email: 'test@email.com' }).then(() => done());
+      await User.remove({ email: 'test@email.com' });
     });
   });
 });

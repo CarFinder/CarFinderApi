@@ -32,8 +32,9 @@ export interface IFilter {
   minPrice?: number;
   minYear?: number;
   modelId?: string;
-  name: string;
-  userId: string;
+  name?: string;
+  userId?: string;
+  sourceName?: string;
 }
 
 export interface IBodyType {
@@ -45,7 +46,7 @@ export interface IAd {
   description?: string;
   images?: string[];
   markId: string;
-  milesFrom?: number;
+  mileFrom?: number;
   modelId: string;
   price?: number;
   sourceName: string;

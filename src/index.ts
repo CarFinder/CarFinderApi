@@ -1,4 +1,4 @@
-import Bluebird = require('bluebird');
+import * as bluebird from 'bluebird';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import * as Koa from 'koa';
@@ -15,7 +15,7 @@ const server = new Koa();
 mongoose.connect(process.env.DB, { useMongoClient: true });
 mongoose.set('debug', true);
 
-(mongoose as any).Promise = Bluebird;
+(mongoose as any).Promise = bluebird;
 
 server.use(bodyParser());
 server.use(passport.initialize());
