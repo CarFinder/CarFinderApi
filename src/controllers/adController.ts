@@ -14,11 +14,11 @@ export const getAds = async (ctx: Koa.Context) => {
       ctx.body = { error: new RequestError(codeErrors.REQUIRED_FIELD).data };
       return;
     }
-
     const ads = await AdService.getAdsByFilter(filter, limit, skip, sort);
+
     ctx.status = HttpStatus.OK;
     ctx.body = ads;
-  } catch (err) {
+  } catch {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
     ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }

@@ -36,7 +36,7 @@ describe('Ad', () => {
         {
           bodyTypeId: body._id,
           markId: mark._id,
-          mileFrom: 20000,
+          mileFrom: 23000,
           modelId: model._id,
           price: 1000,
           sourceName: 'onlinerTest',
@@ -75,23 +75,92 @@ describe('Ad', () => {
       await Mark.remove({ name: 'MarkTest' });
     });
     describe('Services', () => {
-      it('shoud ne return array of ads', async () => {
+      it('should be return array of ads', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString()
+        });
+        ads[1].should.have.property('mark').equal('MarkTest');
+        ads[1].should.have.property('model').equal('ModelTest');
+        ads[1].should.have.property('bodyType').equal('BodyTest');
+        ads.should.have.lengthOf(3);
+      });
+
+      it('should be works with only min-max mileFrom values', async () => {
         const mark = await Mark.findOne();
         const ads = await AdService.getAdsByFilter({
           markId: mark._id.toString(),
-          maxPrice: 1100,
-          maxYear: 2018,
-          minMileFrom: 1000,
-          minPrice: 900,
-          minYear: 2000
+          maxMileFrom: 22000,
+          minMileFrom: 1000
         });
-        ads[0].should.have.property('mark').equal('MarkTest');
-        ads[0].should.have.property('model').equal('ModelTest');
-        ads[0].should.have.property('bodyType').equal('BodyTest');
         ads[0].should.have.property('mileFrom').equal(20000);
+        ads.should.have.lengthOf(2);
+      });
+      it('should be works with only max mileFrom value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          maxMileFrom: 22000
+        });
+        ads[0].should.have.property('mileFrom').equal(20000);
+      });
+      it('should be works with only min mileFrom value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          minMileFrom: 10000
+        });
+        ads[0].should.have.property('mileFrom').equal(20000);
+      });
+      it('should be works with only min-max price values', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          maxPrice: 1200,
+          minPrice: 800
+        });
         ads[0].should.have.property('price').equal(1000);
+      });
+      it('should be works with only max price value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          maxPrice: 1100
+        });
+        ads[0].should.have.property('price').equal(1000);
+      });
+      it('should be works with only min price value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          minPrice: 800
+        });
+        ads[0].should.have.property('price').equal(1000);
+      });
+      it('should be works with only min-max year values', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          maxYear: 2017,
+          minYear: 2008
+        });
         ads[0].should.have.property('year').equal(2010);
-        ads.should.have.lengthOf(3);
+      });
+      it('should be works with only max year value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          maxYear: 2017
+        });
+        ads[0].should.have.property('year').equal(2010);
+      });
+      it('should be works with only min year value', async () => {
+        const mark = await Mark.findOne();
+        const ads = await AdService.getAdsByFilter({
+          markId: mark._id.toString(),
+          minYear: 2008
+        });
+        ads[0].should.have.property('year').equal(2010);
       });
     });
 
@@ -128,7 +197,9 @@ describe('Ad', () => {
       });
 
       it('should be return failed status if an internal db error occured', async () => {
-        mongoose.Model.aggregate = sinon.stub().returns((callback: any) => callback('Error'));
+        const mongoStub = sinon
+          .stub(mongoose.Model, 'aggregate')
+          .returns((callback: any) => callback('Error'));
         try {
           await chai
             .request(app)
@@ -145,6 +216,7 @@ describe('Ad', () => {
           err.response.should.have.status(HttpStatus.INTERNAL_SERVER_ERROR);
           chai.assert.equal(codeErrors.INTERNAL_DB_ERROR, err.response.body.error.code);
         }
+        mongoStub.restore();
       });
     });
   });

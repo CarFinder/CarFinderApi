@@ -9,9 +9,9 @@ export const getMarks = async (ctx: Koa.Context) => {
   try {
     ctx.status = HttpStatus.OK;
     ctx.body = await FilterService.getAllMarks();
-  } catch (err) {
-    ctx.status = HttpStatus.NO_CONTENT;
-    ctx.body = new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  } catch {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
 
@@ -19,9 +19,9 @@ export const getBodyTypes = async (ctx: Koa.Context) => {
   try {
     ctx.status = HttpStatus.OK;
     ctx.body = await FilterService.getAllBodyTypes();
-  } catch (err) {
-    ctx.status = HttpStatus.NO_CONTENT;
-    ctx.body = new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  } catch {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
 
@@ -29,14 +29,15 @@ export const getModels = async (ctx: Koa.Context) => {
   try {
     if (!ctx.request.body.markId) {
       ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
-      ctx.body.error = new RequestError(codeErrors.REQUIRED_FIELD);
+      ctx.body = { error: new RequestError(codeErrors.REQUIRED_FIELD).data };
       return;
     }
 
+    const models = await FilterService.getAllModelsByMark(ctx.request.body.markId);
     ctx.status = HttpStatus.OK;
-    ctx.body = await FilterService.getAllModelsByMark(ctx.request.body.markId);
-  } catch (err) {
-    ctx.status = HttpStatus.NO_CONTENT;
-    ctx.body = new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+    ctx.body = models;
+  } catch {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
