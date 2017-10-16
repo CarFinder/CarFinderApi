@@ -42,7 +42,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false
+  }
 );
 
 UserSchema.pre('save', function(next) {

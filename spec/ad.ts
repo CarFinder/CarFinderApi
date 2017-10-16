@@ -6,6 +6,7 @@ import * as passport from 'passport';
 import * as sinon from 'sinon';
 import app from './index';
 
+import { codeErrors } from '../src/config/config';
 import { Ad, BodyType, Mark, Model } from '../src/db';
 import { AdService } from '../src/services';
 
@@ -79,6 +80,7 @@ describe('Ad', () => {
         const ads = await AdService.getAdsByFilter({
           markId: mark._id.toString(),
           maxPrice: 1100,
+          maxYear: 2018,
           minMileFrom: 1000,
           minPrice: 900,
           minYear: 2000
@@ -89,6 +91,7 @@ describe('Ad', () => {
         ads[0].should.have.property('mileFrom').equal(20000);
         ads[0].should.have.property('price').equal(1000);
         ads[0].should.have.property('year').equal(2010);
+        ads.should.have.lengthOf(3);
       });
     });
 
@@ -108,6 +111,40 @@ describe('Ad', () => {
         const ads = res.body;
         res.should.have.status(HttpStatus.OK);
         ads.should.have.lengthOf(2);
+      });
+
+      it('should be return failed status if do not send required field', async () => {
+        try {
+          await chai
+            .request(app)
+            .post('/api/ad')
+            .set('content-type', 'application/json')
+            .send({});
+          chai.assert.fail('Test failed');
+        } catch (err) {
+          err.response.should.have.status(HttpStatus.UNPROCESSABLE_ENTITY);
+          chai.assert.equal(codeErrors.REQUIRED_FIELD, err.response.body.error.code);
+        }
+      });
+
+      it('should be return failed status if an internal db error occured', async () => {
+        mongoose.Model.aggregate = sinon.stub().returns((callback: any) => callback('Error'));
+        try {
+          await chai
+            .request(app)
+            .post('/api/ad')
+            .set('content-type', 'application/json')
+            .send({
+              filter: {
+                markId,
+                minMileFrom: 1000
+              }
+            });
+          chai.assert.fail('Test failed');
+        } catch (err) {
+          err.response.should.have.status(HttpStatus.INTERNAL_SERVER_ERROR);
+          chai.assert.equal(codeErrors.INTERNAL_DB_ERROR, err.response.body.error.code);
+        }
       });
     });
   });
