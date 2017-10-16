@@ -84,7 +84,8 @@ describe('Ad', () => {
         const ads = await AdService.getAdsByFilter({
           bodyTypeId: bodyTypeId.toString(),
           markId: mark._id.toString(),
-          modelId: modelId.toString()
+          modelId: modelId.toString(),
+          sourceName: 'onlinerTest'
         });
         ads[1].should.have.property('mark').equal('MarkTest');
         ads[1].should.have.property('model').equal('ModelTest');
