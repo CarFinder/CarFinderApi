@@ -9,7 +9,7 @@ import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import config from './config/test';
 import routes from './routes';
-import { testGetMarks } from './utils/';
+import { getMarksAndModels } from './utils/';
 
 const server = new Koa();
 
@@ -21,7 +21,7 @@ mongoose.set('debug', true);
 server.use(bodyParser());
 server.use(passport.initialize());
 server.use(logger());
-//testGetMarks();
+getMarksAndModels();
 
 server.use(routes.routes());
 

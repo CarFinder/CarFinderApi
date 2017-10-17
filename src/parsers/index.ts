@@ -2,7 +2,7 @@ import { Imark, Imodel, IParse } from '../interfaces/parserInterface';
 import { getMarks, getModels } from './onlinerParser/';
 
 export class Api implements IParse {
-  public models: Imodel[];
+  public models: any;
   public marks: Imark[];
   public ads: any[];
   public scrumAndGetMarks: any;
@@ -37,8 +37,8 @@ export class Api implements IParse {
     await this.setMarks(marks);
   }
 
-  public async updateModels(markID: number) {
-    const models: any = await this.scrumAndGetModels(markID);
+  public async updateModels() {
+    const models: any = await this.scrumAndGetModels();
     await this.setModels(models);
   }
 }

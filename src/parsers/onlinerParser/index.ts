@@ -18,14 +18,9 @@ export const getMarks = async () => {
   return arrayOfMarks;
 };
 
-export const getModels = async (markID: number) => {
-  const res = await getPage(
-    `https://ab.onliner.by/#currency=USD&sort[]=last_time_up&page=1&car[0][${markID}]=`
-  );
-  const modelsData = res.match(/var\s+ManufacturesModel \= \[.*\]/g);
-  const arrayOfModels = modelsData[0].match(/[{][^\}]*[}]/g);
-  for (let indexOFCar = 0; indexOFCar < arrayOfModels.length; indexOFCar++) {
-    arrayOfModels[indexOFCar] = JSON.parse(arrayOfModels[indexOFCar]);
-  }
-  return arrayOfModels;
+export const getModels = async () => {
+  const res = await getPage(`https://ab.onliner.by/`);
+  const modelsData: any = res.match(/var\s+ManufacturesModel \= \{.*\}/g);
+  const models: any = modelsData[0].match(/\{.*\}/g);
+  return JSON.parse(models[0]);
 };

@@ -3,6 +3,7 @@ import nodemailer = require('nodemailer');
 import { jwtSecret, mail, url } from '../config/config';
 import { codeErrors } from '../config/config';
 import { Api } from '../parsers/';
+import { updateMarks } from '../services/markService';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
@@ -26,11 +27,26 @@ export const sendMail = (email: string, name: string): void => {
   );
 };
 
-export const testGetMarks = async () => {
+const transformOnlinerMarks = (marks: any) => {
+  const transformedMarks = [];
+  for (const mark of marks) {
+    transformedMarks.push({
+      name: mark.name,
+      onlinerMarkId: mark.id
+    });
+  }
+  return transformedMarks;
+};
+
+export const getMarksAndModels = async () => {
   const api = new Api(1);
   await api.updateMarks();
   const marks = api.getMarks();
-  console.log(marks);
+  const currentMark = marks[0].id;
+  await api.updateModels();
+  const models = api.getModels();
+  const transfomedMarks = transformOnlinerMarks(marks);
+  await updateMarks(transfomedMarks);
 };
 
 const generateEmail = (name: string, email: string, token: string): string => {
@@ -59,9 +75,5 @@ export const decodeToken = (token: string) => {
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
-export const passwordRegExp = new RegExp(
-  '^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$'
-);
-export const emailRegExp = new RegExp(
-  '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$'
-);
+export const passwordRegExp = new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$');
+export const emailRegExp = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$');
