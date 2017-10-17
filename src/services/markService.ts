@@ -11,10 +11,10 @@ export const updateMarks = async (marks: any) => {
     await saveMarks(marks);
     return;
   } else {
+    addNewMarks(knownMarks, marks);
     for (let index = 0; index < knownMarks.length; index++) {
       knownMarks[index] = updateMarkFieds(knownMarks[index], marks);
     }
-    addNewmarks(knownMarks, marks);
     await saveMarks(knownMarks);
     return;
   }
@@ -26,7 +26,7 @@ const saveMarks = async (marks: any) => {
   }
 };
 
-const addNewmarks = (knownMarks: any, marks: any) => {
+const addNewMarks = (knownMarks: any, marks: any) => {
   let isExist;
   for (const mark of marks) {
     isExist = false;

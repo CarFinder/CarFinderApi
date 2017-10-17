@@ -3,6 +3,7 @@ import nodemailer = require('nodemailer');
 import { jwtSecret, mail, url } from '../config/config';
 import { codeErrors } from '../config/config';
 import { Api } from '../parsers/';
+import { updateMarksAndModels } from '../services/';
 import { updateMarks } from '../services/markService';
 import { SecureError } from './errors';
 
@@ -27,6 +28,20 @@ export const sendMail = (email: string, name: string): void => {
   );
 };
 
+export const transformOnlinerModelsData = (models: any, markId: string) => {
+  const transformedModels: any = [];
+  models.forEach((model: any) => {
+    const key = Object.keys(model);
+    const modelName = key[0];
+    transformedModels.push({
+      markId,
+      name: modelName,
+      onlinerId: model[modelName]
+    });
+  });
+  return transformedModels;
+};
+
 const transformOnlinerMarks = (marks: any) => {
   const transformedMarks = [];
   for (const mark of marks) {
@@ -47,6 +62,7 @@ export const getMarksAndModels = async () => {
   const models = api.getModels();
   const transfomedMarks = transformOnlinerMarks(marks);
   await updateMarks(transfomedMarks);
+  await updateMarksAndModels(marks, models);
 };
 
 const generateEmail = (name: string, email: string, token: string): string => {
