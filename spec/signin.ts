@@ -16,11 +16,11 @@ describe('SignIn', () => {
     });
   });
   describe('API', () => {
-    after(done => {
-      User.remove({ email: { $in: ['email@email.com', 'email1@email.com'] } }).then(() => done());
+    after(async () => {
+      await User.remove({ email: { $in: ['email@email.com', 'email1@email.com'] } });
     });
 
-    before(done => {
+    before(async () => {
       const user = {
         email: 'email@email.com',
         name: 'Name',
@@ -33,87 +33,88 @@ describe('SignIn', () => {
         password: 'Password1@'
       };
 
-      User.create([confirmedUser, user], () => done());
+      await User.create([confirmedUser, user]);
     });
 
-    it('should be receive failed status if user does not exist', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'test@email.com',
-          password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(101, res.body.error.code);
-          done();
-        });
+    it('should be receive failed status if user does not exist', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'test@email.com',
+            password: 'Password1@'
+          });
+        chai.assert.fail('Fail');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        chai.assert.equal(101, err.response.body.error.code);
+      }
     });
-    it('should be receive failed status if user does not activated', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email@email.com',
-          password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(103, res.body.error.code);
-          done();
-        });
+    it('should be receive failed status if user does not activated', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email@email.com',
+            password: 'Password1@'
+          });
+        chai.assert.fail('Fail');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        chai.assert.equal(103, err.response.body.error.code);
+      }
     });
-    it('should be receive failed status if incorrect password', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email@email.com',
-          password: 'Password12@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(res.body.error.code, 101);
-          done();
-        });
+    it('should be receive failed status if incorrect password', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email@email.com',
+            password: 'Password12@'
+          });
+        chai.assert.fail('Fail');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        chai.assert.equal(err.response.body.error.code, 101);
+      }
     });
-    it('should be receive succes status if signin is succesed', done => {
-      chai
+    it('should be receive succes status if signin is succesed', async () => {
+      const res = await chai
         .request(app)
         .post('/api/user/signin')
         .set('content-type', 'application/json')
         .send({
           email: 'email1@email.com',
           password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.body.should.have.property('token');
-          res.should.have.status(HttpStatus.OK);
-          done();
         });
+      res.body.should.have.property('token');
+      res.should.have.status(HttpStatus.OK);
     });
-    it('should be receive failed status if user sent invalid data', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email1email.com',
-          password: 'password'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(res.body.error.code, 105);
-          done();
-        });
+    it('should be receive failed status if user sent invalid data', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email1email.com',
+            password: 'password'
+          });
+        chai.assert.fail('Fail');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        chai.assert.equal(err.response.body.error.code, 105);
+      }
     });
   });
 });

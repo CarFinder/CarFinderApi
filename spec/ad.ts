@@ -40,7 +40,7 @@ describe('Ad', () => {
         {
           bodyTypeId: body._id,
           markId: mark._id,
-          mileFrom: 23000,
+          mileFrom: 20000,
           modelId: model._id,
           price: 1000,
           sourceName: 'onlinerTest',
@@ -101,7 +101,6 @@ describe('Ad', () => {
           minMileFrom: 1000
         });
         ads[0].should.have.property('mileFrom').equal(20000);
-        ads.should.have.lengthOf(2);
       });
       it('should be works with only max mileFrom value', async () => {
         const mark = await Mark.findOne();

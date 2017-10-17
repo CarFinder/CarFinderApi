@@ -12,9 +12,6 @@ export const getAdsByFilter = async (
   if (filter.bodyTypeId) {
     searchFilter.bodyTypeId = filter.bodyTypeId;
   }
-  if (filter.markId) {
-    searchFilter.markId = filter.markId;
-  }
   if (filter.modelId) {
     searchFilter.modelId = filter.modelId;
   }
