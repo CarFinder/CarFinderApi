@@ -53,3 +53,5 @@ export const decodeToken = (token: string) => {
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
 export const passwordRegExp = new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$');
 export const emailRegExp = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$');
+export const yearRegExp = new RegExp('^(19[0-9][0-9]|200d|201[0-7])$');
+export const positiveNumsRegExp = new RegExp('^[0-9][0-9]*$');

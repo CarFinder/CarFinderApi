@@ -9,27 +9,15 @@ const FilterSchema = new mongoose.Schema(
     bodyTypeId: {
       type: String
     },
+    kmsFrom: {
+      type: Number
+    },
+    kmsTo: {
+      type: Number
+    },
     markId: {
       required: true,
       type: String
-    },
-    maxMileFrom: {
-      type: Number
-    },
-    maxPrice: {
-      type: Number
-    },
-    maxYear: {
-      type: Number
-    },
-    minMileFrom: {
-      type: Number
-    },
-    minPrice: {
-      type: Number
-    },
-    minYear: {
-      type: Number
     },
     modelId: {
       type: String
@@ -38,9 +26,21 @@ const FilterSchema = new mongoose.Schema(
       required: true,
       type: String
     },
+    priceFrom: {
+      type: Number
+    },
+    priceTo: {
+      type: Number
+    },
     userId: {
       required: true,
       type: String
+    },
+    yearFrom: {
+      type: Number
+    },
+    yearTo: {
+      type: Number
     }
   },
   { versionKey: false }

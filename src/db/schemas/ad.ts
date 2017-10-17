@@ -16,12 +16,12 @@ const AdSchema = new mongoose.Schema(
     images: {
       type: Array
     },
+    kms: {
+      type: Number
+    },
     markId: {
       required: true,
       type: String
-    },
-    mileFrom: {
-      type: Number
     },
     modelId: {
       required: true,

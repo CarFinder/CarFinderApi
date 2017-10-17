@@ -45,8 +45,8 @@ export const getByFilter = async (
         bodyType: { $first: '$bodyDocument.name' },
         description: { $first: '$description' },
         images: { $first: '$images' },
+        kms: { $first: '$kms' },
         mark: { $first: '$markDocument.name' },
-        mileFrom: { $first: '$mileFrom' },
         model: { $first: '$modelDocument.name' },
         price: { $first: '$price' },
         sourceName: { $first: '$sourceName' },
@@ -57,5 +57,5 @@ export const getByFilter = async (
   ])
     .limit(limit || 20)
     .skip(skip || 0)
-    .sort(sort || '-modelId')) as IAdModel[];
+    .sort(sort || 'price')) as IAdModel[];
 };

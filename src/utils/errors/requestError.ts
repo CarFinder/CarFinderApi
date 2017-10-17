@@ -13,6 +13,11 @@ export default class RequestError extends Error {
           type: 'Request Error'
         };
         break;
+      case codeErrors.VALIDATION_ERROR:
+        this.data = {
+          code: codeErrors.VALIDATION_ERROR,
+          type: 'Request Error'
+        };
     }
   }
 }

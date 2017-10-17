@@ -1,69 +1,68 @@
 import { IAdModel } from '../db/';
-import { IFilter } from '../interfaces';
 import { getByFilter } from '../repositories/adRepository';
 
 export const getAdsByFilter = async (
-  filter?: IFilter,
+  filter?: any,
   limit?: number,
   skip?: number,
   sort?: string
 ): Promise<IAdModel[]> => {
   const searchFilter: any = {};
   if (filter.bodyTypeId) {
-    searchFilter.bodyTypeId = filter.bodyTypeId;
+    searchFilter.bodyTypeId = { $in: [...filter.bodyTypeIds] };
   }
   if (filter.modelId) {
-    searchFilter.modelId = filter.modelId;
+    searchFilter.modelId = { $in: [...filter.modelIds] };
   }
   if (filter.sourceName) {
     searchFilter.sourceName = filter.sourceName;
   }
-  if (filter.minPrice && !filter.maxPrice) {
+  if (filter.priceFrom && !filter.priceTo) {
     searchFilter.price = {
-      $gt: filter.minPrice
+      $gt: filter.priceFrom
     };
   }
-  if (!filter.minPrice && filter.maxPrice) {
+  if (!filter.priceFrom && filter.priceTo) {
     searchFilter.price = {
-      $lt: filter.maxPrice
+      $lt: filter.priceTo
     };
   }
-  if (filter.minPrice && filter.maxPrice) {
+  if (filter.priceFrom && filter.priceTo) {
     searchFilter.price = {
-      $gt: filter.minPrice,
-      $lt: filter.maxPrice
+      $gt: filter.priceFrom,
+      $lt: filter.priceTo
     };
   }
-  if (filter.minMileFrom && !filter.maxMileFrom) {
-    searchFilter.mileFrom = {
-      $gt: filter.minMileFrom
+  if (filter.kmsFrom && !filter.kmsTo) {
+    searchFilter.kms = {
+      $gt: filter.kmsFrom
     };
   }
-  if (!filter.minMileFrom && filter.maxMileFrom) {
-    searchFilter.mileFrom = {
-      $lt: filter.maxMileFrom
+  if (!filter.kmsFrom && filter.kmsTo) {
+    searchFilter.kms = {
+      $lt: filter.kmsTo
     };
   }
-  if (filter.minMileFrom && filter.maxMileFrom) {
-    searchFilter.mileFrom = {
-      $gt: filter.minMileFrom,
-      $lt: filter.maxMileFrom
+  if (filter.kmsFrom && filter.kmsTo) {
+    searchFilter.kms = {
+      $gt: filter.kmsFrom,
+      $lt: filter.kmsTo
     };
   }
-  if (filter.minYear && !filter.maxYear) {
+  if (filter.yearFrom && !filter.yearTo) {
     searchFilter.year = {
-      $gt: filter.minYear
+      $gt: filter.yearFrom
     };
   }
-  if (!filter.minYear && filter.maxYear) {
+  if (!filter.yearFrom && filter.yearTo) {
     searchFilter.year = {
-      $lt: filter.maxYear
+      $lt: filter.yearTo
     };
   }
-  if (filter.minYear && filter.maxYear) {
+  if (filter.yearFrom && filter.yearTo) {
     searchFilter.year = {
-      $gt: filter.minYear,
-      $lt: filter.maxYear
+      $gt: filter.yearFrom,
+      $lt: filter.yearTo
     };
   }
   return await getByFilter(searchFilter, limit, skip, sort);
