@@ -59,7 +59,6 @@ export const forgotPassword = async (ctx: Koa.Context) => {
     }
     await sendRestorePasswordEmail(userData.email);
     ctx.status = HttpStatus.OK;
-    ctx.body = {};
   } catch (error) {
     ctx.status = HttpStatus.UNAUTHORIZED;
     ctx.body = { error: error.data };
@@ -77,7 +76,6 @@ export const restorePassword = async (ctx: Koa.Context) => {
     }
     await restoreUserPassword(userData);
     ctx.status = HttpStatus.OK;
-    ctx.body = {};
   } catch (error) {
     ctx.status = HttpStatus.UNAUTHORIZED;
     ctx.body = { error: error.data };

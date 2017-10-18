@@ -68,9 +68,9 @@ UserSchema.pre('save', function(next) {
   });
 });
 
-UserSchema.post('save', function() {
+UserSchema.post('save', async function() {
   const user = this;
-  sendMail(this.email, this.name, emailActions.CONFIRM_REGISTRATION);
+  await sendMail(this.email, this.name, emailActions.CONFIRM_REGISTRATION);
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {
