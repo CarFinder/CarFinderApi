@@ -23,3 +23,8 @@ export const codeErrors = {
   REQUIRED_FIELD: 110,
   VALIDATION_ERROR: 105
 };
+
+export const emailActions = {
+  CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
+  RESTORE_PASSWORD: 'RESTORE_PASSWORD'
+};

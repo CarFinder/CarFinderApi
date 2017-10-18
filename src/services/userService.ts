@@ -1,7 +1,8 @@
-import { codeErrors } from '../config/config';
+import { codeErrors, emailActions } from '../config/config';
 import { IUser } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
-import { DatabaseError } from '../utils/errors';
+import { DatabaseError, SecureError } from '../utils/errors';
+import { encryptPassword, sendMail } from '../utils/index';
 
 export const register = async (payload: IUser) => {
   try {
@@ -63,4 +64,27 @@ export const getUser = (email: string, done: any) => {
     .catch(err => {
       done(err);
     });
+};
+
+export const sendPasswordEmail = async (email: string) => {
+  try {
+    const user = await get(email);
+    sendMail(user.email, user.name, emailActions.RESTORE_PASSWORD);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const restorePassword = async (password: string, email: string) => {
+  try {
+    const encryptedPassword = await encryptPassword(password);
+    const payload = {
+      $set: {
+        password: encryptedPassword
+      }
+    };
+    await update(email, payload);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
 };

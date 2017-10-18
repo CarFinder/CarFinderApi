@@ -1,19 +1,20 @@
+import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
-import { jwtSecret, mail, url } from '../config/config';
-import { codeErrors } from '../config/config';
+import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
-export const sendMail = (email: string, name: string): void => {
+export const sendMail = (email: string, name: string, action: string): void => {
   const token: any = getToken({ email });
-  const html = generateEmail(name, email, token);
+  const html = generateEmail(name, email, token, action);
+  const subject = getEmailSubject(action);
   transport.sendMail(
     {
       from: 'Car Finder',
       html,
-      subject: 'Confirm registration',
+      subject,
       to: email
     },
     (err, info) => {
@@ -25,14 +26,36 @@ export const sendMail = (email: string, name: string): void => {
   );
 };
 
-const generateEmail = (name: string, email: string, token: string): string => {
-  return `
-  <div style="text-align: center;">
-     <h1>Hi, ${name}!</h1>
-     <p>To use CarFinder service, you should to follow the link.Best regards,CarFinder company :) </p>
-     <a href="http://${url}/confirmation/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Confirm</a>
-  </div>
-  `;
+const generateEmail = (name: string, email: string, token: string, action: string): string => {
+  switch (action) {
+    case emailActions.CONFIRM_REGISTRATION:
+      return `
+    <div style="text-align: center;">
+       <h1>Hi, ${name}!</h1>
+       <p>To use CarFinder service, you should to follow the link.Best regards,CarFinder company :) </p>
+       <a href="http://${url}/confirmation/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Confirm</a>
+    </div>
+    `;
+    case emailActions.RESTORE_PASSWORD:
+      return `
+    <div style="text-align: center;">
+       <h1>Hi, ${name}!</h1>
+       <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+       <p>Please click on the following link, or paste this into your browser to complete the process</p>
+       <a href="http://${url}/restore/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Restore password</a>
+       <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    </div>
+    `;
+  }
+};
+
+const getEmailSubject = (action: string) => {
+  switch (action) {
+    case emailActions.CONFIRM_REGISTRATION:
+      return 'Confirm your registration';
+    case emailActions.RESTORE_PASSWORD:
+      return 'CarFinder Password Reset';
+  }
 };
 
 export const getToken = (data: any) => {
@@ -48,6 +71,14 @@ export const decodeToken = (token: string) => {
     decoded = res;
   });
   return decoded;
+};
+
+export const encryptPassword = async (password: string) => {
+  let encryptedPassword: string;
+  let salt: string;
+  salt = bcrypt.genSaltSync(10);
+  encryptedPassword = bcrypt.hashSync(password, salt);
+  return encryptedPassword;
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
