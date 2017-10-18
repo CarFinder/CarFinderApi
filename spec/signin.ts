@@ -1,4 +1,5 @@
 import * as chai from 'chai';
+import { assert, expect } from 'chai';
 import chaiHttp = require('chai-http');
 import * as HttpStatus from 'http-status-codes';
 import app from './index';
@@ -12,15 +13,15 @@ describe('SignIn', () => {
     it('should be able to generate jwt', () => {
       const token =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4';
-      chai.assert.equal(token, getToken({ email: 'pupkin@mail.com' }));
+      assert.equal(token, getToken({ email: 'pupkin@mail.com' }));
     });
   });
   describe('API', () => {
-    after(done => {
-      User.remove({ email: { $in: ['email@email.com', 'email1@email.com'] } }).then(() => done());
+    after(async () => {
+      await User.remove({ email: { $in: ['email@email.com', 'email1@email.com'] } });
     });
 
-    before(done => {
+    before(async () => {
       const user = {
         email: 'email@email.com',
         name: 'Name',
@@ -33,87 +34,88 @@ describe('SignIn', () => {
         password: 'Password1@'
       };
 
-      User.create([confirmedUser, user], () => done());
+      await User.create([confirmedUser, user]);
     });
 
-    it('should be receive failed status if user does not exist', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'test@email.com',
-          password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(101, res.body.error.code);
-          done();
-        });
+    it('should be receive failed status if user does not exist', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'test@email.com',
+            password: 'Password1@'
+          });
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        assert.equal(101, err.response.body.error.code);
+      }
     });
-    it('should be receive failed status if user does not activated', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email@email.com',
-          password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(103, res.body.error.code);
-          done();
-        });
+    it('should be receive failed status if user does not activated', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email@email.com',
+            password: 'Password1@'
+          });
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        assert.equal(103, err.response.body.error.code);
+      }
     });
-    it('should be receive failed status if incorrect password', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email@email.com',
-          password: 'Password12@'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(res.body.error.code, 101);
-          done();
-        });
+    it('should be receive failed status if incorrect password', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email@email.com',
+            password: 'Password12@'
+          });
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        assert.equal(err.response.body.error.code, 101);
+      }
     });
-    it('should be receive succes status if signin is succesed', done => {
-      chai
+    it('should be receive succes status if signin is succesed', async () => {
+      const res = await chai
         .request(app)
         .post('/api/user/signin')
         .set('content-type', 'application/json')
         .send({
           email: 'email1@email.com',
           password: 'Password1@'
-        })
-        .end((err, res) => {
-          res.body.should.have.property('token');
-          res.should.have.status(HttpStatus.OK);
-          done();
         });
+      res.body.should.have.property('token');
+      res.should.have.status(HttpStatus.OK);
     });
-    it('should be receive failed status if user sent invalid data', done => {
-      chai
-        .request(app)
-        .post('/api/user/signin')
-        .set('content-type', 'application/json')
-        .send({
-          email: 'email1email.com',
-          password: 'password'
-        })
-        .end((err, res) => {
-          res.should.have.status(HttpStatus.UNAUTHORIZED);
-          res.body.should.have.property('error');
-          chai.assert.equal(res.body.error.code, 105);
-          done();
-        });
+    it('should be receive failed status if user sent invalid data', async () => {
+      try {
+        await chai
+          .request(app)
+          .post('/api/user/signin')
+          .set('content-type', 'application/json')
+          .send({
+            email: 'email1email.com',
+            password: 'password'
+          });
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
+      } catch (err) {
+        err.response.should.have.status(HttpStatus.UNAUTHORIZED);
+        err.response.body.should.have.property('error');
+        assert.equal(err.response.body.error.code, 105);
+      }
     });
   });
 });

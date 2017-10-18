@@ -25,15 +25,16 @@ export interface IMark {
 export interface IFilter {
   bodyTypeId?: string;
   markId: string;
-  maxMileFrom?: number;
-  maxPrice?: number;
-  maxYear?: number;
-  minMileFrom?: number;
-  minPrice?: number;
-  minYear?: number;
+  kmsTo?: number;
+  priceTo?: number;
+  yearTo?: number;
+  kmsFrom?: number;
+  priceFrom?: number;
+  yearFrom?: number;
   modelId?: string;
-  name: string;
-  userId: string;
+  name?: string;
+  userId?: string;
+  sourceName?: string;
 }
 
 export interface IBodyType {
@@ -45,7 +46,7 @@ export interface IAd {
   description?: string;
   images?: string[];
   markId: string;
-  milesFrom?: number;
+  mileFrom?: number;
   modelId: string;
   price?: number;
   sourceName: string;

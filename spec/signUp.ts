@@ -112,7 +112,7 @@ describe('User Registartion', () => {
       .end((err, res) => {
         res.should.have.status(HttpStatus.CONFLICT);
         res.body.should.have.property('error');
-        chai.assert.equal(res.body.error.code, 105);
+        assert.equal(res.body.error.code, 105);
         done();
       });
   });

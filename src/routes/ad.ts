@@ -1,7 +1,9 @@
 import * as Router from 'koa-router';
 
+import { getAds } from '../controllers/adController';
+
 const router = new Router();
 
-router.get('/', async () => global.console.log('do something'));
+router.post('/', getAds);
 
 export default router;

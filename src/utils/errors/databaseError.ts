@@ -1,4 +1,4 @@
-import * as HttpStatus  from "http-status-codes";
+import * as HttpStatus from 'http-status-codes';
 import { codeErrors } from '../../config/config';
 import { IErrorData } from '../../interfaces';
 export default class DatabaseError extends Error {
@@ -11,6 +11,12 @@ export default class DatabaseError extends Error {
         this.data = {
           code: HttpStatus.CONFLICT,
           type: 'Registration Error'
+        };
+        break;
+      case codeErrors.INTERNAL_DB_ERROR:
+        this.data = {
+          code: codeErrors.INTERNAL_DB_ERROR,
+          type: 'Db error'
         };
         break;
     }

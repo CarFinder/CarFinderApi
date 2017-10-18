@@ -1,6 +1,9 @@
 import { IUser } from '../interfaces/index';
 import { decodeToken } from '../utils';
+import * as AdService from './adService';
+import * as FilterService from './filterService';
 import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
+
 import * as UserService from './userService';
 
 export const registerUser = async (payload: IUser) => {
@@ -23,4 +26,4 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export { UserService };
+export { AdService, FilterService, UserService };
