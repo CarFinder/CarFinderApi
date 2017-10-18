@@ -1,8 +1,8 @@
 import { IUser } from '../interfaces/index';
 import { decodeToken } from '../utils';
-import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
 import * as AdService from './adService';
 import * as FilterService from './filterService';
+import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
 
 import * as UserService from './userService';
 
