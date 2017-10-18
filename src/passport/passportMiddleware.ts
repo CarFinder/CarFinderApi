@@ -6,7 +6,7 @@ import { codeErrors } from '../config/config';
 import { emailRegExp, passwordRegExp } from '../utils';
 import { SecureError } from '../utils/errors';
 
-export const jwtLogin = async (ctx: Koa.Context, next: any) => {
+export const jwtLogin = async (ctx: Koa.Context, next?: any) => {
   return passport.authenticate(
     'jwt',
     { session: false },

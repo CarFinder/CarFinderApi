@@ -9,6 +9,16 @@
       "outFiles": ["${workspaceRoot}/dist/src/*.js"],
       "protocol": "inspector",
       "sourceMaps": true
+    },
+    {
+      "name": "Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "args": ["-r", "ts-node/register", "${workspaceRoot}/spec/**/*.ts"],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }

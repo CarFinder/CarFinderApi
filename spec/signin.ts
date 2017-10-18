@@ -1,4 +1,5 @@
 import * as chai from 'chai';
+import { assert, expect } from 'chai';
 import chaiHttp = require('chai-http');
 import * as HttpStatus from 'http-status-codes';
 import app from './index';
@@ -12,7 +13,7 @@ describe('SignIn', () => {
     it('should be able to generate jwt', () => {
       const token =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1cGtpbkBtYWlsLmNvbSJ9.Si2nol4q-7SeMzCkyvm94s45CzP7kx3jG4y9OLdGcv4';
-      chai.assert.equal(token, getToken({ email: 'pupkin@mail.com' }));
+      assert.equal(token, getToken({ email: 'pupkin@mail.com' }));
     });
   });
   describe('API', () => {
@@ -46,11 +47,11 @@ describe('SignIn', () => {
             email: 'test@email.com',
             password: 'Password1@'
           });
-        chai.assert.fail('Fail');
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
       } catch (err) {
         err.response.should.have.status(HttpStatus.UNAUTHORIZED);
         err.response.body.should.have.property('error');
-        chai.assert.equal(101, err.response.body.error.code);
+        assert.equal(101, err.response.body.error.code);
       }
     });
     it('should be receive failed status if user does not activated', async () => {
@@ -63,11 +64,11 @@ describe('SignIn', () => {
             email: 'email@email.com',
             password: 'Password1@'
           });
-        chai.assert.fail('Fail');
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
       } catch (err) {
         err.response.should.have.status(HttpStatus.UNAUTHORIZED);
         err.response.body.should.have.property('error');
-        chai.assert.equal(103, err.response.body.error.code);
+        assert.equal(103, err.response.body.error.code);
       }
     });
     it('should be receive failed status if incorrect password', async () => {
@@ -80,11 +81,11 @@ describe('SignIn', () => {
             email: 'email@email.com',
             password: 'Password12@'
           });
-        chai.assert.fail('Fail');
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
       } catch (err) {
         err.response.should.have.status(HttpStatus.UNAUTHORIZED);
         err.response.body.should.have.property('error');
-        chai.assert.equal(err.response.body.error.code, 101);
+        assert.equal(err.response.body.error.code, 101);
       }
     });
     it('should be receive succes status if signin is succesed', async () => {
@@ -109,11 +110,11 @@ describe('SignIn', () => {
             email: 'email1email.com',
             password: 'password'
           });
-        chai.assert.fail('Fail');
+        assert.fail('No error has been thrown by auth while the parameters were incorrect');
       } catch (err) {
         err.response.should.have.status(HttpStatus.UNAUTHORIZED);
         err.response.body.should.have.property('error');
-        chai.assert.equal(err.response.body.error.code, 105);
+        assert.equal(err.response.body.error.code, 105);
       }
     });
   });

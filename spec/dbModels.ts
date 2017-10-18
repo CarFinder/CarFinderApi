@@ -1,6 +1,6 @@
 // tslint:disable:no-unused-expression
 
-import * as chai from 'chai';
+import { assert, expect } from 'chai';
 
 import { Ad, BodyType, Filter, Mark, Model, User } from '../src/db';
 
@@ -10,12 +10,12 @@ describe('Database Models', () => {
       const ad = new Ad();
 
       ad.validate(err => {
-        chai.expect(err.errors.bodyTypeId).to.exist;
-        chai.expect(err.errors.markId).to.exist;
-        chai.expect(err.errors.modelId).to.exist;
-        chai.expect(err.errors.sourceName).to.exist;
-        chai.expect(err.errors.sourceUrl).to.exist;
-        chai.expect(err.errors.year).to.exist;
+        expect(err.errors.bodyTypeId).to.exist;
+        expect(err.errors.markId).to.exist;
+        expect(err.errors.modelId).to.exist;
+        expect(err.errors.sourceName).to.exist;
+        expect(err.errors.sourceUrl).to.exist;
+        expect(err.errors.year).to.exist;
         done();
       });
     });
@@ -31,7 +31,7 @@ describe('Database Models', () => {
       });
 
       ad.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -42,7 +42,7 @@ describe('Database Models', () => {
       const bodyType = new BodyType();
 
       bodyType.validate(err => {
-        chai.expect(err.errors.name).to.exist;
+        expect(err.errors.name).to.exist;
         done();
       });
     });
@@ -53,7 +53,7 @@ describe('Database Models', () => {
       });
 
       bodyType.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -64,9 +64,9 @@ describe('Database Models', () => {
       const filter = new Filter();
 
       filter.validate(err => {
-        chai.expect(err.errors.markId).to.exist;
-        chai.expect(err.errors.userId).to.exist;
-        chai.expect(err.errors.name).to.exist;
+        expect(err.errors.markId).to.exist;
+        expect(err.errors.userId).to.exist;
+        expect(err.errors.name).to.exist;
         done();
       });
     });
@@ -79,7 +79,7 @@ describe('Database Models', () => {
       });
 
       filter.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -90,7 +90,7 @@ describe('Database Models', () => {
       const mark = new Mark();
 
       mark.validate(err => {
-        chai.expect(err.errors.name).to.exist;
+        expect(err.errors.name).to.exist;
         done();
       });
     });
@@ -101,7 +101,7 @@ describe('Database Models', () => {
       });
 
       mark.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -112,8 +112,8 @@ describe('Database Models', () => {
       const model = new Model();
 
       model.validate(err => {
-        chai.expect(err.errors.markId).to.exist;
-        chai.expect(err.errors.name).to.exist;
+        expect(err.errors.markId).to.exist;
+        expect(err.errors.name).to.exist;
         done();
       });
     });
@@ -125,7 +125,7 @@ describe('Database Models', () => {
       });
 
       model.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -136,9 +136,9 @@ describe('Database Models', () => {
       const user = new User();
 
       user.validate(err => {
-        chai.expect(err.errors.email).to.exist;
-        chai.expect(err.errors.name).to.exist;
-        chai.expect(err.errors.password).to.exist;
+        expect(err.errors.email).to.exist;
+        expect(err.errors.name).to.exist;
+        expect(err.errors.password).to.exist;
         done();
       });
     });
@@ -151,7 +151,7 @@ describe('Database Models', () => {
       });
 
       user.validate(err => {
-        chai.expect(err).to.not.exist;
+        expect(err).to.not.exist;
         done();
       });
     });
@@ -166,11 +166,11 @@ describe('Database Models', () => {
       await user.save();
 
       await user.comparePassword('password', (err: any, isMatching: boolean) => {
-        chai.assert.isTrue(isMatching);
+        assert.isTrue(isMatching);
       });
 
       await user.comparePassword('password1', (err: any, isMatching: boolean) => {
-        chai.assert.isNotTrue(isMatching);
+        assert.isNotTrue(isMatching);
       });
 
       await User.remove({ email: 'test@email.com' });
