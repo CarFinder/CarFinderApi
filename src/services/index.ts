@@ -19,14 +19,14 @@ export const confirmUserEmail = async (payload: any) => {
 };
 
 export const updateMarksAndModels = async (marks: any, models: any) => {
-  await updateMarks(marks);
-  const knownMarks = await getAllMarks();
-  for (const knownMark of knownMarks) {
-    const markId = knownMark.id;
-    const listOfModels = models[knownMark.onlinerMarkId];
+  for (const mark of marks) {
+    const markModel = { name: mark.name };
+    const savedMark: any = await updateMarks(markModel);
+    const markId = savedMark.id;
+    const listOfModels = models[mark.onlinerMarkId];
+    console.log(mark);
     const transformedModels = transformOnlinerModelsData(listOfModels, markId);
     await updateModels(transformedModels);
-    // console.log('\n', knownMark, '\n', transformedModels, '\n');
   }
   return;
 };

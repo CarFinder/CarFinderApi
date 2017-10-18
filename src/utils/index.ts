@@ -30,13 +30,15 @@ export const sendMail = (email: string, name: string): void => {
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
   const transformedModels: any = [];
+  if (!models) {
+    return [];
+  }
   models.forEach((model: any) => {
     const key = Object.keys(model);
     const modelName = key[0];
     transformedModels.push({
       markId,
-      name: modelName,
-      onlinerId: model[modelName]
+      name: modelName
     });
   });
   return transformedModels;
@@ -61,8 +63,7 @@ export const getMarksAndModels = async () => {
   await api.updateModels();
   const models = api.getModels();
   const transfomedMarks = transformOnlinerMarks(marks);
-  await updateMarks(transfomedMarks);
-  await updateMarksAndModels(marks, models);
+  await updateMarksAndModels(transfomedMarks, models);
 };
 
 const generateEmail = (name: string, email: string, token: string): string => {

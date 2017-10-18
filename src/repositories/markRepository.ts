@@ -12,3 +12,7 @@ export const update = async (mark: IMark) => {
 export const getAll = async () => {
   return await Mark.find();
 };
+
+export const getByName = async (name: string) => {
+  return await Mark.findOne({ name });
+};

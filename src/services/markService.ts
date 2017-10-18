@@ -1,23 +1,21 @@
 import { IMarkModel } from '../db/schemas/mark';
-import { getAll, update } from '../repositories/markRepository';
+import { getAll, getByName, update } from '../repositories/markRepository';
 
 export const getAllMarks = async () => {
   return await getAll();
 };
 
-export const updateMarks = async (marks: any) => {
+export const updateMarks = async (mark: any) => {
   const knownMarks: IMarkModel[] = await getAllMarks();
   if (knownMarks.length === 0) {
-    await saveMarks(marks);
-    return;
+    const newMarks = [];
+    newMarks.push(mark);
+    await saveMarks(newMarks);
   } else {
-    addNewMarks(knownMarks, marks);
-    for (let index = 0; index < knownMarks.length; index++) {
-      knownMarks[index] = updateMarkFieds(knownMarks[index], marks);
-    }
+    addNewMark(knownMarks, mark);
     await saveMarks(knownMarks);
-    return;
   }
+  return getByName(mark.name);
 };
 
 const saveMarks = async (marks: any) => {
@@ -26,32 +24,15 @@ const saveMarks = async (marks: any) => {
   }
 };
 
-const addNewMarks = (knownMarks: any, marks: any) => {
-  let isExist;
-  for (const mark of marks) {
-    isExist = false;
-    for (const knownMark of knownMarks) {
-      if (knownMark.name === mark.name) {
-        isExist = true;
-      }
+const addNewMark = (knownMarks: any, mark: any) => {
+  let isExist = false;
+  for (const knownMark of knownMarks) {
+    if (knownMark.name === mark.name) {
+      isExist = true;
     }
-    if (!isExist) {
-      knownMarks.push(mark);
-    }
+  }
+  if (!isExist) {
+    knownMarks.push(mark);
   }
   return knownMarks;
-};
-
-const updateMarkFieds = (currentMark: any, marks: any) => {
-  let selectedMark;
-  let markIndex;
-  for (const mark of marks) {
-    if (currentMark.name === mark.name) {
-      selectedMark = mark;
-      markIndex = marks.indexOf(mark);
-    }
-  }
-  const response = Object.assign(currentMark, selectedMark);
-  marks.splice(markIndex, 1);
-  return response;
 };
