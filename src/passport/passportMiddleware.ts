@@ -55,7 +55,7 @@ export const localLogin = async (ctx: Koa.Context, next: any) => {
         ctx.state.user = {
           email: user.email,
           image: user.image,
-          interfaceLang: user.interfaceLang,
+          interfaceLanguage: user.interfaceLang,
           name: user.name,
           subscription: user.subscription
         };

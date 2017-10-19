@@ -27,7 +27,7 @@ export const getUserData = async (email: string): Promise<IUser> => {
     confirmed: user.confirmed,
     email: user.email,
     image: user.image,
-    interfaceLanguage: user.interfaceLang,
+    interfaceLang: user.interfaceLang,
     name: user.name,
     subscription: user.subscription
   } as IUser;
