@@ -8,8 +8,7 @@ const MarkSchema = new mongoose.Schema({
   name: {
     required: true,
     type: String
-  },
-  onlinerMarkId: Number
+  }
 });
 
 export { MarkSchema };

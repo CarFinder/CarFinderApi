@@ -1,5 +1,6 @@
 import { IUser } from '../interfaces/index';
-import { decodeToken, transformOnlinerModelsData } from '../utils';
+import { decodeToken, getAds, transformAdsData, transformOnlinerModelsData } from '../utils';
+import { updateBodyTypes } from './bodyTypeService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
 import { confirm, getUserData, register } from './userService';
@@ -18,17 +19,24 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export const updateMarksAndModels = async (marks: any, models: any) => {
+export const updateMarksAndModels = async (marks: any, models: any, bodyTypes: any) => {
+  await updateBodyTypes(bodyTypes);
   for (const mark of marks) {
     const markModel = { name: mark.name };
     const savedMark: any = await updateMarks(markModel);
     const markId = savedMark.id;
     const listOfModels = models[mark.onlinerMarkId];
-    console.log(mark);
     const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-    await updateModels(transformedModels);
+    await await updateModels(transformedModels);
+    const ads: any = await getAds(mark.onlinerMarkId);
   }
+
+  // await updateAds(ads, bodyTypes);
   return;
+};
+
+const updateAds = async (ads: any, bodyTypes: any) => {
+  await transformAdsData(ads, bodyTypes);
 };
 
 export { UserService };

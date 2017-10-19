@@ -8,23 +8,22 @@ export const getAllMarks = async () => {
 export const updateMarks = async (mark: any) => {
   const knownMarks: IMarkModel[] = await getAllMarks();
   if (knownMarks.length === 0) {
-    const newMarks = [];
-    newMarks.push(mark);
-    await saveMarks(newMarks);
+    await saveMarks(mark);
   } else {
-    addNewMark(knownMarks, mark);
-    await saveMarks(knownMarks);
+    await addNewMark(knownMarks, mark);
   }
   return getByName(mark.name);
 };
 
-const saveMarks = async (marks: any) => {
-  for (const mark of marks) {
-    await update(mark);
-  }
+const saveMarks = async (mark: any) => {
+  await update(mark);
 };
 
-const addNewMark = (knownMarks: any, mark: any) => {
+export const getMarkByName = async (name: string) => {
+  return await getByName(name);
+};
+
+const addNewMark = async (knownMarks: any, mark: any) => {
   let isExist = false;
   for (const knownMark of knownMarks) {
     if (knownMark.name === mark.name) {
@@ -32,7 +31,6 @@ const addNewMark = (knownMarks: any, mark: any) => {
     }
   }
   if (!isExist) {
-    knownMarks.push(mark);
+    await saveMarks(mark);
   }
-  return knownMarks;
 };

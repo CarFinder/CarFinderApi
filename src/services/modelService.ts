@@ -1,5 +1,5 @@
 import { IModelModel } from '../db/';
-import { getAll, update } from '../repositories/modelRepository';
+import { getAll, getByName, update } from '../repositories/modelRepository';
 
 export const getAllModels = async () => {
   return await getAll();
@@ -7,17 +7,18 @@ export const getAllModels = async () => {
 
 export const updateModels = async (models: any) => {
   const knownModels: IModelModel[] = await getAllModels();
+  const newModels: any = [];
   if (knownModels.length === 0) {
     await saveModels(models);
     return;
   } else {
     for (const model of models) {
-      addNewModel(knownModels, model);
+      addNewModel(knownModels, model, newModels);
     }
-    for (let index = 0; index < knownModels.length; index++) {
-      knownModels[index] = await updateModelFields(knownModels[index], models);
-    }
-    await saveModels(knownModels);
+    // for (let index = 0; index < knownModels.length; index++) {
+    //   knownModels[index] = await updateModelFields(knownModels[index], models);
+    // }
+    await saveModels(newModels);
     return;
   }
 };
@@ -42,7 +43,7 @@ const updateModelFields = (currentModel: any, models: any) => {
   return response;
 };
 
-const addNewModel = (knownModels: any, model: any) => {
+const addNewModel = (knownModels: any, model: any, newModels: any) => {
   let isExist = false;
   for (const knownModel of knownModels) {
     if (knownModel.name === model.name) {
@@ -50,6 +51,10 @@ const addNewModel = (knownModels: any, model: any) => {
     }
   }
   if (!isExist) {
-    knownModels.push(model);
+    newModels.push(model);
   }
+};
+
+export const getModelByName = async (name: string) => {
+  return await getByName(name);
 };

@@ -1,11 +1,14 @@
 import * as jwt from 'jsonwebtoken';
+import * as _ from 'lodash';
 import nodemailer = require('nodemailer');
 import { jwtSecret, mail, url } from '../config/config';
 import { codeErrors } from '../config/config';
 import { Api } from '../parsers/';
-import { getBodyTypes } from '../parsers/onlinerParser';
 import { updateMarksAndModels } from '../services/';
+import { getBodyTypeByName } from '../services/bodyTypeService';
+import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
+import { getModelByName } from '../services/modelService';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
@@ -45,6 +48,12 @@ export const transformOnlinerModelsData = (models: any, markId: string) => {
   return transformedModels;
 };
 
+export const getAds = async (markId: number) => {
+  const api = new Api(1);
+  await api.updateAds(markId);
+  return await api.getAds();
+};
+
 const transformOnlinerMarks = (marks: any) => {
   const transformedMarks = [];
   for (const mark of marks) {
@@ -56,16 +65,48 @@ const transformOnlinerMarks = (marks: any) => {
   return transformedMarks;
 };
 
+export const transformAdsData = async (ads: object, bodyTypes: string[]) => {
+  const transformedAds: any = [];
+  _.forEach(ads, (val, key) => {
+    transformedAds.push({
+      bodyTypeId: val.car.body,
+      description: '',
+      images: val.photos,
+      markName: val.car.manufacturerName,
+      milesFrom: val.car.odometerState,
+      modelName: val.car.model.name,
+      price: 0,
+      sourceName: 'onliner',
+      sourceUrl: 'https://ab.onliner.by/' + val.id,
+      year: val.car.year
+    });
+  });
+  for (const ad of transformedAds) {
+    const bodyName = bodyTypes[ad.bodyTypeId];
+    const bodyType = await getBodyTypeByName(bodyName);
+    const model = await getModelByName(ad.modelName);
+    const mark = await getMarkByName(ad.markName);
+    ad.markId = mark.id;
+    ad.modelId = model.id || null;
+    ad.bodyTypeId = bodyType.id;
+    ad.modelName = undefined;
+    ad.markName = undefined;
+  }
+  console.log(transformedAds);
+  return transformedAds;
+};
+
 export const getMarksAndModels = async () => {
-  // const api = new Api(1);
-  // await api.updateMarks();
-  // const marks = api.getMarks();
-  // const currentMark = marks[0].id;
-  // await api.updateModels();
-  // const models = api.getModels();
-  // const transfomedMarks = transformOnlinerMarks(marks);
-  // await updateMarksAndModels(transfomedMarks, models);
-  getBodyTypes();
+  const api = new Api(1);
+  await api.updateMarks();
+  const marks = api.getMarks();
+  const currentMark = marks[0].id;
+  await api.updateModels();
+  const models = api.getModels();
+  const transfomedMarks = transformOnlinerMarks(marks);
+  await api.updateBodyTypes();
+  const bodyTypes = api.getBodyTypes();
+  await updateMarksAndModels(transfomedMarks, models, bodyTypes);
 };
 
 const generateEmail = (name: string, email: string, token: string): string => {

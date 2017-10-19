@@ -1,3 +1,6 @@
+import axios from 'axios';
+import FormData = require('form-data');
+import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
 
 const getPage = async (url: string) => {
@@ -41,10 +44,24 @@ export const getBodyTypes = async () => {
     const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
     // match type id for onliner
     const idMatch = item.match(/\d/g);
-    bodyTypes.push({
-      type: typeMatch[0],
-      typeOnlinerId: idMatch[0]
-    });
+    bodyTypes[idMatch[0]] = typeMatch[0];
   }
+  // remove empty item
+  bodyTypes.shift();
   return bodyTypes;
+};
+
+export const getAdsForCurrentModel = async (modelId: number) => {
+  const carModel = 'car[0][' + 88 + ']';
+  const form = new FormData();
+  form.append('car[0][88', '');
+  form.append('currency', 'USD');
+  form.append('page', 1);
+  form.append('sort[]', 'last_time_up');
+  // const res:any = await
+  const res: any = fetch('https://ab.onliner.by/search', { method: 'POST', body: form });
+  const data: any = await res.json();
+  console.log(res.advertisements);
+  // console.log(res);
+  return;
 };

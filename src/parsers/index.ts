@@ -1,18 +1,23 @@
 import { Imark, Imodel, IParse } from '../interfaces/parserInterface';
-import { getMarks, getModels } from './onlinerParser/';
+import * as onliner from './onlinerParser/';
 
 export class Api implements IParse {
   public models: any;
   public marks: Imark[];
-  public ads: any[];
+  public ads: any;
+  public bodyTypes: string[];
   public scrumAndGetMarks: any;
+  public scrumAndGetBodyTypes: any;
   public scrumAndGetModels: any;
+  public scrumAndGetAds: any;
 
   constructor(codeOfSource: number) {
     switch (codeOfSource) {
       case 1:
-        this.scrumAndGetMarks = getMarks;
-        this.scrumAndGetModels = getModels;
+        this.scrumAndGetMarks = onliner.getMarks;
+        this.scrumAndGetModels = onliner.getModels;
+        this.scrumAndGetAds = onliner.getAdsForCurrentModel;
+        this.scrumAndGetBodyTypes = onliner.getBodyTypes;
     }
   }
 
@@ -32,6 +37,22 @@ export class Api implements IParse {
     return this.marks;
   }
 
+  public setAds(ads: any) {
+    this.ads = ads;
+  }
+
+  public getAds() {
+    return this.ads;
+  }
+
+  public setBodyTypes(bodyTypes: string[]) {
+    this.bodyTypes = bodyTypes;
+  }
+
+  public getBodyTypes() {
+    return this.bodyTypes;
+  }
+
   public async updateMarks() {
     const marks: any = await this.scrumAndGetMarks();
     await this.setMarks(marks);
@@ -40,5 +61,15 @@ export class Api implements IParse {
   public async updateModels() {
     const models: any = await this.scrumAndGetModels();
     await this.setModels(models);
+  }
+
+  public async updateAds(markId: number) {
+    const ads: any = await this.scrumAndGetAds(markId);
+    await this.setAds(ads);
+  }
+
+  public async updateBodyTypes() {
+    const types = await this.scrumAndGetBodyTypes();
+    await this.setBodyTypes(types);
   }
 }
