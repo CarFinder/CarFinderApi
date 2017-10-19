@@ -1,5 +1,6 @@
 import { IUser } from '../interfaces/index';
 import { decodeToken, getAds, transformAdsData, transformOnlinerModelsData } from '../utils';
+import { updateAds } from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
@@ -29,14 +30,10 @@ export const updateMarksAndModels = async (marks: any, models: any, bodyTypes: a
     const transformedModels = transformOnlinerModelsData(listOfModels, markId);
     await await updateModels(transformedModels);
     const ads: any = await getAds(mark.onlinerMarkId);
+    const markAds = await transformAdsData(markId, ads, bodyTypes);
+    await updateAds(markAds);
   }
-
-  // await updateAds(ads, bodyTypes);
   return;
-};
-
-const updateAds = async (ads: any, bodyTypes: any) => {
-  await transformAdsData(ads, bodyTypes);
 };
 
 export { UserService };

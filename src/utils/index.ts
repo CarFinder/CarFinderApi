@@ -65,14 +65,14 @@ const transformOnlinerMarks = (marks: any) => {
   return transformedMarks;
 };
 
-export const transformAdsData = async (ads: object, bodyTypes: string[]) => {
+export const transformAdsData = async (markId: string, ads: object, bodyTypes: string[]) => {
   const transformedAds: any = [];
   _.forEach(ads, (val, key) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
       description: '',
       images: val.photos,
-      markName: val.car.manufacturerName,
+      markId,
       milesFrom: val.car.odometerState,
       modelName: val.car.model.name,
       price: 0,
@@ -84,15 +84,22 @@ export const transformAdsData = async (ads: object, bodyTypes: string[]) => {
   for (const ad of transformedAds) {
     const bodyName = bodyTypes[ad.bodyTypeId];
     const bodyType = await getBodyTypeByName(bodyName);
-    const model = await getModelByName(ad.modelName);
-    const mark = await getMarkByName(ad.markName);
-    ad.markId = mark.id;
-    ad.modelId = model.id || null;
+    let modelId;
+    try {
+      const model = await getModelByName(ad.modelName);
+      modelId = model.id;
+    } catch (e) {
+      modelId = 'unknown';
+    }
+    const images: any = [];
+    ad.images.forEach((item: any) => {
+      images.push(item.images.original);
+    });
+    ad.images = images;
+    ad.modelId = modelId;
     ad.bodyTypeId = bodyType.id;
-    ad.modelName = undefined;
-    ad.markName = undefined;
+    delete ad.modelName;
   }
-  console.log(transformedAds);
   return transformedAds;
 };
 

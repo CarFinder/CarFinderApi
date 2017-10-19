@@ -8,6 +8,7 @@ const getPage = async (url: string) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'networkidle' });
   const content = page.content();
+
   return content;
 };
 
@@ -37,31 +38,39 @@ export const getBodyTypes = async () => {
   res = res.replace(/ /g, '');
   // match all structure constructions of body types select
   const listOfTypes: any = res.match(
-    /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d"\>[\r\n]*.*/g
+    /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d+"\>[\r\n]*.*/g
   );
   for (const item of listOfTypes) {
     // match all types
     const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
     // match type id for onliner
-    const idMatch = item.match(/\d/g);
+    const idMatch = item.match(/\d+/g);
     bodyTypes[idMatch[0]] = typeMatch[0];
   }
-  // remove empty item
-  bodyTypes.shift();
   return bodyTypes;
 };
 
 export const getAdsForCurrentModel = async (modelId: number) => {
-  const carModel = 'car[0][' + 88 + ']';
-  const form = new FormData();
-  form.append('car[0][88', '');
-  form.append('currency', 'USD');
-  form.append('page', 1);
-  form.append('sort[]', 'last_time_up');
-  // const res:any = await
-  const res: any = fetch('https://ab.onliner.by/search', { method: 'POST', body: form });
-  const data: any = await res.json();
-  console.log(res.advertisements);
-  // console.log(res);
-  return;
+  const carModel = 'car[0][' + modelId + ']';
+  let count = 1;
+  let response;
+  const ads: any = {};
+  do {
+    const form = new FormData();
+    form.append(carModel, '');
+    form.append('currency', 'USD');
+    form.append('page', count);
+    form.append('sort[]', 'last_time_up');
+    // rude hack
+    response = await fetch('https://ab.onliner.by/search', { method: 'POST', body: form })
+      .then(res => res.json())
+      .then(json => json);
+    if (response.result.advertisements) {
+      Object.assign(ads, response.result.advertisements);
+    }
+
+    count++;
+  } while (response.result.advertisements);
+
+  return ads;
 };
