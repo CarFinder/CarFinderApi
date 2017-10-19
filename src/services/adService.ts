@@ -8,12 +8,12 @@ export const getAdsByFilter = async (
   sort?: any
 ): Promise<IAdModel[]> => {
   const searchFilter: any = {};
-  let sortParams;
+  let sortParams = null;
   if (filter.bodyTypeId) {
-    searchFilter.bodyTypeId = { $in: [...filter.bodyTypeIds] };
+    searchFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
   }
   if (filter.modelId) {
-    searchFilter.modelId = { $in: [...filter.modelIds] };
+    searchFilter.modelId = { $in: [...filter.modelId] };
   }
   if (filter.sourceName) {
     searchFilter.sourceName = filter.sourceName;
@@ -69,5 +69,5 @@ export const getAdsByFilter = async (
   if (sort) {
     sortParams = { [sort.field]: sort.sort };
   }
-  return await getByFilter(searchFilter, limit, skip, sort);
+  return await getByFilter(searchFilter, limit, skip, sortParams);
 };
