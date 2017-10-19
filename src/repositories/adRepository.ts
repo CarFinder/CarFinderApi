@@ -6,7 +6,7 @@ export const getByFilter = async (
   filter?: any,
   limit?: number,
   skip?: number,
-  sort?: string
+  sort?: any
 ): Promise<IAdModel[]> => {
   return (await Ad.aggregate([
     {
@@ -57,5 +57,5 @@ export const getByFilter = async (
   ])
     .limit(limit || 20)
     .skip(skip || 0)
-    .sort(sort || 'price')) as IAdModel[];
+    .sort(sort || { year: 1 })) as IAdModel[];
 };
