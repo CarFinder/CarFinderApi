@@ -182,7 +182,7 @@ describe('Ad', () => {
     });
 
     describe('requests', () => {
-      it.only('should be return array of ads', async () => {
+      it('should be return array of ads', async () => {
         const res = await chai
           .request(app)
           .post('/api/ad')
