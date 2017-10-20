@@ -12,42 +12,42 @@ export const getByFilter = async (
     {
       $match: filter || {}
     },
-    {
-      $lookup: {
-        as: 'markDocument',
-        foreignField: '_id.str',
-        from: 'marks',
-        localField: 'markId.str'
-      }
-    },
-    {
-      $lookup: {
-        as: 'modelDocument',
-        foreignField: '_id.str',
-        from: 'models',
-        localField: 'modelId.str'
-      }
-    },
-    {
-      $lookup: {
-        as: 'bodyDocument',
-        foreignField: '_id.str',
-        from: 'bodytypes',
-        localField: 'bodyTypeId.str'
-      }
-    },
-    { $unwind: '$bodyDocument' },
-    { $unwind: '$markDocument' },
-    { $unwind: '$modelDocument' },
+    // {
+    //   $lookup: {
+    //     as: 'markDocument',
+    //     foreignField: '_id.str',
+    //     from: 'marks',
+    //     localField: 'markId.str'
+    //   }
+    // },
+    // {
+    //   $lookup: {
+    //     as: 'modelDocument',
+    //     foreignField: '_id.str',
+    //     from: 'models',
+    //     localField: 'modelId.str'
+    //   }
+    // },
+    // {
+    //   $lookup: {
+    //     as: 'bodyDocument',
+    //     foreignField: '_id.str',
+    //     from: 'bodytypes',
+    //     localField: 'bodyTypeId.str'
+    //   }
+    // },
+    // { $unwind: '$bodyDocument' },
+    // { $unwind: '$markDocument' },
+    // { $unwind: '$modelDocument' },
     {
       $group: {
         _id: '$_id',
-        bodyType: { $first: '$bodyDocument.name' },
+        bodyType: { $first: '$bodyTypeId' },
         description: { $first: '$description' },
         images: { $first: '$images' },
         kms: { $first: '$kms' },
-        mark: { $first: '$markDocument.name' },
-        model: { $first: '$modelDocument.name' },
+        mark: { $first: '$markId' },
+        model: { $first: '$modelId' },
         price: { $first: '$price' },
         sourceName: { $first: '$sourceName' },
         sourceUrl: { $first: '$sourceUrl' },
