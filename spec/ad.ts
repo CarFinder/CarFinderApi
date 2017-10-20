@@ -198,9 +198,9 @@ describe('Ad', () => {
         res.should.have.status(HttpStatus.OK);
         ads.should.have.lengthOf(2);
       });
-      it('should be return failed status if an internal db error occured', async () => {
+      it.only('should be return failed status if an internal db error occured', async () => {
         const mongoStub = sinon
-          .stub(mongoose.Model, 'aggregate')
+          .stub(mongoose.Model, 'find')
           .returns((callback: any) => callback('Error'));
         try {
           await chai
