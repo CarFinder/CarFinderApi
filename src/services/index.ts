@@ -26,12 +26,18 @@ export const updateMarksAndModels = async (marks: any, models: any, bodyTypes: a
     const markModel = { name: mark.name };
     const savedMark: any = await updateMarks(markModel);
     const markId = savedMark.id;
-    const listOfModels = models[mark.onlinerMarkId];
-    const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-    await await updateModels(transformedModels);
-    const ads: any = await getAds(mark.onlinerMarkId);
-    const markAds = await transformAdsData(markId, ads, bodyTypes);
-    await updateAds(markAds);
+    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
+      const ads: any = await getAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await updateAds(markAds);
+    } else {
+      const listOfModels = models[mark.onlinerMarkId];
+      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+      await updateModels(transformedModels);
+      const ads: any = await getAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await updateAds(markAds);
+    }
   }
   return;
 };

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import FormData = require('form-data');
+import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
 
@@ -65,8 +66,28 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     response = await fetch('https://ab.onliner.by/search', { method: 'POST', body: form })
       .then(res => res.json())
       .then(json => json);
-    if (response.result.advertisements) {
-      Object.assign(ads, response.result.advertisements);
+    let content = response.result.content;
+    const newAds = response.result.advertisements;
+    if (response.result.content) {
+      // cause there is no positice look behind
+      const descriptions = content.match(/\<p\>([^\<]*)/g);
+
+      // fix cycle if string length === 0 string = next string
+      descriptions.forEach((description: any, index: any) => {
+        const match = description.match(/[^\<p\>]*/g);
+        descriptions[index] = match[3];
+      });
+      content = content.replace(/ /g, '');
+      const prices = content.match(/\d+?(?=\$)/g);
+      const keys = Object.keys(newAds);
+      keys.forEach((key, index) => {
+        newAds[key].price = prices[index];
+        newAds[key].description = descriptions[index];
+      });
+    }
+
+    if (newAds) {
+      Object.assign(ads, newAds);
     }
 
     count++;

@@ -8,7 +8,7 @@ import { updateMarksAndModels } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
-import { getModelByName } from '../services/modelService';
+import { getModelByName, saveNewModel } from '../services/modelService';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
@@ -70,14 +70,14 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
   _.forEach(ads, (val, key) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
-      description: '',
+      description: val.description,
       images: val.photos,
+      kms: val.car.odometerState,
       markId,
-      milesFrom: val.car.odometerState,
       modelName: val.car.model.name,
-      price: 0,
+      price: val.price,
       sourceName: 'onliner',
-      sourceUrl: 'https://ab.onliner.by/' + val.id,
+      sourceUrl: 'https://ab.onliner.by/car/' + val.id,
       year: val.car.year
     });
   });
@@ -89,7 +89,9 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
       const model = await getModelByName(ad.modelName);
       modelId = model.id;
     } catch (e) {
-      modelId = 'unknown';
+      await saveNewModel(ad.modelName, markId);
+      const model = await getModelByName(ad.modelName);
+      modelId = model.id;
     }
     const images: any = [];
     ad.images.forEach((item: any) => {
