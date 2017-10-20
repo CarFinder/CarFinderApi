@@ -46,7 +46,7 @@ export interface IAd {
   description?: string;
   images?: string[];
   markId: string;
-  mileFrom?: number;
+  kms?: number;
   modelId: string;
   price?: number;
   sourceName: string;
