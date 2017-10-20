@@ -2,7 +2,7 @@ import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
 
 import { codeErrors } from '../config/config';
-import { AdService } from '../services/';
+import { AdService, getAds as getAdsFromDb } from '../services/';
 import { DatabaseError, RequestError } from '../utils/errors';
 import { validateFilterRequest } from '../utils/validators';
 
@@ -10,7 +10,7 @@ export const getAds = async (ctx: Koa.Context) => {
   try {
     validateFilterRequest(ctx.request.body);
     const { filter, limit, skip, sort } = ctx.request.body;
-    const ads = await AdService.getAdsByFilter(filter, limit, skip, sort);
+    const ads = await getAdsFromDb(filter, limit, skip, sort);
 
     ctx.status = HttpStatus.OK;
     ctx.body = ads;

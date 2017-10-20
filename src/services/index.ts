@@ -26,4 +26,31 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
+export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
+  const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
+  const length = adsFromDb.length;
+
+  return Promise.all(
+    adsFromDb.map(async ad => {
+      const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
+      const mark = await FilterService.getMarkById(ad.markId);
+      const model = await FilterService.getModelById(ad.modelId);
+
+      return {
+        _id: ad._id,
+        bodyType: bodyType.name,
+        description: ad.description,
+        images: ad.images,
+        kms: ad.kms,
+        mark: mark.name,
+        model: model.name,
+        price: ad.price,
+        sourceName: ad.sourceName,
+        sourceUrl: ad.sourceUrl,
+        year: ad.year
+      };
+    })
+  );
+};
+
 export { AdService, FilterService, UserService };

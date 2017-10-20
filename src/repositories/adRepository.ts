@@ -59,3 +59,15 @@ export const getByFilter = async (
     .skip(skip || 0)
     .sort(sort || { year: 1 })) as IAdModel[];
 };
+
+export const get = async (
+  filter?: any,
+  limit?: number,
+  skip?: number,
+  sort?: any
+): Promise<IAdModel[]> => {
+  return (await Ad.find(filter || {})
+    .limit(limit || 20)
+    .skip(skip || 0)
+    .sort(sort || { year: 1 })) as IAdModel[];
+};
