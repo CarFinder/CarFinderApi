@@ -1,5 +1,6 @@
 import { IUser } from '../interfaces/index';
-import { decodeToken, getAds, transformAdsData, transformOnlinerModelsData } from '../utils';
+import { decodeToken } from '../utils';
+import { getAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import { updateAds } from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import { getAllMarks, updateMarks } from './markService';

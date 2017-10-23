@@ -11,6 +11,11 @@ export const mail = {
   service: 'Gmail'
 };
 
+// execute every 3 day
+// see more adout config in dosc
+
+export const triggerSchedule = '*/3 * *';
+
 export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
 
 export const codeErrors = {
@@ -21,3 +26,7 @@ export const codeErrors = {
   MONGO_DUPLICATE_ERROR: 11000,
   VALIDATION_ERROR: 105
 };
+
+export enum sourceCodes {
+  ONLINER = 1
+}

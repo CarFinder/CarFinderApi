@@ -6,6 +6,8 @@ export class Api implements IParse {
   public marks: Imark[];
   public ads: any;
   public bodyTypes: string[];
+
+  // * this fiels should be changed is we use another source for ads
   public scrumAndGetMarks: any;
   public scrumAndGetBodyTypes: any;
   public scrumAndGetModels: any;
