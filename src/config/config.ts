@@ -2,6 +2,7 @@ import config from './test';
 
 export const db = process.env.DB || config.db;
 export const jwtSecret = process.env.JWT_SECRET || config.jwt_secret;
+export const port = process.env.PORT || config.port;
 
 export const mail = {
   auth: {

@@ -61,7 +61,7 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     form.append(carModel, '');
     form.append('currency', 'USD');
     form.append('page', count);
-    form.append('sort[]', 'last_time_up');
+    form.append('sort[]', '');
     // rude hack
     response = await fetch('https://ab.onliner.by/search', { method: 'POST', body: form })
       .then(res => res.json())

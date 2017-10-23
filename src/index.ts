@@ -8,13 +8,12 @@ import * as jwt from 'koa-jwt';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
-import { triggerSchedule } from './config/config';
+import { db, port, triggerSchedule } from './config/config';
 import config from './config/test';
 import routes from './routes';
 import { getInfo } from './utils/parserUtils';
 
 const server = new Koa();
-
 // run parse api whe server started
 getInfo();
 
@@ -23,7 +22,7 @@ const parse = schedule.scheduleJob(triggerSchedule, () => {
   getInfo();
 });
 
-mongoose.connect(process.env.DB, { useMongoClient: true });
+mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
 
 (mongoose as any).Promise = Bluebird;
@@ -34,4 +33,4 @@ server.use(logger());
 
 server.use(routes.routes());
 
-export const app: any = server.listen(process.env.PORT || config.port);
+export const app: any = server.listen(port);
