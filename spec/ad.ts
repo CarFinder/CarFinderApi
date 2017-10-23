@@ -200,7 +200,7 @@ describe('Ad', () => {
       });
       it('should be return failed status if an internal db error occured', async () => {
         const mongoStub = sinon
-          .stub(mongoose.Model, 'aggregate')
+          .stub(mongoose.Model, 'find')
           .returns((callback: any) => callback('Error'));
         try {
           await chai

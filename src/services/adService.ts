@@ -97,50 +97,50 @@ export const getAds = async (
   }
   if (filter.priceFrom && !filter.priceTo) {
     searchFilter.price = {
-      $gt: filter.priceFrom
+      $gte: filter.priceFrom
     };
   }
   if (!filter.priceFrom && filter.priceTo) {
     searchFilter.price = {
-      $lt: filter.priceTo
+      $lte: filter.priceTo
     };
   }
   if (filter.priceFrom && filter.priceTo) {
     searchFilter.price = {
-      $gt: filter.priceFrom,
-      $lt: filter.priceTo
+      $gte: filter.priceFrom,
+      $lte: filter.priceTo
     };
   }
   if (filter.kmsFrom && !filter.kmsTo) {
     searchFilter.kms = {
-      $gt: filter.kmsFrom
+      $gte: filter.kmsFrom
     };
   }
   if (!filter.kmsFrom && filter.kmsTo) {
     searchFilter.kms = {
-      $lt: filter.kmsTo
+      $lte: filter.kmsTo
     };
   }
   if (filter.kmsFrom && filter.kmsTo) {
     searchFilter.kms = {
-      $gt: filter.kmsFrom,
-      $lt: filter.kmsTo
+      $gte: filter.kmsFrom,
+      $lte: filter.kmsTo
     };
   }
   if (filter.yearFrom && !filter.yearTo) {
     searchFilter.year = {
-      $gt: filter.yearFrom
+      $gte: filter.yearFrom
     };
   }
   if (!filter.yearFrom && filter.yearTo) {
     searchFilter.year = {
-      $lt: filter.yearTo
+      $lte: filter.yearTo
     };
   }
   if (filter.yearFrom && filter.yearTo) {
     searchFilter.year = {
-      $gt: filter.yearFrom,
-      $lt: filter.yearTo
+      $gte: filter.yearFrom,
+      $lte: filter.yearTo
     };
   }
   if (sort) {
