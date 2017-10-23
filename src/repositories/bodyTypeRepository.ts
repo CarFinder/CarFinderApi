@@ -1,6 +1,7 @@
 import { BodyType, IBodyTypeModel } from '../db';
+import { IBodyType } from '../interfaces/';
 
-export const save = async (bodyType: any) => {
+export const save = async (bodyType: IBodyType) => {
   const newBodyType = new BodyType(bodyType);
   newBodyType.save(err => err);
 };

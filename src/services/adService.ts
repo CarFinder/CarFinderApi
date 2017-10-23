@@ -1,11 +1,12 @@
 import { IAdModel } from '../db/';
+import { IAd } from '../interfaces/';
 import { getAll, save } from '../repositories/adRepository';
 
 export const getAllAds = async () => {
   return await getAll();
 };
 
-export const updateAds = async (ads: any) => {
+export const updateAds = async (ads: IAd[]) => {
   // const knownAds: any = await getAllAds();
   // if (knownAds.length === 0) {
   await saveAds(ads);
@@ -19,7 +20,7 @@ export const updateAds = async (ads: any) => {
   // }
 };
 
-const updateAdsFields = async (knownAd: any, ads: any) => {
+const updateAdsFields = async (knownAd: IAd, ads: IAd[]) => {
   let selectedAd;
   for (const ad of ads) {
     if (knownAd.sourceUrl === ad.sourceUrl) {
@@ -29,13 +30,13 @@ const updateAdsFields = async (knownAd: any, ads: any) => {
   return Object.assign(knownAd, selectedAd);
 };
 
-const saveAds = async (ads: any) => {
+const saveAds = async (ads: IAd[]) => {
   for (const ad of ads) {
     await save(ad);
   }
 };
 
-const addNewAds = (knownAds: any, ads: any) => {
+const addNewAds = (knownAds: IAd[], ads: IAd[]) => {
   let isExist;
   const newAds = [];
   for (const ad of ads) {

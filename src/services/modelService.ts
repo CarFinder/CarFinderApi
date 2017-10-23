@@ -1,13 +1,14 @@
 import { IModelModel } from '../db/';
+import { IModel } from '../interfaces/';
 import { getAll, getByName, update } from '../repositories/modelRepository';
 
 export const getAllModels = async () => {
   return await getAll();
 };
 
-export const updateModels = async (models: any) => {
+export const updateModels = async (models: IModel[]) => {
   const knownModels: IModelModel[] = await getAllModels();
-  const newModels: any = [];
+  const newModels: IModel[] = [];
   if (knownModels.length === 0) {
     await saveModels(models);
     return;
@@ -20,13 +21,13 @@ export const updateModels = async (models: any) => {
   }
 };
 
-const saveModels = async (models: any) => {
+const saveModels = async (models: IModel[]) => {
   for (const model of models) {
     await update(model);
   }
 };
 
-const addNewModel = (knownModels: any, model: any, newModels: any) => {
+const addNewModel = (knownModels: IModel[], model: IModel, newModels: IModel[]) => {
   let isExist = false;
   for (const knownModel of knownModels) {
     if (knownModel.name === model.name) {

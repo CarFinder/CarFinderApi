@@ -15,7 +15,7 @@ import { getInfo } from './utils/parserUtils';
 
 const server = new Koa();
 // run parse api whe server started
-getInfo();
+// getInfo();
 
 // run sheduled parser task
 const parse = schedule.scheduleJob(triggerSchedule, () => {

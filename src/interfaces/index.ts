@@ -39,6 +39,7 @@ export interface IFilter {
 
 export interface IBodyType {
   name: string;
+  id?: string;
 }
 
 export interface IAd {

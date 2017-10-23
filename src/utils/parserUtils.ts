@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { sourceCodes } from '../config/config';
+import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
 import { updateMarksAndModels } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
@@ -29,7 +30,7 @@ export const getAds = async (markId: number) => {
   return await api.getAds();
 };
 
-const transformOnlinerMarks = (marks: any) => {
+const transformOnlinerMarks = (marks: IOnlinerMark[]) => {
   const transformedMarks: any = [];
   marks.forEach((mark: any) => {
     transformedMarks.push({
@@ -71,8 +72,8 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
       const model = await getModelByName(ad.modelName);
       modelId = model.id;
     }
-    const images: any = [];
-    ad.images.forEach((item: any) => {
+    const images: string[] = [];
+    ad.images.forEach((item: ITransformedAd) => {
       images.push(item.images.original);
     });
     ad.images = images;

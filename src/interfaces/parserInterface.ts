@@ -13,3 +13,32 @@ export interface IParse {
   marks: Imark[];
   ads: any[];
 }
+
+export interface ITransformedAd {
+  bodyTypeId: string;
+  description?: string;
+  images?: IOnlinerImages;
+  markId: string;
+  milesFrom?: number;
+  modelId: string;
+  price?: number;
+  sourceName: string;
+  sourceUrl: string;
+  year: number;
+  modelName?: string;
+}
+
+export interface IOnlinerImages {
+  original?: string;
+  source?: string;
+}
+
+export interface ITransformedMarks {
+  onlinerMarkId?: number;
+  name?: string;
+}
+
+export interface IOnlinerMark {
+  id?: number;
+  name?: string;
+}

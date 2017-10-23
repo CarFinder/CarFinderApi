@@ -1,4 +1,5 @@
 import { IUser } from '../interfaces/index';
+import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
 import { getAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import { updateAds } from './adService';
@@ -21,11 +22,15 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export const updateMarksAndModels = async (marks: any, models: any, bodyTypes: any) => {
+export const updateMarksAndModels = async (
+  marks: ITransformedMarks[],
+  models: any,
+  bodyTypes: string[]
+) => {
   await updateBodyTypes(bodyTypes);
   for (const mark of marks) {
-    const markModel = { name: mark.name };
-    const savedMark: any = await updateMarks(markModel);
+    const markMaket = { name: mark.name };
+    const savedMark: any = await updateMarks(markMaket);
     const markId = savedMark.id;
     if (mark.name === 'BMW' || mark.name === 'Mercedes') {
       const ads: any = await getAds(mark.onlinerMarkId);

@@ -1,4 +1,5 @@
 import { IBodyTypeModel } from '../db/';
+import { IBodyType } from '../interfaces/';
 import { getAll, getByName, save } from '../repositories/bodyTypeRepository';
 
 export const updateBodyTypes = async (bodyTypes: string[]) => {
@@ -12,7 +13,7 @@ const saveBodyType = async (type: string) => {
   await save({ name: type });
 };
 
-const addNew = async (knownBodyTypes: any, type: string) => {
+const addNew = async (knownBodyTypes: IBodyType[], type: string) => {
   let isExist = false;
   for (const knownBodyType of knownBodyTypes) {
     if (knownBodyType.name === type) {

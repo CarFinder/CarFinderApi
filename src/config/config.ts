@@ -13,7 +13,7 @@ export const mail = {
 };
 
 // execute every 3 day
-// see more adout config in dosc
+// see more adout config in dosc for node-schedule
 
 export const triggerSchedule = '*/3 * *';
 
