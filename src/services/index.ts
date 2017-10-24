@@ -9,8 +9,6 @@ import { updateModels } from './modelService';
 import { confirm, getUserData, register } from './userService';
 import * as UserService from './userService';
 
-// write test(mock data) and isert it in DB
-
 export const registerUser = async (payload: IUser) => {
   await register(payload);
 };

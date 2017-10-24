@@ -7,17 +7,7 @@ export const getAllAds = async () => {
 };
 
 export const updateAds = async (ads: IAd[]) => {
-  // const knownAds: any = await getAllAds();
-  // if (knownAds.length === 0) {
   await saveAds(ads);
-  // } else {
-  //   const newAds = addNewAds(knownAds, ads);
-  //   await saveAds(newAds);
-  //   for (let index = 0; index < knownAds.length; index++) {
-  //     knownAds[index] = updateAdsFields(knownAds[index], ads);
-  //   }
-  //   await saveAds(ads);
-  // }
 };
 
 const updateAdsFields = async (knownAd: IAd, ads: IAd[]) => {
