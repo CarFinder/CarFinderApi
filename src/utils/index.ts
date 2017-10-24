@@ -46,6 +46,14 @@ const generateEmail = (name: string, email: string, token: string, action: strin
        <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
     </div>
     `;
+    case emailActions.UPDATE_EMAIL:
+      return `
+  <div style="text-align: center;">
+     <h1>Hi, ${name}!</h1>
+     <p>You are receiving this because you have requested to change your email.</p>
+     <p>Your email was updated successfully.</p>
+  </div>
+  `;
   }
 };
 
@@ -55,6 +63,8 @@ const getEmailSubject = (action: string) => {
       return 'Confirm your registration';
     case emailActions.RESTORE_PASSWORD:
       return 'CarFinder Password Reset';
+    case emailActions.UPDATE_EMAIL:
+      return 'Confirm New Email';
   }
 };
 
