@@ -5,7 +5,8 @@ import {
   confirmEmail,
   forgotPassword,
   restorePassword,
-  signUp
+  signUp,
+  updateProfile
 } from '../controllers/userController';
 import { signin } from '../controllers/userController';
 import '../passport/passport';
@@ -23,5 +24,7 @@ router.post('/signin', localLogin, signin);
 router.post('/forgot', forgotPassword);
 
 router.post('/restore', restorePassword);
+
+router.post('/update', updateProfile);
 
 export default router;
