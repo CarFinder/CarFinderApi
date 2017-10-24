@@ -2,7 +2,15 @@ import { IUser } from '../interfaces/index';
 import { decodeToken } from '../utils';
 import * as AdService from './adService';
 import * as FilterService from './filterService';
-import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
+import {
+  confirm,
+  getUserData,
+  register,
+  restorePassword,
+  sendEmailConfirmation,
+  sendPasswordEmail,
+  updateUserData
+} from './userService';
 
 import * as UserService from './userService';
 
@@ -23,6 +31,15 @@ export const confirmUserEmail = async (payload: any) => {
   const data = decodeToken(payload.token);
   await confirm(data.email);
   const userData = await getUserData(data.email);
+  return userData;
+};
+
+export const updateUserProfile = async (payload: any) => {
+  const data = decodeToken(payload.token);
+  if (payload.email) {
+    await sendEmailConfirmation(data.id, payload.email);
+  }
+  const userData = await updateUserData(data.email, payload);
   return userData;
 };
 

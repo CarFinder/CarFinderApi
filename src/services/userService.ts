@@ -88,3 +88,28 @@ export const restorePassword = async (password: string, email: string) => {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
 };
+
+export const sendEmailConfirmation = async (id: string, email: string) => {
+  try {
+    const user = await get(id);
+    sendMail(email, user.name, emailActions.UPDATE_EMAIL);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const updateUserData = async (email: string, data: any) => {
+  try {
+    const payload = {
+      $set: {
+        email: data.email,
+        image: data.image,
+        interfaceLang: data.interfaceLanguage,
+        name: data.name
+      }
+    };
+    await update(email, payload);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
