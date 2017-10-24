@@ -3,6 +3,8 @@ import FormData = require('form-data');
 import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
+import { codeErrors } from '../../config/config';
+import { ParserError } from '../../utils/errors/';
 
 const getPage = async (url: string) => {
   const browser = await puppeteer.launch();
@@ -62,10 +64,14 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     form.append('currency', 'USD');
     form.append('page', count);
     form.append('sort[]', '');
-    // rude hack
-    response = await fetch('https://ab.onliner.by/search', { method: 'POST', body: form })
-      .then(res => res.json())
-      .then(json => json);
+    try {
+      response = await fetch('https://ab.onliner.by/search', { method: 'POST', body: form })
+        .then(res => res.json())
+        .then(json => json);
+    } catch (e) {
+      throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
+    }
+
     let content = response.result.content;
     const newAds = response.result.advertisements;
     if (response.result.content) {
@@ -74,8 +80,8 @@ export const getAdsForCurrentModel = async (modelId: number) => {
 
       // fix cycle if string length === 0 string = next string
       descriptions.forEach((description: any, index: any) => {
-        const match = description.match(/[^\<p\>]*/g);
-        descriptions[index] = match[3];
+        const match = description.match(/[^\<p\>]+/g);
+        descriptions[index] = match[0];
       });
       content = content.replace(/ /g, '');
       const prices = content.match(/\d+?(?=\$)/g);
