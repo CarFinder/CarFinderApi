@@ -1,3 +1,4 @@
+import AWS = require('aws-sdk');
 import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
@@ -5,6 +6,13 @@ import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
+
+AWS.config.update({
+  accessKeyId: process.env.AWSAccessKeyId,
+  secretAccessKey: process.env.AWSSecretKey
+});
+
+const s3Bucket = new AWS.S3();
 
 export const sendMail = (email: string, name: string, action: string): void => {
   const token: any = getToken({ email });
@@ -89,6 +97,26 @@ export const encryptPassword = async (password: string) => {
   salt = bcrypt.genSaltSync(10);
   encryptedPassword = bcrypt.hashSync(password, salt);
   return encryptedPassword;
+};
+
+export const uploadImage = (payload: any) => {
+  const userData: any = { image: null };
+  const buf = new Buffer(payload.image, 'base64');
+  const params = {
+    ACL: 'public-read',
+    Body: buf,
+    Bucket: 'car-finder',
+    ContentEncoding: 'base64',
+    ContentType: payload.type,
+    Key: payload.imageKey
+  };
+  s3Bucket.putObject(params, (error, data) => {
+    if (error) {
+      throw error;
+    }
+  });
+  userData.image = s3Bucket.getSignedUrl('getObject', params);
+  return userData;
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
