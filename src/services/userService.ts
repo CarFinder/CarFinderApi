@@ -98,10 +98,10 @@ export const restorePassword = async (password: string, email: string) => {
   }
 };
 
-export const sendEmailConfirmation = async (id: string, email: string) => {
+export const sendEmailConfirmation = async (email: string, updatedEmail: string) => {
   try {
-    const user = await get(id);
-    sendMail(email, user.name, emailActions.UPDATE_EMAIL);
+    const user = await get(email);
+    sendMail(updatedEmail, user.name, emailActions.UPDATE_EMAIL);
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }

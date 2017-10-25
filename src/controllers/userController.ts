@@ -87,11 +87,12 @@ export const restorePassword = async (ctx: Koa.Context) => {
 
 export const updateData = async (ctx: Koa.Context) => {
   const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
     if (!emailRegExp.test(userData.email) || !nameRegExp.test(userData.name)) {
       throw new SecureError(codeErrors.VALIDATION_ERROR);
     }
-    const user = await updateUserData(userData);
+    const user = await updateUserData(userData, userToken);
     const token = getToken(user);
     ctx.status = HttpStatus.OK;
     ctx.body = {
@@ -105,8 +106,9 @@ export const updateData = async (ctx: Koa.Context) => {
 
 export const updateSettings = async (ctx: Koa.Context) => {
   const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
-    const user = await updateUserSettings(userData);
+    const user = await updateUserSettings(userData, userToken);
     const token = getToken(user);
     ctx.status = HttpStatus.OK;
     ctx.body = {
@@ -120,8 +122,9 @@ export const updateSettings = async (ctx: Koa.Context) => {
 
 export const updateImage = async (ctx: Koa.Context) => {
   const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
-    const user = await updateUserImage(userData);
+    const user = await updateUserImage(userData, userToken);
     const token = getToken(user);
     ctx.status = HttpStatus.OK;
     ctx.body = {

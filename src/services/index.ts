@@ -35,25 +35,25 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export const updateUserData = async (payload: any) => {
-  const data = decodeToken(payload.token);
+export const updateUserData = async (payload: any, token: any) => {
+  const data = decodeToken(token);
   if (payload.email) {
-    await sendEmailConfirmation(data.id, payload.email);
+    await sendEmailConfirmation(data.email, payload.email);
   }
   await updateUserProfile(data.email, payload);
   const userData = payload.email ? getUserData(payload.email) : getUserData(data.email);
   return userData;
 };
 
-export const updateUserSettings = async (payload: any) => {
-  const data = decodeToken(payload.token);
+export const updateUserSettings = async (payload: any, token: any) => {
+  const data = decodeToken(token);
   await updateUserProfile(data.email, payload);
   const userData = getUserData(data.email);
   return userData;
 };
 
-export const updateUserImage = async (payload: any) => {
-  const data = decodeToken(payload.token);
+export const updateUserImage = async (payload: any, token: any) => {
+  const data = decodeToken(token);
   const image = await updateImage(payload.image);
   await updateUserProfile(data.email, image);
   const userData = getUserData(data.email);
