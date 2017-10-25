@@ -119,6 +119,18 @@ export const uploadImage = (payload: any) => {
   return userData;
 };
 
+export const transformDataForMongo = (data: any) => {
+  const payload = {
+    ...(data.email && { email: data.email }),
+    ...(data.image && { image: data.image }),
+    ...(data.interfaceLanguage && { interfaceLang: data.interfaceLanguage }),
+    ...(data.name && { name: data.name }),
+    ...(data.subscription && { subscription: data.subscription })
+  };
+
+  return payload;
+};
+
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
 export const passwordRegExp = new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$');
 export const emailRegExp = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$');
