@@ -41,3 +41,19 @@ export const getModels = async (ctx: Koa.Context) => {
     ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
+
+export const saveFilter = async (ctx: Koa.Context) => {
+  try {
+    if (!ctx.request.body.data.markId || !ctx.request.body.data.name) {
+      ctx.status = HttpStatus.BAD_REQUEST;
+      ctx.body = { error: new RequestError(codeErrors.REQUIRED_FIELD).data };
+      return;
+    }
+    const token = ctx.request.header.authorization.split(' ')[1];
+    await FilterService.saveSavedSearchFilter(ctx.request.body.data, token);
+    ctx.status = HttpStatus.OK;
+  } catch {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
+  }
+};
