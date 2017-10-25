@@ -2,7 +2,7 @@ import { codeErrors, emailActions } from '../config/config';
 import { IUser } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError, SecureError } from '../utils/errors';
-import { encryptPassword, sendMail } from '../utils/index';
+import { encryptPassword, sendMail, uploadImage } from '../utils/index';
 
 export const register = async (payload: IUser) => {
   try {
@@ -70,6 +70,15 @@ export const sendPasswordEmail = async (email: string) => {
   try {
     const user = await get(email);
     sendMail(user.email, user.name, emailActions.RESTORE_PASSWORD);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const updateImage = async (image: any) => {
+  try {
+    const imageUrl = uploadImage(image);
+    return imageUrl;
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
