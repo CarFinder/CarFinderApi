@@ -8,7 +8,9 @@ import {
   registerUser,
   restoreUserPassword,
   sendRestorePasswordEmail,
-  updateUserProfile
+  updateUserData,
+  updateUserSettings,
+  updateUserImage
 } from '../services/';
 import { emailRegExp, getToken, nameRegExp, passwordRegExp } from '../utils';
 import { SecureError } from '../utils/errors';
@@ -83,16 +85,43 @@ export const restorePassword = async (ctx: Koa.Context) => {
   }
 };
 
-export const updateProfile = async (ctx: Koa.Context) => {
+export const updateData = async (ctx: Koa.Context) => {
   const userData = ctx.request.body;
   try {
-    if (!userData.token) {
-      throw new SecureError(codeErrors.AUTH_ERROR);
-    }
     if (!emailRegExp.test(userData.email) || !nameRegExp.test(userData.name)) {
       throw new SecureError(codeErrors.VALIDATION_ERROR);
     }
-    const user = await updateUserProfile(userData);
+    const user = await updateUserData(userData);
+    const token = getToken(user);
+    ctx.status = HttpStatus.OK;
+    ctx.body = {
+      token
+    };
+  } catch (error) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const updateSettings = async (ctx: Koa.Context) => {
+  const userData = ctx.request.body;
+  try {
+    const user = await updateUserSettings(userData);
+    const token = getToken(user);
+    ctx.status = HttpStatus.OK;
+    ctx.body = {
+      token
+    };
+  } catch (error) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const updateImage = async (ctx: Koa.Context) => {
+  const userData = ctx.request.body;
+  try {
+    const user = await updateUserImage(userData);
     const token = getToken(user);
     ctx.status = HttpStatus.OK;
     ctx.body = {

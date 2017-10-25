@@ -98,14 +98,15 @@ export const sendEmailConfirmation = async (id: string, email: string) => {
   }
 };
 
-export const updateUserData = async (email: string, data: any) => {
+export const updateUserProfile = async (email: string, data: any) => {
   try {
     const payload = {
       $set: {
         email: data.email,
         image: data.image,
         interfaceLang: data.interfaceLanguage,
-        name: data.name
+        name: data.name,
+        subscription: data.subscription
       }
     };
     await update(email, payload);

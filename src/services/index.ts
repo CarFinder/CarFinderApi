@@ -9,7 +9,7 @@ import {
   restorePassword,
   sendEmailConfirmation,
   sendPasswordEmail,
-  updateUserData
+  updateUserProfile
 } from './userService';
 
 import * as UserService from './userService';
@@ -34,12 +34,27 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export const updateUserProfile = async (payload: any) => {
+export const updateUserData = async (payload: any) => {
   const data = decodeToken(payload.token);
   if (payload.email) {
     await sendEmailConfirmation(data.id, payload.email);
   }
-  const userData = await updateUserData(data.email, payload);
+  await updateUserProfile(data.email, payload);
+  const userData = payload.email ? getUserData(payload.email) : getUserData(data.email);
+  return userData;
+};
+
+export const updateUserSettings = async (payload: any) => {
+  const data = decodeToken(payload.token);
+  await updateUserProfile(data.email, payload);
+  const userData = getUserData(data.email);
+  return userData;
+};
+
+export const updateUserImage = async (payload: any) => {
+  const data = decodeToken(payload.token);
+  await updateUserProfile(data.email, payload);
+  const userData = getUserData(data.email);
   return userData;
 };
 
