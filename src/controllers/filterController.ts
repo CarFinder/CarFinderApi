@@ -53,7 +53,7 @@ export const saveFilter = async (ctx: Koa.Context) => {
     await FilterService.saveSavedSearchFilter(ctx.request.body.data, token);
     ctx.status = HttpStatus.OK;
   } catch (error) {
-    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.status = HttpStatus.BAD_REQUEST;
     ctx.body = { error: error.data };
   }
 };
@@ -65,7 +65,7 @@ export const getSavedFilters = async (ctx: Koa.Context) => {
     ctx.status = HttpStatus.OK;
     ctx.body = savedFilters;
   } catch (error) {
-    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.status = HttpStatus.BAD_REQUEST;
     ctx.body = { error: error.data };
   }
 };
