@@ -4,5 +4,7 @@ export default {
   mailPass: 'gfhjkm123',
   mailUser: 'carfinder.it@gmail.com',
   port: 3000,
-  url: 'localhost:3001'
+  url: 'localhost:3001',
+  AWSAccessKeyId: 'AKIAJHFYB27I74EO26NQ',
+  AWSSecretKey: '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 '
 };

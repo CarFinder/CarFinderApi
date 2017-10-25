@@ -29,3 +29,8 @@ export const emailActions = {
   RESTORE_PASSWORD: 'RESTORE_PASSWORD',
   UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
+
+export const awsConfig = {
+  accessKeyId: config.AWSAccessKeyId,
+  secretAccessKey: config.AWSSecretKey
+};

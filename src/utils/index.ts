@@ -2,14 +2,14 @@ import AWS = require('aws-sdk');
 import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
-import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
+import { awsConfig, codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
 AWS.config.update({
-  accessKeyId: process.env.AWSAccessKeyId,
-  secretAccessKey: process.env.AWSSecretKey
+  accessKeyId: awsConfig.accessKeyId,
+  secretAccessKey: awsConfig.secretAccessKey
 });
 
 const s3Bucket = new AWS.S3();
