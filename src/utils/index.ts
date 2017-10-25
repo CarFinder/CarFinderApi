@@ -2,17 +2,26 @@ import AWS = require('aws-sdk');
 import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
-import { awsConfig, codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
-import { SecureError } from './errors';
+import {
+  awsConfig,
+  bucket,
+  codeErrors,
+  emailActions,
+  jwtSecret,
+  mail,
+  url
+} from '../config/config';
+import { IUserImage } from '../interfaces/index';
+import { RequestError, SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
 AWS.config.update({
   accessKeyId: awsConfig.accessKeyId,
-  secretAccessKey: awsConfig.secretAccessKey
+  region: awsConfig.region,
+  secretAccessKey: awsConfig.secretAccessKey,
+  signatureVersion: 'v4'
 });
-
-const s3Bucket = new AWS.S3();
 
 export const sendMail = (email: string, name: string, action: string): void => {
   const token: any = getToken({ email });
@@ -99,23 +108,27 @@ export const encryptPassword = async (password: string) => {
   return encryptedPassword;
 };
 
-export const uploadImage = (payload: any) => {
+export const uploadImage = (payload: IUserImage) => {
+  const s3Bucket = new AWS.S3();
   const userData: any = { image: null };
-  const buf = new Buffer(payload.image, 'base64');
+  const buf = new Buffer(payload.image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
   const params = {
     ACL: 'public-read',
     Body: buf,
-    Bucket: 'car-finder',
+    Bucket: bucket,
     ContentEncoding: 'base64',
     ContentType: payload.type,
-    Key: payload.imageKey
+    Key: payload.imageKey.toString()
   };
   s3Bucket.putObject(params, (error, data) => {
     if (error) {
-      throw error;
+      throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
     }
   });
-  userData.image = s3Bucket.getSignedUrl('getObject', params);
+  userData.image = s3Bucket.getSignedUrl('getObject', {
+    Bucket: bucket,
+    Key: payload.imageKey.toString()
+  });
   return userData;
 };
 
