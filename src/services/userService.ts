@@ -1,8 +1,8 @@
 import { codeErrors, emailActions } from '../config/config';
-import { IUser } from '../interfaces/index';
+import { IUser, IUserImage } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
-import { DatabaseError, SecureError } from '../utils/errors';
-import { encryptPassword, sendMail, uploadImage } from '../utils/index';
+import { DatabaseError, RequestError, SecureError } from '../utils/errors';
+import { encryptPassword, sendMail, transformDataForMongo, uploadImage } from '../utils/index';
 
 export const register = async (payload: IUser) => {
   try {
@@ -75,15 +75,6 @@ export const sendPasswordEmail = async (email: string) => {
   }
 };
 
-export const updateImage = async (image: any) => {
-  try {
-    const imageUrl = uploadImage(image);
-    return imageUrl;
-  } catch (error) {
-    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
-  }
-};
-
 export const restorePassword = async (password: string, email: string) => {
   try {
     const encryptedPassword = await encryptPassword(password);
@@ -98,28 +89,32 @@ export const restorePassword = async (password: string, email: string) => {
   }
 };
 
+export const updateImage = async (image: IUserImage) => {
+  try {
+    const imageUrl = uploadImage(image);
+    return imageUrl;
+  } catch (error) {
+    throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
+  }
+};
+
 export const sendEmailConfirmation = async (email: string, updatedEmail: string) => {
   try {
     const user = await get(email);
     sendMail(updatedEmail, user.name, emailActions.UPDATE_EMAIL);
   } catch (error) {
-    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };
 
-export const updateUserProfile = async (email: string, data: any) => {
+export const updateUserProfile = async (email: string, userData: any) => {
   try {
-    const payload = {
-      $set: {
-        email: data.email,
-        image: data.image,
-        interfaceLang: data.interfaceLanguage,
-        name: data.name,
-        subscription: data.subscription
-      }
+    const payload: any = transformDataForMongo(userData);
+    const updatedData = {
+      $set: payload
     };
-    await update(email, payload);
+    await update(email, updatedData);
   } catch (error) {
-    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };
