@@ -34,6 +34,10 @@ export const getModel = async (id: string): Promise<IModelModel> => {
   return (await Model.findById(id)) as IModelModel;
 };
 
+export const getSavedFiltersByUserId = async (id: string): Promise<IFilterModel[]> => {
+  return (await Filter.find({ userId: id })) as IFilterModel[];
+};
+
 export const saveFilter = async (filterData: IFilter): Promise<IFilterModel> => {
   const newFilter = new Filter(filterData);
   return await newFilter.save();

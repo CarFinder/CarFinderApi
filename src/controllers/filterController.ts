@@ -57,3 +57,15 @@ export const saveFilter = async (ctx: Koa.Context) => {
     ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
+
+export const getSavedFilters = async (ctx: Koa.Context) => {
+  try {
+    const token = ctx.request.header.authorization.split(' ')[1];
+    const savedFilters = await FilterService.getSavedSearchFilters(token);
+    ctx.status = HttpStatus.OK;
+    ctx.body = savedFilters;
+  } catch {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
+  }
+};

@@ -8,6 +8,7 @@ import {
   getMarks,
   getModel,
   getModelsByMark,
+  getSavedFiltersByUserId,
   saveFilter
 } from '../repositories/filterRepository';
 import { get as getUserByEmail } from '../repositories/userRepository';
@@ -36,6 +37,16 @@ export const getBodyTypeById = async (id: string): Promise<IBodyTypeModel> => {
 
 export const getModelById = async (id: string): Promise<IModelModel> => {
   return await getModel(id);
+};
+
+export const getSavedSearchFilters = async (token: string): Promise<IFilterModel[]> => {
+  const decodedUser = decodeToken(token);
+  try {
+    const user = await getUserByEmail(decodedUser.email);
+    return await getSavedFiltersByUserId(user._id);
+  } catch {
+    throw new SecureError(codeErrors.AUTH_ERROR);
+  }
 };
 
 export const saveSavedSearchFilter = async (
