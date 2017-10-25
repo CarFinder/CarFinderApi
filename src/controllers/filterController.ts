@@ -46,15 +46,15 @@ export const saveFilter = async (ctx: Koa.Context) => {
   try {
     if (!ctx.request.body.data.markId || !ctx.request.body.data.name) {
       ctx.status = HttpStatus.BAD_REQUEST;
-      ctx.body = { error: new RequestError(codeErrors.REQUIRED_FIELD).data };
+      ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
       return;
     }
     const token = ctx.request.header.authorization.split(' ')[1];
     await FilterService.saveSavedSearchFilter(ctx.request.body.data, token);
     ctx.status = HttpStatus.OK;
-  } catch {
+  } catch (error) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
+    ctx.body = { error: error.data };
   }
 };
 
@@ -64,8 +64,8 @@ export const getSavedFilters = async (ctx: Koa.Context) => {
     const savedFilters = await FilterService.getSavedSearchFilters(token);
     ctx.status = HttpStatus.OK;
     ctx.body = savedFilters;
-  } catch {
+  } catch (error) {
     ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
+    ctx.body = { error: error.data };
   }
 };
