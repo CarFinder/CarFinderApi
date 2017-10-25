@@ -16,6 +16,7 @@ export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
   AUTH_ERROR: 102,
+  IMAGE_UPLOAD_ERROR: 106,
   INCORRECT_EMAIL_OR_PASS: 101,
   INTERNAL_DB_ERROR: 120,
   JWT_DECODE_ERROR: 104,
@@ -31,6 +32,9 @@ export const emailActions = {
 };
 
 export const awsConfig = {
-  accessKeyId: config.AWSAccessKeyId,
-  secretAccessKey: config.AWSSecretKey
+  accessKeyId: process.env.AWS_ACCESS_KEY || config.AWSAccessKeyId,
+  region: process.env.AWS_REGION || config.region,
+  secretAccessKey: process.env.AWS_SECRET_KEY || config.AWSSecretKey
 };
+
+export const bucket = config.bucket;
