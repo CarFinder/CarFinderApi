@@ -9,8 +9,8 @@ import {
   restoreUserPassword,
   sendRestorePasswordEmail,
   updateUserData,
-  updateUserSettings,
-  updateUserImage
+  updateUserImage,
+  updateUserSettings
 } from '../services/';
 import { emailRegExp, getToken, nameRegExp, passwordRegExp } from '../utils';
 import { SecureError } from '../utils/errors';

@@ -9,6 +9,7 @@ import {
   restorePassword,
   sendEmailConfirmation,
   sendPasswordEmail,
+  updateImage,
   updateUserProfile
 } from './userService';
 
@@ -53,7 +54,8 @@ export const updateUserSettings = async (payload: any) => {
 
 export const updateUserImage = async (payload: any) => {
   const data = decodeToken(payload.token);
-  await updateUserProfile(data.email, payload);
+  const image = await updateImage(payload.image);
+  await updateUserProfile(data.email, image);
   const userData = getUserData(data.email);
   return userData;
 };
