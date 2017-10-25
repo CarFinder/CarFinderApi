@@ -10,7 +10,7 @@ import app from './index';
 
 chai.use(chaiHttp);
 
-describe.only('Saved Search', () => {
+describe('Saved Search', () => {
   const validUser = {
     confirmed: true,
     email: 'validemail@test.com',

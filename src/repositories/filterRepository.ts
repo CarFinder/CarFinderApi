@@ -42,3 +42,11 @@ export const saveFilter = async (filterData: IFilter): Promise<IFilterModel> => 
   const newFilter = new Filter(filterData);
   return await newFilter.save();
 };
+
+export const removeFilterById = async (id: string) => {
+  return await Filter.findByIdAndRemove(id);
+};
+
+export const removeAllFilters = async (userId: string) => {
+  return await Filter.remove({ userId });
+};

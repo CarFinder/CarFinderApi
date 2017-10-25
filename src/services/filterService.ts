@@ -9,6 +9,8 @@ import {
   getModel,
   getModelsByMark,
   getSavedFiltersByUserId,
+  removeAllFilters,
+  removeFilterById,
   saveFilter
 } from '../repositories/filterRepository';
 import { get as getUserByEmail } from '../repositories/userRepository';
@@ -62,6 +64,24 @@ export const saveSavedSearchFilter = async (
   }
   try {
     return await saveFilter(filterData);
+  } catch {
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  }
+};
+
+export const removeSavedFilterById = async (id: string) => {
+  try {
+    return await removeFilterById(id);
+  } catch {
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  }
+};
+
+export const removeAllSavedFilters = async (token: string) => {
+  try {
+    const decodedUser = decodeToken(token);
+    const user = await getUserByEmail(decodedUser.email);
+    return await removeAllFilters(user._id);
   } catch {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }

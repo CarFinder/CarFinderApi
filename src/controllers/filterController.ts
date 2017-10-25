@@ -69,3 +69,29 @@ export const getSavedFilters = async (ctx: Koa.Context) => {
     ctx.body = { error: error.data };
   }
 };
+
+export const removeAllSavedFilters = async (ctx: Koa.Context) => {
+  try {
+    const token = ctx.request.header.authorization.split(' ')[1];
+    await FilterService.removeAllSavedFilters(token);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const removeSavedFilterById = async (ctx: Koa.Context) => {
+  try {
+    if (!ctx.params.id) {
+      ctx.status = HttpStatus.BAD_REQUEST;
+      ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
+      return;
+    }
+    await FilterService.removeSavedFilterById(ctx.params.id);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};
