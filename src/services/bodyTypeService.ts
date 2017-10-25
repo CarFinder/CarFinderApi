@@ -14,12 +14,10 @@ const saveBodyType = async (type: string) => {
 };
 
 const addNew = async (knownBodyTypes: IBodyType[], type: string) => {
-  let isExist = false;
-  for (const knownBodyType of knownBodyTypes) {
-    if (knownBodyType.name === type) {
-      isExist = true;
-    }
+  if (!type) {
+    return;
   }
+  const isExist = knownBodyTypes.find(bodyType => bodyType.name === type);
   if (!isExist) {
     await saveBodyType(type);
   }

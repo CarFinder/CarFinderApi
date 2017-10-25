@@ -1,6 +1,6 @@
-import Bluebird = require('bluebird');
+import * as bluebird from 'bluebird';
 import * as dotenv from 'dotenv';
-import schedule = require('node-schedule');
+import * as schedule from 'node-schedule';
 dotenv.config();
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
@@ -11,21 +11,26 @@ import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
 import config from './config/test';
 import routes from './routes';
-import { getInfo } from './utils/parserUtils';
+import { updateServiceData } from './utils/parserUtils';
 
 const server = new Koa();
-// run parse api whe server started
-getInfo();
 
-// run sheduled parser task
-const parse = schedule.scheduleJob(triggerSchedule, () => {
-  getInfo();
+// update marks, models, bodyTypes, ads / fill db if db is empty,
+// when server runned first time or was restarted
+
+(async () => {
+  await updateServiceData();
+})();
+
+// update marks, models, bodyTypes, ads by schedule
+const parse = schedule.scheduleJob(triggerSchedule, async () => {
+  await updateServiceData();
 });
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
 
-(mongoose as any).Promise = Bluebird;
+(mongoose as any).Promise = bluebird;
 
 server.use(bodyParser());
 server.use(passport.initialize());

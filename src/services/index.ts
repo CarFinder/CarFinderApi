@@ -1,16 +1,27 @@
 import { IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
-import { getAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
-import { updateAds } from './adService';
+import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
+import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
+import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
-import { confirm, getUserData, register } from './userService';
+import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
+
 import * as UserService from './userService';
 
 export const registerUser = async (payload: IUser) => {
   await register(payload);
+};
+
+export const sendRestorePasswordEmail = async (payload: string) => {
+  await sendPasswordEmail(payload);
+};
+
+export const restoreUserPassword = async (payload: { password: string; token: string }) => {
+  const data = decodeToken(payload.token);
+  await restorePassword(payload.password, data.email);
 };
 
 export const confirmUserEmail = async (payload: any) => {
@@ -20,7 +31,7 @@ export const confirmUserEmail = async (payload: any) => {
   return userData;
 };
 
-export const updateMarksAndModels = async (
+export const updateDBData = async (
   marks: ITransformedMarks[],
   models: any,
   bodyTypes: string[]
@@ -30,20 +41,49 @@ export const updateMarksAndModels = async (
     const markMaket = { name: mark.name };
     const savedMark: any = await updateMarks(markMaket);
     const markId = savedMark.id;
+    // if mark name is BMW or Mercedes , don't set models
+    // `cause they models setted like series on onliner
     if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-      const ads: any = await getAds(mark.onlinerMarkId);
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await updateAds(markAds);
+      await AdService.updateAds(markAds);
     } else {
       const listOfModels = models[mark.onlinerMarkId];
       const transformedModels = transformOnlinerModelsData(listOfModels, markId);
       await updateModels(transformedModels);
-      const ads: any = await getAds(mark.onlinerMarkId);
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await updateAds(markAds);
+      await AdService.updateAds(markAds);
     }
   }
   return;
 };
 
-export { UserService };
+export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
+  const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
+  const length = adsFromDb.length;
+
+  return Promise.all(
+    adsFromDb.map(async ad => {
+      const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
+      const mark = await FilterService.getMarkById(ad.markId);
+      const model = await FilterService.getModelById(ad.modelId);
+
+      return {
+        _id: ad._id,
+        bodyType: bodyType.name,
+        description: ad.description,
+        images: ad.images,
+        kms: ad.kms,
+        mark: mark.name,
+        model: model.name,
+        price: ad.price,
+        sourceName: ad.sourceName,
+        sourceUrl: ad.sourceUrl,
+        year: ad.year
+      };
+    })
+  );
+};
+
+export { AdService, FilterService, UserService };

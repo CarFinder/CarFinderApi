@@ -1,5 +1,5 @@
 export default {
-  db: 'mongodb://Admin:passwordforadmin531@ds163494.mlab.com:63494/car-finder',
+  db: 'mongodb://test:testpass@ds121965.mlab.com:21965/car-finder-test',
   jwt_secret: 'superjwtsecretkey',
   mailPass: 'gfhjkm123',
   mailUser: 'carfinder.it@gmail.com',

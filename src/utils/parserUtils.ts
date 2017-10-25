@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
-import { updateMarksAndModels } from '../services/';
+import { updateDBData } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
@@ -24,7 +24,7 @@ export const transformOnlinerModelsData = (models: any, markId: string) => {
   return transformedModels;
 };
 
-export const getAds = async (markId: number) => {
+export const getOnlinerAds = async (markId: number) => {
   const api = new Api(1);
   await api.updateAds(markId);
   return await api.getAds();
@@ -59,7 +59,6 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
   });
 
   // used for of loop, cause async-await is present
-
   for (const ad of transformedAds) {
     const bodyName = bodyTypes[ad.bodyTypeId];
     const bodyType = await getBodyTypeByName(bodyName);
@@ -84,7 +83,9 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
   return transformedAds;
 };
 
-export const getInfo = async () => {
+// update ads, models, marks, body types, fill db is it is empty
+
+export const updateServiceData = async () => {
   const api = new Api(sourceCodes.ONLINER);
   await api.updateMarks();
   const marks = api.getMarks();
@@ -93,5 +94,5 @@ export const getInfo = async () => {
   const transfomedMarks = transformOnlinerMarks(marks);
   await api.updateBodyTypes();
   const bodyTypes = api.getBodyTypes();
-  await updateMarksAndModels(transfomedMarks, models, bodyTypes);
+  await updateDBData(transfomedMarks, models, bodyTypes);
 };

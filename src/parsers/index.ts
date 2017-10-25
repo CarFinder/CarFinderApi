@@ -1,13 +1,13 @@
-import { Imark, Imodel, IParse } from '../interfaces/parserInterface';
+import { Imark, Imodel, IParser } from '../interfaces/parserInterface';
 import * as onliner from './onlinerParser/';
 
-export class Api implements IParse {
+export class Api implements IParser {
   public models: any;
   public marks: Imark[];
   public ads: any;
   public bodyTypes: string[];
 
-  // * this fiels should be changed is we use another source for ads
+  // * this fields should be changed is we use another source for ads
   public scrumAndGetMarks: any;
   public scrumAndGetBodyTypes: any;
   public scrumAndGetModels: any;

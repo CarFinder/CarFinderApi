@@ -8,7 +8,7 @@ export interface Imodel {
   model: string;
 }
 
-export interface IParse {
+export interface IParser {
   models: Imodel[];
   marks: Imark[];
   ads: any[];

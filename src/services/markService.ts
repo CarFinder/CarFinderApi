@@ -25,13 +25,9 @@ export const getMarkByName = async (name: string) => {
 };
 
 const addNewMark = async (knownMarks: IMark[], mark: IMark) => {
-  let isExist = false;
-  for (const knownMark of knownMarks) {
-    if (knownMark.name === mark.name) {
-      isExist = true;
-    }
-  }
+  const isExist = knownMarks.find(knownMark => knownMark.name === mark.name);
   if (!isExist) {
     await saveMarks(mark);
+    return;
   }
 };

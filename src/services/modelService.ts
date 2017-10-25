@@ -28,12 +28,7 @@ const saveModels = async (models: IModel[]) => {
 };
 
 const addNewModel = (knownModels: IModel[], model: IModel, newModels: IModel[]) => {
-  let isExist = false;
-  for (const knownModel of knownModels) {
-    if (knownModel.name === model.name) {
-      isExist = true;
-    }
-  }
+  const isExist = knownModels.find(knownModel => knownModel.name === model.name);
   if (!isExist) {
     newModels.push(model);
   }

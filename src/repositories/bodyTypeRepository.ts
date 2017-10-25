@@ -3,7 +3,7 @@ import { IBodyType } from '../interfaces/';
 
 export const save = async (bodyType: IBodyType) => {
   const newBodyType = new BodyType(bodyType);
-  newBodyType.save(err => err);
+  await newBodyType.save(err => err);
 };
 
 export const getAll = async () => {
