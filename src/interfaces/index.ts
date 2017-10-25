@@ -53,3 +53,9 @@ export interface IAd {
   sourceUrl: string;
   year: number;
 }
+
+export interface IUserImage {
+  image: string;
+  type: string;
+  imageKey: number;
+}
