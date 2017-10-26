@@ -137,7 +137,7 @@ export const transformDataForMongo = (data: any) => {
     ...(data.image && { image: data.image }),
     ...(data.interfaceLanguage && { interfaceLang: data.interfaceLanguage }),
     ...(data.name && { name: data.name }),
-    ...(data.subscription && { subscription: data.subscription })
+    ...(data.subscription !== undefined && { subscription: data.subscription })
   };
 
   return payload;
