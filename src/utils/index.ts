@@ -11,7 +11,7 @@ import {
   mail,
   url
 } from '../config/config';
-import { IUserImage } from '../interfaces/index';
+import { IUser, IUserImage } from '../interfaces/index';
 import { RequestError, SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
@@ -141,6 +141,20 @@ export const transformDataForMongo = (data: any) => {
   };
 
   return payload;
+};
+
+export const transformDataForToken = (data: IUser) => {
+  const transformedData = {
+    confirmed: data.confirmed,
+    email: data.email,
+    image: data.image,
+    interfaceLanguage: data.interfaceLang,
+    name: data.name,
+    password: data.password,
+    subscription: data.subscription
+  };
+
+  return transformedData;
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);

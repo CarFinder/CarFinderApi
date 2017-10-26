@@ -12,7 +12,7 @@ import {
   updateUserImage,
   updateUserSettings
 } from '../services/';
-import { emailRegExp, getToken, nameRegExp, passwordRegExp } from '../utils';
+import { emailRegExp, getToken, nameRegExp, passwordRegExp, transformDataForToken } from '../utils';
 import { SecureError } from '../utils/errors';
 
 export const signUp = async (ctx: Koa.Context) => {
@@ -38,7 +38,7 @@ export const signUp = async (ctx: Koa.Context) => {
 export const confirmEmail = async (ctx: Koa.Context) => {
   try {
     const user = await confirmUserEmail(ctx.request.body);
-    const token = getToken(user);
+    const token = getToken(transformDataForToken(user));
     ctx.status = HttpStatus.OK;
     ctx.body = {
       token
@@ -93,7 +93,7 @@ export const updateData = async (ctx: Koa.Context) => {
       throw new SecureError(codeErrors.VALIDATION_ERROR);
     }
     const user = await updateUserData(userData, userToken);
-    const token = getToken(user);
+    const token = getToken(transformDataForToken(user));
     ctx.status = HttpStatus.OK;
     ctx.body = {
       token
@@ -109,7 +109,7 @@ export const updateSettings = async (ctx: Koa.Context) => {
   const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
     const user = await updateUserSettings(userData, userToken);
-    const token = getToken(user);
+    const token = getToken(transformDataForToken(user));
     ctx.status = HttpStatus.OK;
     ctx.body = {
       token
@@ -125,7 +125,7 @@ export const updateImage = async (ctx: Koa.Context) => {
   const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
     const user = await updateUserImage(userData, userToken);
-    const token = getToken(user);
+    const token = getToken(transformDataForToken(user));
     ctx.status = HttpStatus.OK;
     ctx.body = {
       token
