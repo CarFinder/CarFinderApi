@@ -5,6 +5,8 @@ import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
+import { getAllMarks, updateMarks } from './markService';
+import { updateModels } from './modelService';
 import {
   confirm,
   getUserData,
@@ -15,8 +17,6 @@ import {
   updateImage,
   updateUserProfile
 } from './userService';
-import { getAllMarks, updateMarks } from './markService';
-import { updateModels } from './modelService';
 
 import * as UserService from './userService';
 
