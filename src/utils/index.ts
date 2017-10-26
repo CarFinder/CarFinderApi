@@ -2,9 +2,13 @@ import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
 import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
-import { SecureError } from './errors';
+import { DatabaseError, SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
+
+export const handleDatabaseError = (err: any) => {
+  throw new DatabaseError(err.code);
+};
 
 export const sendMail = (email: string, name: string, action: string): void => {
   const token: any = getToken({ email });

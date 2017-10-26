@@ -1,9 +1,14 @@
 import { BodyType, IBodyTypeModel } from '../db';
 import { IBodyType } from '../interfaces/';
+import { handleDatabaseError } from '../utils';
 
 export const save = async (bodyType: IBodyType) => {
   const newBodyType = new BodyType(bodyType);
-  await newBodyType.save(err => err);
+  await newBodyType.save(err => {
+    if (err) {
+      handleDatabaseError(err);
+    }
+  });
 };
 
 export const getAll = async () => {

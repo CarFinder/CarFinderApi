@@ -6,15 +6,6 @@ import puppeteer = require('puppeteer');
 import { codeErrors, ONLINER_URL } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
 
-const getPage = async (url: string) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'networkidle' });
-  const content = page.content();
-  await browser.close();
-  return content;
-};
-
 export const getMarks = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();

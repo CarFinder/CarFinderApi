@@ -1,5 +1,6 @@
 import { IModelModel, Model } from '../db';
 import { IModel } from '../interfaces';
+import { handleDatabaseError } from '../utils';
 
 export const getAll = async () => {
   return await Model.find();
@@ -7,8 +8,10 @@ export const getAll = async () => {
 
 export const update = async (model: IModel) => {
   const newModel = new Model(model);
-  await newModel.save(err => {
-    return err;
+  const error = await newModel.save(err => {
+    if (err) {
+      handleDatabaseError(err);
+    }
   });
 };
 

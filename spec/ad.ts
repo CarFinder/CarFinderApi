@@ -55,7 +55,7 @@ describe('Ad', () => {
           modelId: model._id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
-          sourceUrl: adFields.SOURCE_URL,
+          sourceUrl: adFields.SOURCE_URL + 0,
           year: adFields.YEAR
         },
         {
@@ -65,7 +65,7 @@ describe('Ad', () => {
           modelId: model._id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
-          sourceUrl: adFields.SOURCE_URL,
+          sourceUrl: adFields.SOURCE_URL + 1,
           year: adFields.YEAR
         },
         {
@@ -75,7 +75,7 @@ describe('Ad', () => {
           modelId: model._id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
-          sourceUrl: adFields.SOURCE_URL,
+          sourceUrl: adFields.SOURCE_URL + 2,
           year: adFields.YEAR
         }
       ];

@@ -1,16 +1,19 @@
 import * as mongoose from 'mongoose';
 import { Ad, IAdModel } from '../db/';
+import { handleDatabaseError } from '../utils';
 
 export const save = async (ad: object) => {
   const newAd = new Ad(ad);
-  newAd.save(err => err);
+  const error = await newAd.save(err => {
+    if (err) {
+      handleDatabaseError(err);
+    }
+  });
 };
 
 export const getAll = async () => {
   return await Ad.find();
-}
-
-
+};
 
 export const getByFilter = async (
   filter?: any,
