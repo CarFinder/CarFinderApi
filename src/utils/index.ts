@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 import * as jwt from 'jsonwebtoken';
 import nodemailer = require('nodemailer');
 import { codeErrors, emailActions, jwtSecret, mail, url } from '../config/config';
+import { IFilter } from '../interfaces';
 import { SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
@@ -79,6 +80,46 @@ export const encryptPassword = async (password: string) => {
   salt = bcrypt.genSaltSync(10);
   encryptedPassword = bcrypt.hashSync(password, salt);
   return encryptedPassword;
+};
+
+export const transformFilterForSave = async (filterData: IFilter): Promise<IFilter> => {
+  const transformedFilter: IFilter = {
+    markId: ''
+  };
+  if (filterData.markId) {
+    transformedFilter.markId = filterData.markId;
+  }
+  if (filterData.modelId.length !== 0) {
+    transformedFilter.modelId = filterData.modelId;
+  }
+  if (filterData.bodyTypeId.length !== 0) {
+    transformedFilter.bodyTypeId = filterData.bodyTypeId;
+  }
+  if (filterData.yearFrom) {
+    transformedFilter.yearFrom = filterData.yearFrom;
+  }
+  if (filterData.yearTo) {
+    transformedFilter.yearTo = filterData.yearTo;
+  }
+  if (filterData.priceFrom) {
+    transformedFilter.priceFrom = filterData.priceFrom;
+  }
+  if (filterData.priceTo) {
+    transformedFilter.priceTo = filterData.priceTo;
+  }
+  if (filterData.kmsFrom) {
+    transformedFilter.kmsFrom = filterData.kmsFrom;
+  }
+  if (filterData.kmsTo) {
+    transformedFilter.kmsTo = filterData.kmsTo;
+  }
+  if (filterData.name) {
+    transformedFilter.name = filterData.name;
+  }
+  if (filterData.userId) {
+    transformedFilter.userId = transformedFilter.userId;
+  }
+  return transformedFilter;
 };
 
 export const nameRegExp = new RegExp(`^[a-zA-Zа-яёА-ЯЁ\s\'\-]+$`);
