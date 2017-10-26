@@ -1,5 +1,8 @@
-import { IUser } from '../interfaces/index';
+import { codeErrors, limitForSavedFilters } from '../config/config';
+import { ISavedFilterAds, IUser } from '../interfaces/index';
+import { get as getUserByEmail } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
+import { DatabaseError } from '../utils/errors';
 import * as AdService from './adService';
 import * as FilterService from './filterService';
 import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
@@ -51,6 +54,29 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
       };
     })
   );
+};
+
+export const getSavedFiltersAds = async (token: string): Promise<ISavedFilterAds[]> => {
+  let result: ISavedFilterAds[] = [];
+  try {
+    const savedFilters = await FilterService.getSavedSearchFilters(token);
+    if (savedFilters.length === 0) {
+      return [];
+    } else {
+      result = await Promise.all(
+        savedFilters.map(async filter => {
+          return {
+            ads: await getAds(filter, limitForSavedFilters, 0),
+            filterId: filter._id,
+            filterName: filter.name
+          };
+        })
+      );
+      return result;
+    }
+  } catch {
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  }
 };
 
 export { AdService, FilterService, UserService };

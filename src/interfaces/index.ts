@@ -53,3 +53,23 @@ export interface IAd {
   sourceUrl: string;
   year: number;
 }
+
+export interface IAdForClient {
+  _id: string;
+  bodyType: string;
+  description: string;
+  images: string[];
+  kms: number;
+  mark: string;
+  model: string;
+  price: number;
+  sourceName: string;
+  sourceUrl: string;
+  year: number;
+}
+
+export interface ISavedFilterAds {
+  filterName: string;
+  filterId: string;
+  ads: IAdForClient[];
+}
