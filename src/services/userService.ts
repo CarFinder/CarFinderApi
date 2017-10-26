@@ -95,7 +95,7 @@ export const updateImage = async (email: string, userData: IUserImage) => {
     const imageUrl = uploadImage(user.id, userData);
     return imageUrl;
   } catch (error) {
-    throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
 };
 
@@ -104,7 +104,7 @@ export const sendEmailConfirmation = async (email: string, updatedEmail: string)
     const user = await get(email);
     sendMail(updatedEmail, user.name, emailActions.UPDATE_EMAIL);
   } catch (error) {
-    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
 };
 
