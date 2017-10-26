@@ -38,7 +38,7 @@ export const signUp = async (ctx: Koa.Context) => {
 export const confirmEmail = async (ctx: Koa.Context) => {
   try {
     const user = await confirmUserEmail(ctx.request.body);
-    const token = getToken(transformDataForToken(user));
+    const token = getToken(user);
     ctx.status = HttpStatus.OK;
     ctx.body = {
       token
