@@ -1,7 +1,12 @@
 import { IUser } from '../interfaces/index';
+import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
+import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
+import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
+import { getAllMarks, updateMarks } from './markService';
+import { updateModels } from './modelService';
 import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
 
 import * as UserService from './userService';
@@ -24,6 +29,34 @@ export const confirmUserEmail = async (payload: any) => {
   await confirm(data.email);
   const userData = await getUserData(data.email);
   return userData;
+};
+
+export const updateDBData = async (
+  marks: ITransformedMarks[],
+  models: any,
+  bodyTypes: string[]
+) => {
+  await updateBodyTypes(bodyTypes);
+  for (const mark of marks) {
+    const markMaket = { name: mark.name };
+    const savedMark: any = await updateMarks(markMaket);
+    const markId = savedMark.id;
+    // if mark name is BMW or Mercedes , don't set models
+    // `cause they models setted like series on onliner
+    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await AdService.updateAds(markAds);
+    } else {
+      const listOfModels = models[mark.onlinerMarkId];
+      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+      await updateModels(transformedModels);
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await AdService.updateAds(markAds);
+    }
+  }
+  return;
 };
 
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
