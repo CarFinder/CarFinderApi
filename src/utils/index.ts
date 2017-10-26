@@ -108,17 +108,16 @@ export const encryptPassword = async (password: string) => {
   return encryptedPassword;
 };
 
-export const uploadImage = (payload: IUserImage) => {
+export const uploadImage = (id: string, userData: IUserImage) => {
   const s3Bucket = new AWS.S3();
-  const userData: any = { image: null };
-  const buf = new Buffer(payload.image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+  const buf = new Buffer(userData.image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
   const params = {
     ACL: 'public-read',
     Body: buf,
     Bucket: bucket,
     ContentEncoding: 'base64',
-    ContentType: payload.type,
-    Key: payload.imageKey.toString()
+    ContentType: userData.type,
+    Key: id
   };
   s3Bucket.putObject(params, (error, data) => {
     if (error) {
@@ -127,7 +126,7 @@ export const uploadImage = (payload: IUserImage) => {
   });
   userData.image = s3Bucket.getSignedUrl('getObject', {
     Bucket: bucket,
-    Key: payload.imageKey.toString()
+    Key: id
   });
   return userData;
 };

@@ -89,9 +89,10 @@ export const restorePassword = async (password: string, email: string) => {
   }
 };
 
-export const updateImage = async (image: IUserImage) => {
+export const updateImage = async (email: string, userData: IUserImage) => {
   try {
-    const imageUrl = uploadImage(image);
+    const user = await get(email);
+    const imageUrl = uploadImage(user.id, userData);
     return imageUrl;
   } catch (error) {
     throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);

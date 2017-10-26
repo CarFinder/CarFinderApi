@@ -54,7 +54,7 @@ export const updateUserSettings = async (userData: any, token: any) => {
 
 export const updateUserImage = async (userData: any, token: any) => {
   const decodedUserData = decodeToken(token);
-  const image = await updateImage(userData);
+  const image = await updateImage(decodedUserData.email, userData);
   await updateUserProfile(decodedUserData.email, image);
   const payload = getUserData(decodedUserData.email);
   return payload;

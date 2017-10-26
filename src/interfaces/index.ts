@@ -57,5 +57,4 @@ export interface IAd {
 export interface IUserImage {
   image: string;
   type: string;
-  imageKey: number;
 }
