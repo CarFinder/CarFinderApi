@@ -4,5 +4,3 @@ import RequestError from './requestError';
 import SecureError from './secureError';
 
 export { SecureError, DatabaseError, ParserError, RequestError };
-
-
