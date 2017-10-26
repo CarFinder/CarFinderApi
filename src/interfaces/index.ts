@@ -20,6 +20,7 @@ export interface IModel {
 
 export interface IMark {
   name: string;
+  onlinerMarkId?: number;
 }
 
 export interface IFilter {
@@ -39,6 +40,7 @@ export interface IFilter {
 
 export interface IBodyType {
   name: string;
+  id?: string;
 }
 
 export interface IAd {

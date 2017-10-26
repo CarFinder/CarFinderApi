@@ -12,7 +12,7 @@ import {
   url
 } from '../config/config';
 import { IUser, IUserImage } from '../interfaces/index';
-import { RequestError, SecureError } from './errors';
+import { DatabaseError, RequestError, SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
 
@@ -22,6 +22,10 @@ AWS.config.update({
   secretAccessKey: awsConfig.secretAccessKey,
   signatureVersion: 'v4'
 });
+
+export const handleDatabaseError = (err: any) => {
+  throw new DatabaseError(err.code);
+};
 
 export const sendMail = (email: string, name: string, action: string): void => {
   const token: any = getToken({ email });
