@@ -14,7 +14,7 @@ import {
   saveFilter
 } from '../repositories/filterRepository';
 import { get as getUserByEmail } from '../repositories/userRepository';
-import { decodeToken, transformFilterForSave } from '../utils';
+import { decodeToken } from '../utils';
 import { DatabaseError, SecureError } from '../utils/errors';
 
 export const getAllMarks = async (): Promise<IMarkModel[]> => {
@@ -56,12 +56,10 @@ export const saveSavedSearchFilter = async (
   token: string
 ): Promise<IFilterModel> => {
   const decodedUser = decodeToken(token);
-  const searchFilter: any = {};
   try {
     const user = await getUserByEmail(decodedUser.email);
     filterData.userId = user._id;
-    const transformedFilter = await transformFilterForSave(filterData);
-    return await saveFilter(transformedFilter);
+    return await saveFilter(filterData);
   } catch {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
