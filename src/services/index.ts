@@ -18,7 +18,6 @@ import {
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
 
-
 import * as UserService from './userService';
 
 export const registerUser = async (payload: IUser) => {
@@ -64,6 +63,7 @@ export const updateUserImage = async (userData: any, token: any) => {
   await updateUserProfile(decodedUserData.email, image);
   const payload = getUserData(decodedUserData.email);
   return payload;
+};
 
 export const updateDBData = async (
   marks: ITransformedMarks[],
