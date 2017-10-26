@@ -56,16 +56,10 @@ export const saveSavedSearchFilter = async (
   token: string
 ): Promise<IFilterModel> => {
   const decodedUser = decodeToken(token);
-  const searchFilter: IFilter = {
-    markId: ''
-  };
+  const searchFilter: any = {};
   try {
     const user = await getUserByEmail(decodedUser.email);
     filterData.userId = user._id;
-  } catch {
-    throw new SecureError(codeErrors.AUTH_ERROR);
-  }
-  try {
     const transformedFilter = await transformFilterForSave(filterData);
     return await saveFilter(transformedFilter);
   } catch {

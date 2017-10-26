@@ -89,10 +89,10 @@ export const transformFilterForSave = async (filterData: IFilter): Promise<IFilt
   if (filterData.markId) {
     transformedFilter.markId = filterData.markId;
   }
-  if (filterData.modelId.length !== 0) {
+  if (filterData.modelId) {
     transformedFilter.modelId = filterData.modelId;
   }
-  if (filterData.bodyTypeId.length !== 0) {
+  if (filterData.bodyTypeId) {
     transformedFilter.bodyTypeId = filterData.bodyTypeId;
   }
   if (filterData.yearFrom) {
@@ -117,7 +117,7 @@ export const transformFilterForSave = async (filterData: IFilter): Promise<IFilt
     transformedFilter.name = filterData.name;
   }
   if (filterData.userId) {
-    transformedFilter.userId = transformedFilter.userId;
+    transformedFilter.userId = filterData.userId;
   }
   return transformedFilter;
 };
