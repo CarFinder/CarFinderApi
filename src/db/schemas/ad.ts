@@ -36,8 +36,7 @@ const AdSchema = new mongoose.Schema(
     },
     sourceUrl: {
       required: true,
-      type: String,
-      unique: true
+      type: String
     },
     year: {
       required: true,

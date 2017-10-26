@@ -15,13 +15,6 @@ import { updateServiceData } from './utils/parserUtils';
 
 const server = new Koa();
 
-// update marks, models, bodyTypes, ads / fill db if db is empty,
-// when server runned first time or was restarted
-
-(async () => {
-  await updateServiceData();
-})();
-
 // update marks, models, bodyTypes, ads by schedule
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
