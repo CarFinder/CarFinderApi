@@ -14,7 +14,7 @@ import { codeErrors } from '../src/config/config';
 
 chai.use(chaiHttp);
 
-describe.only('User Profile', () => {
+describe('User Profile', () => {
   const user = {
     confirmed: true,
     email: 'email@test.com',
