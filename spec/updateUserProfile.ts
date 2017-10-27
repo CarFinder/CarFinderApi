@@ -51,7 +51,7 @@ describe('User Profile', () => {
             email: '123email123.@com',
             name: '***123***'
           });
-        assert.fail('Test failed');
+        assert.fail('Test failed. No validation error thrown for wrong username and email format');
       } catch (error) {
         error.response.should.have.status(HttpStatus.UNAUTHORIZED);
         assert.equal(codeErrors.VALIDATION_ERROR, error.response.body.error.code);
