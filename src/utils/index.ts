@@ -27,9 +27,9 @@ export const handleDatabaseError = (err: any) => {
   throw new DatabaseError(err.code);
 };
 
-export const sendMail = (email: string, name: string, action: string): void => {
+export const sendMail = (email: string, name: string, language: string, action: string): void => {
   const token: any = getToken({ email });
-  const html = generateEmail(name, email, token, action);
+  const html = generateEmail(name, email, language, token, action);
   const subject = getEmailSubject(action);
   transport.sendMail(
     {
@@ -47,34 +47,108 @@ export const sendMail = (email: string, name: string, action: string): void => {
   );
 };
 
-const generateEmail = (name: string, email: string, token: string, action: string): string => {
+const generateEmail = (
+  name: string,
+  email: string,
+  language: string,
+  token: string,
+  action: string
+): string => {
+  const emailText: any = {
+    en: {
+      confirmButton: 'Confirm',
+      confirmRegistration:
+        'To use CarFinder service, please confirm your email by following the link. ' +
+        'Best regards, CarFinder company :)',
+      declineRequest:
+        'If you did not request this, please ignore this email ' +
+        'and your password will remain unchanged.',
+      greetings: `Hi, ${name}!`,
+      restoreButton: `Restore password`,
+      restorePassword:
+        'You are receiving this because you (or someone else) have requested ' +
+        'the reset of the password for your account. Please click on the following link, ' +
+        'or paste this into your browser to complete the process',
+      updateEmail:
+        'You are receiving this because you have requested to change your email. ' +
+        'Your email was updated successfully.'
+    },
+    ru: {
+      confirmButton: 'Подтвердить',
+      confirmRegistration:
+        'Чтобы воспользоваться сервисом CarFinder, подтвердите ваш е-мейл, ' +
+        'перейдя по ссылке. С наилучшими пожеланиями, компания CarFinder :)',
+      declineRequest:
+        'Если вы не запрашивали изменение пароля, проигнорируйте это письмо ' +
+        'и ваш пароль останется прежним',
+      greetings: `Здравствуйте, ${name}!`,
+      restoreButton: 'Восстановить пароль',
+      restorePassword:
+        'Вы получили это письмо, т.к. вы (или кто-то другой) запросили восстановление пароля для ' +
+        'вашего аккаунта. Чтобы изменить пароль, пожалуйста нажмите на ссылку ниже, или вставьте ' +
+        'ее в строку вашего браузера',
+      updateEmail:
+        'Вы получили это письмо, т.к. вы запросили смену е-мейла. Ваш е-мейл был изменен успешно.'
+    }
+  };
+  const text = language === 'en' ? emailText.en : emailText.ru;
   switch (action) {
     case emailActions.CONFIRM_REGISTRATION:
       return `
-    <div style="text-align: center;">
-       <h1>Hi, ${name}!</h1>
-       <p>To use CarFinder service, you should to follow the link.Best regards,CarFinder company :) </p>
-       <a href="http://${url}/confirmation/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Confirm</a>
-    </div>
-    `;
+      <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
+        <div style="background-color: white; border-radius: 5px;">
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+            <span>CARFINDER</span>
+          </div>
+          <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
+            <h1>${text.greetings}</h1>
+            <p style="margin-bottom: 40px;">${text.confirmRegistration}</p>
+            <div style="display: flex; justify-content: flex-end;"> 
+              <button style="padding: 0px; background-color: #ffdd57; margin-bottom: 20px; border-color: transparent; font-size: 0.9rem; border-radius: 3px;">
+                <a href="http://${url}/confirmation/?token=${token}" style="display: block; padding: 10px; text-decoration: none; color: rgba(0, 0, 0, 0.7);">${text.confirmButton}</a>
+              </button>
+            </div>
+            <hr style="color: #95989a">
+            <p style="font-size: 12px; color: #95989a; text-align: center;">CarFinder by CarFinder Inc.  The source code is licensed under MIT.</p>
+          </div>
+        </div>
+      </div>`;
     case emailActions.RESTORE_PASSWORD:
       return `
-    <div style="text-align: center;">
-       <h1>Hi, ${name}!</h1>
-       <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
-       <p>Please click on the following link, or paste this into your browser to complete the process</p>
-       <a href="http://${url}/restore/?token=${token}" style="background-color: #319640; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 20px; display: inline-block;">Restore password</a>
-       <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
-    </div>
-    `;
+      <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
+        <div style="background-color: white; border-radius: 5px;">
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+            <span>CARFINDER</span>
+          </div>
+          <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
+            <h1>${text.greetings}</h1>
+            <p style="margin-bottom: 40px;">${text.restorePassword}</p>
+            <div style="display: flex; justify-content: flex-end;"> 
+              <button style="padding: 0px; background-color: #ffdd57; margin-bottom: 20px; border-color: transparent; font-size: 0.9rem; border-radius: 3px;">
+                <a href="http://${url}/restore/?token=${token}" style="display: block; padding: 10px; text-decoration: none; color: rgba(0, 0, 0, 0.7);">${text.confirmButton}</a>
+              </button>
+            </div>
+            <p style="margin-bottom: 40px;">${text.declineRequest}</p>
+            <hr style="color: #95989a">
+            <p style="font-size: 12px; color: #95989a; text-align: center;">CarFinder by CarFinder Inc.  The source code is licensed under MIT.</p>
+          </div>
+        </div>
+      </div>`;
     case emailActions.UPDATE_EMAIL:
       return `
-  <div style="text-align: center;">
-     <h1>Hi, ${name}!</h1>
-     <p>You are receiving this because you have requested to change your email.</p>
-     <p>Your email was updated successfully.</p>
-  </div>
-  `;
+      <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
+        <div style="background-color: white; border-radius: 5px;">
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+            <span>CARFINDER</span>
+          </div>
+          <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
+            <h1>${text.greetings}</h1>
+            <p style="margin-bottom: 40px;">${text.updateEmail}</p>
+            <hr style="color: #95989a">
+            <p style="font-size: 12px; color: #95989a; text-align: center;">CarFinder by CarFinder Inc.  The source code is licensed under MIT.</p>
+          </div>
+        </div>
+      </div>`;
   }
 };
 
