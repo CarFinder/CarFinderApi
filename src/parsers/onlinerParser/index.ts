@@ -70,19 +70,27 @@ export const getAdsForCurrentModel = async (modelId: number) => {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
 
-    let content = response.result.content;
     const newAds = response.result.advertisements;
     if (response.result.content) {
-      // cause there is no positice look behind
-      const descriptions = content.match(/\<p\>([^\<]*)/g);
-
-      // fix cycle if string length === 0 string = next string
-      descriptions.forEach((description: any, index: any) => {
-        const match = description.match(/[^\<p\>]+/g);
-        descriptions[index] = match[0];
+      const content = response.result.content;
+      const $ = cheerio.load(content, {
+        normalizeWhitespace: true,
+        xmlMode: true
       });
-      content = content.replace(/ /g, '');
-      const prices = content.match(/\d+?(?=\$)/g);
+
+      const descriptions = $('.carRow .txt p')
+        .map(function() {
+          return $(this).text();
+        })
+        .get();
+
+      const prices = $('.cost-i .small')
+        .text()
+        .replace(/\$ (.*?) €/g, '-')
+        .split('-')
+        .map(el => el.trim())
+        .filter(el => el !== '');
+
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {
         newAds[key].price = prices[index];
