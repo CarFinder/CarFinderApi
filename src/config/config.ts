@@ -45,9 +45,11 @@ export const emailActions = {
 };
 
 export const awsConfig = {
-  accessKeyId: process.env.AWS_ACCESS_KEY || config.AWSAccessKeyId,
+  accessKeyId: process.env.AWS_ACCESS_KEY,
   region: process.env.AWS_REGION || config.region,
-  secretAccessKey: process.env.AWS_SECRET_KEY || config.AWSSecretKey
+  secretAccessKey: process.env.AWS_SECRET_KEY
 };
+
+global.console.log(process.env.AWS_ACCESS_KEY, process.env.AWS_SECRET_KEY);
 
 export const bucket = config.bucket;
