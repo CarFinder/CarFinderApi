@@ -171,7 +171,7 @@ export const getAds = async (
     };
   }
   if (sort) {
-    sortParams = { [sort.field]: sort.sort };
+    sortParams = { sort };
   }
   return await get(searchFilter, limit, skip, sortParams);
 };
