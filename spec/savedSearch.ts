@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 import * as HttpStatus from 'http-status-codes';
 import { codeErrors } from '../src/config/config';
-import { Filter, User } from '../src/db';
+import { Ad, BodyType, Filter, Mark, Model, User } from '../src/db';
 import { decodeToken, getToken } from '../src/utils';
 import { DatabaseError, RequestError, SecureError } from '../src/utils/errors';
 import app from './index';
@@ -266,40 +266,133 @@ describe('Saved Search', () => {
   });
 
   describe('Return ads for saved search filters', () => {
-    const filters = [
-      {
-        bodyTypeId: ['59ef6e585eae9114ddfc7e8f'],
-        markId: '59ef6fcb5eae9114ddfc8966',
-        modelId: [
-          '59ef6fd55eae9114ddfc8968',
-          '59ef6fd85eae9114ddfc8970',
-          '59ef6fe25eae9114ddfc897b'
-        ],
-        name: 'Unique Test Filter 56557563453212313135790',
-        userId: '',
-        yearFrom: 2010,
-        yearTo: 2017
-      }
-    ];
+    const adFields = {
+      BODY_NAME: 'BodyTest',
+      KMS: 20000,
+      MARK_NAME: 'MarkName',
+      MODEL_NAME: 'ModelTest',
+      PRICE: 1000,
+      SOURCE_NAME: 'onlinerTest',
+      SOURCE_URL: 'url',
+      YEAR: 2010
+    };
+    const anotherUser = {
+      confirmed: true,
+      email: 'anotheremail321@test.com',
+      name: 'AnotherName',
+      password: 'Password2#'
+    };
+    const tokenForAnotherUser = getToken({ email: anotherUser.email });
+    const filters: any[] = [];
+    let filterId: string;
     let userId: string;
+    let markId: string;
+    let bodyTypeId: string;
+    let modelId: string;
     before(async () => {
       const user = await User.create(validUser);
+      await User.create(anotherUser);
       userId = user._id;
-      filters[0].userId = userId;
-      await Filter.create(filters);
+      const bodyObj = {
+        name: adFields.BODY_NAME
+      };
+      const markObj = {
+        name: adFields.MARK_NAME
+      };
+      const body = await BodyType.create(bodyObj);
+      bodyTypeId = body._id;
+      const mark = await Mark.create(markObj);
+      const modelObj = {
+        markId: mark._id,
+        name: adFields.MODEL_NAME
+      };
+      const model = await Model.create(modelObj);
+      modelId = model._id;
+      const ads = [
+        {
+          bodyTypeId: body._id,
+          kms: adFields.KMS,
+          markId: mark._id,
+          modelId: model._id,
+          price: adFields.PRICE,
+          sourceName: adFields.SOURCE_NAME,
+          sourceUrl: `${adFields.SOURCE_URL}123`,
+          year: adFields.YEAR
+        },
+        {
+          bodyTypeId: body._id,
+          kms: adFields.KMS,
+          markId: mark._id,
+          modelId: model._id,
+          price: adFields.PRICE,
+          sourceName: adFields.SOURCE_NAME,
+          sourceUrl: `${adFields.SOURCE_URL}321`,
+          year: adFields.YEAR
+        },
+        {
+          bodyTypeId: body._id,
+          kms: adFields.KMS,
+          markId: mark._id,
+          modelId: model._id,
+          price: adFields.PRICE,
+          sourceName: adFields.SOURCE_NAME,
+          sourceUrl: `${adFields.SOURCE_URL}666`,
+          year: adFields.YEAR
+        }
+      ];
+      markId = mark._id;
+      await Ad.create(ads);
+      filters[0] = {
+        bodyTypeId: [bodyTypeId],
+        markId,
+        modelId: [modelId],
+        name: 'Unique Test Filter 8978565432',
+        userId,
+        yearFrom: adFields.YEAR
+      };
+      const filter = await Filter.create(filters);
+      filterId = String(filter[0]._id);
     });
 
     it('should return an empty array, if there is no saved filters for such user', async () => {
-      // test goes here
+      const response = await chai
+        .request(app)
+        .get('/api/ad/saved/')
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${tokenForAnotherUser}`);
+      const data = response.body;
+
+      response.should.have.status(HttpStatus.OK);
+      data.should.have.lengthOf(0);
     });
 
-    it('should return ads if user has any saved seach filters', async () => {
-      // test goes here
+    it('should return only two ads if user has any saved seach filters', async () => {
+      const response = await chai
+        .request(app)
+        .get('/api/ad/saved/')
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${validToken}`);
+      const data = response.body;
+
+      response.should.have.status(HttpStatus.OK);
+      data.should.have.lengthOf(1);
+      data[0].should.have.property('filterName').equal(filters[0].name);
+      data[0].should.have.property('filterId').equal(filterId);
+      data[0].should.have.property('ads').lengthOf(2);
+      data[0].ads[0].bodyType.should.equal(adFields.BODY_NAME);
+      data[0].ads[0].mark.should.equal(adFields.MARK_NAME);
+      data[0].ads[0].model.should.equal(adFields.MODEL_NAME);
+      data[0].ads[0].year.should.equal(adFields.YEAR);
     });
 
     after(async () => {
       await User.remove({ email: validUser.email });
+      await User.remove({ email: anotherUser.email });
       await Filter.remove({ userId });
+      await Ad.remove({ sourceName: adFields.SOURCE_NAME });
+      await BodyType.remove({ name: adFields.BODY_NAME });
+      await Model.remove({ name: adFields.MODEL_NAME });
+      await Mark.remove({ name: adFields.MARK_NAME });
     });
   });
 });
