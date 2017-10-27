@@ -50,6 +50,4 @@ export const awsConfig = {
   secretAccessKey: process.env.AWS_SECRET_KEY
 };
 
-global.console.log(process.env.AWS_ACCESS_KEY, process.env.AWS_SECRET_KEY);
-
 export const bucket = config.bucket;

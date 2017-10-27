@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 describe('User Profile', () => {
   const user = {
     confirmed: true,
-    email: 'email@test.com',
+    email: 'abracodabra@test.com',
     image: 'linktoimage.com',
     interfaceLanguage: 'ru',
     name: 'UserName',
