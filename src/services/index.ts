@@ -60,7 +60,7 @@ export const getSavedFiltersAds = async (token: string): Promise<ISavedFilterAds
   let result: ISavedFilterAds[] = [];
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(token);
-    if (savedFilters.length === 0) {
+    if (!savedFilters.length) {
       return [];
     } else {
       result = await Promise.all(

@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 describe('Saved Search', () => {
   const validUser = {
     confirmed: true,
-    email: 'validemail@test.com',
+    email: 'validemail123321@test.com',
     name: 'ValidName',
     password: 'Password1#'
   };
@@ -44,6 +44,7 @@ describe('Saved Search', () => {
               modelId: ['59ef6e595eae9114ddfc7e98', '59ef6e5a5eae9114ddfc7e9a']
             }
           });
+
         assert.fail('No error has been thrown while data does not pass validation rules');
       } catch (error) {
         error.response.should.have.status(HttpStatus.BAD_REQUEST);
@@ -61,6 +62,7 @@ describe('Saved Search', () => {
           .send({
             data: filterFields
           });
+
         assert.fail('No error has been thrown while token is not valid');
       } catch (error) {
         error.response.should.have.status(HttpStatus.UNAUTHORIZED);
@@ -78,6 +80,7 @@ describe('Saved Search', () => {
           data: filterFields
         });
       const savedFilters = await Filter.find({ name: filterFields.name });
+
       chai.expect(savedFilters).to.have.lengthOf(1);
       chai.expect(savedFilters[0].name).to.equal(filterFields.name);
       chai.expect(savedFilters[0].markId).to.equal(filterFields.markId);
@@ -95,6 +98,7 @@ describe('Saved Search', () => {
           .send({
             data: filterFields
           });
+
         response.should.have.status(HttpStatus.OK);
       } catch {
         assert.fail('No error expected');
@@ -147,6 +151,7 @@ describe('Saved Search', () => {
         .set('content-type', 'application/json')
         .set('authorization', `Bearer ${validTokenOfAnotherUser}`);
       const data = response.body;
+
       response.should.have.status(HttpStatus.OK);
       data.should.have.lengthOf(0);
     });
@@ -158,6 +163,7 @@ describe('Saved Search', () => {
         .set('content-type', 'application/json')
         .set('authorization', `Bearer ${validToken}`);
       const data = response.body;
+
       response.should.have.status(HttpStatus.OK);
       data.should.have.lengthOf(1);
       data[0].should.have.property('name').equal(filters[0].name);
@@ -170,6 +176,129 @@ describe('Saved Search', () => {
     after(async () => {
       await User.remove({ email: validUser.email });
       await User.remove({ email: anotherUser.email });
+      await Filter.remove({ userId });
+    });
+  });
+
+  describe('Remove saved filters', () => {
+    const filters = [
+      {
+        bodyTypeId: ['59ef6e585eae9114ddfc7e8f'],
+        markId: '59ef6fcb5eae9114ddfc8966',
+        modelId: [
+          '59ef6fd55eae9114ddfc8968',
+          '59ef6fd85eae9114ddfc8970',
+          '59ef6fe25eae9114ddfc897b'
+        ],
+        name: 'Unique Test Filter 56557563453212313135790',
+        userId: '',
+        yearFrom: 2010,
+        yearTo: 2017
+      }
+    ];
+    let userId: string;
+    let filterId: string;
+    before(async () => {
+      const user = await User.create(validUser);
+      userId = user._id;
+      filters[0].userId = userId;
+      const filter = await Filter.create(filters);
+      filterId = filter[0]._id;
+    });
+
+    it('should throw not found error, if no id is provided in params', async () => {
+      try {
+        await chai
+          .request(app)
+          .del('/api/filter/saved')
+          .set('content-type', 'application/json')
+          .set('authorization', `Bearer ${validToken}`);
+
+        assert.fail('An error expected');
+      } catch (error) {
+        error.response.should.have.status(HttpStatus.NOT_FOUND);
+      }
+    });
+
+    it('should remove a saved search filter, is there is a filter with such ID in DB', async () => {
+      const response = await chai
+        .request(app)
+        .del(`/api/filter/saved/${filterId}`)
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${validToken}`);
+      const thisFilter = await Filter.findOne({ _id: filterId });
+
+      chai.assert.isNull(thisFilter);
+      response.should.have.status(HttpStatus.OK);
+    });
+
+    it('should thow a database error, if provided id is not valid', async () => {
+      try {
+        await chai
+          .request(app)
+          .del(`/api/filter/saved/${['sadasdasdgg']}`)
+          .set('content-type', 'application/json')
+          .set('authorization', `Bearer ${validToken}`);
+
+        assert.fail('An error expected');
+      } catch (error) {
+        error.response.should.have.status(HttpStatus.BAD_REQUEST);
+        assert.equal(codeErrors.INTERNAL_DB_ERROR, error.response.body.error.code);
+      }
+    });
+
+    it('should remove all filters for current user', async () => {
+      const response = await chai
+        .request(app)
+        .del(`/api/filter/saved/all`)
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${validToken}`);
+      const filtersForCurrentUser = await Filter.find({ userId });
+
+      chai.assert.lengthOf(filtersForCurrentUser, 0);
+      response.should.have.status(HttpStatus.OK);
+    });
+
+    after(async () => {
+      await User.remove({ email: validUser.email });
+      await Filter.remove({ userId });
+    });
+  });
+
+  describe('Return ads for saved search filters', () => {
+    const filters = [
+      {
+        bodyTypeId: ['59ef6e585eae9114ddfc7e8f'],
+        markId: '59ef6fcb5eae9114ddfc8966',
+        modelId: [
+          '59ef6fd55eae9114ddfc8968',
+          '59ef6fd85eae9114ddfc8970',
+          '59ef6fe25eae9114ddfc897b'
+        ],
+        name: 'Unique Test Filter 56557563453212313135790',
+        userId: '',
+        yearFrom: 2010,
+        yearTo: 2017
+      }
+    ];
+    let userId: string;
+    before(async () => {
+      const user = await User.create(validUser);
+      userId = user._id;
+      filters[0].userId = userId;
+      await Filter.create(filters);
+    });
+
+    it('should return an empty array, if there is no saved filters for such user', async () => {
+      // test goes here
+    });
+
+    it('should return ads if user has any saved seach filters', async () => {
+      // test goes here
+    });
+
+    after(async () => {
+      await User.remove({ email: validUser.email });
       await Filter.remove({ userId });
     });
   });
