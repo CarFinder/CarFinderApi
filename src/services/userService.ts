@@ -69,7 +69,7 @@ export const getUser = (email: string, done: any) => {
 export const sendPasswordEmail = async (email: string) => {
   try {
     const user = await get(email);
-    sendMail(user.email, user.name, emailActions.RESTORE_PASSWORD);
+    sendMail(user.email, user.name, user.interfaceLang, emailActions.RESTORE_PASSWORD);
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
@@ -102,7 +102,7 @@ export const updateImage = async (email: string, userData: IUserImage) => {
 export const sendEmailConfirmation = async (email: string, updatedEmail: string) => {
   try {
     const user = await get(email);
-    sendMail(updatedEmail, user.name, emailActions.UPDATE_EMAIL);
+    sendMail(updatedEmail, user.name, user.interfaceLang, emailActions.UPDATE_EMAIL);
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
