@@ -28,14 +28,14 @@ describe('User Profile', () => {
   let passportStub: sinon.SinonStub;
 
   describe('Update user data', () => {
-    before(async () => {
+    beforeEach(async () => {
       passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
         await next();
       });
       await User.create(user);
     });
 
-    after(async () => {
+    afterEach(async () => {
       passportStub.restore();
       await User.remove({ email: user.email });
     });
@@ -78,14 +78,14 @@ describe('User Profile', () => {
   });
 
   describe('Update user settings', () => {
-    before(async () => {
+    beforeEach(async () => {
       passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
         await next();
       });
       await User.create(user);
     });
 
-    after(async () => {
+    afterEach(async () => {
       passportStub.restore();
       await User.remove({ email: user.email });
     });
@@ -125,14 +125,14 @@ describe('User Profile', () => {
       type: 'image/gif'
     };
 
-    before(async () => {
+    beforeEach(async () => {
       passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
         await next();
       });
       await User.create(user);
     });
 
-    after(async () => {
+    afterEach(async () => {
       passportStub.restore();
       await User.remove({ email: user.email });
     });
@@ -174,14 +174,14 @@ describe('User Profile', () => {
       type: 'image/gif'
     };
 
-    before(async () => {
+    beforeEach(async () => {
       passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
         await next();
       });
       await User.create(user);
     });
 
-    after(async () => {
+    afterEach(async () => {
       passportStub.restore();
       await User.remove({ email: user.email });
     });
