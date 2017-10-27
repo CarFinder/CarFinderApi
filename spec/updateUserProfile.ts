@@ -154,7 +154,7 @@ describe('User Profile', () => {
       const email = 'email@test.com';
       const res = await updateImage(email, imageData);
       expect(res).to.have.all.keys('image', 'type');
-      expect(res.image).to.include('https://carfinder-bucket.s3.us-east-2.amazonaws.com');
+      expect(res.image).to.match(/s3(.*?)amazonaws/i);
     });
 
     it('should throw error if user does not exist', async () => {
