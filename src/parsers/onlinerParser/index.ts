@@ -37,24 +37,17 @@ export const getBodyTypes = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  let res = await page.content();
-  const $ = cheerio.load(res);
-  const bodyTypes: any = [];
-  // remove all spaces for more comfort parsing
-  res = res.replace(/ /g, '');
-  // match all structure constructions of body types select
-  const listOfTypes: any = res.match(
-    /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d+"\>[\r\n]*.*/g
-  );
+  const res = await page.content();
+  const $ = cheerio.load(res, {
+    normalizeWhitespace: true,
+    xmlMode: true
+  });
+  const bodyTypes: any = $('li[class*="body_type-"]')
+    .text()
+    .replace(/["'&nbsp;\d]/g, '')
+    .split(' ')
+    .filter(el => el !== '');
 
-  for (const item of listOfTypes) {
-    // match all types
-    const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
-    // match type id for onliner
-    const idMatch = item.match(/\d+/g);
-    bodyTypes[idMatch[0]] = typeMatch[0];
-  }
-  await browser.close();
   return bodyTypes;
 };
 
