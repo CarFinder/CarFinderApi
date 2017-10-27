@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cheerio = require('cheerio');
 import FormData = require('form-data');
 import * as _ from 'lodash';
 import fetch from 'node-fetch';
@@ -37,6 +38,7 @@ export const getBodyTypes = async () => {
   const page = await browser.newPage();
   await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
   let res = await page.content();
+  const $ = cheerio.load(res);
   const bodyTypes: any = [];
   // remove all spaces for more comfort parsing
   res = res.replace(/ /g, '');
@@ -44,6 +46,7 @@ export const getBodyTypes = async () => {
   const listOfTypes: any = res.match(
     /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d+"\>[\r\n]*.*/g
   );
+
   for (const item of listOfTypes) {
     // match all types
     const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
