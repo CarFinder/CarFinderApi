@@ -19,6 +19,11 @@ export default class DatabaseError extends Error {
           type: 'Db error'
         };
         break;
+      default:
+        this.data = {
+          code,
+          type: 'Unknown'
+        };
     }
   }
 }
