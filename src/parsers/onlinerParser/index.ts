@@ -3,8 +3,14 @@ import FormData = require('form-data');
 import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
+import * as request from 'request-promise';
 import { codeErrors, ONLINER_URL } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
+
+const proxy = process.env.PROXY.split(',');
+request.defaults({
+  proxy
+});
 
 export const getMarks = async () => {
   const browser = await puppeteer.launch();
@@ -56,20 +62,24 @@ export const getBodyTypes = async () => {
 };
 
 export const getAdsForCurrentModel = async (modelId: number) => {
-  const carModel = 'car[0][' + modelId + ']';
+  const carModel = `car[0][${modelId}]`;
   let count = 1;
-  let response;
+  let response: any;
   const ads: any = {};
   do {
-    const form = new FormData();
-    form.append(carModel, '');
-    form.append('currency', 'USD');
-    form.append('page', count);
-    form.append('sort[]', '');
+    const form: any = {
+      currency: 'USD',
+      page: count,
+      'sort[]': ''
+    };
+    form[`car[0][${modelId}]`] = '';
     try {
-      response = await fetch(`https://ab.onliner.by/search`, { method: 'POST', body: form })
-        .then(res => res.json())
-        .then(json => json);
+      response = await request({
+        formData: form,
+        json: true,
+        method: 'POST',
+        uri: 'https://ab.onliner.by/search'
+      });
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
