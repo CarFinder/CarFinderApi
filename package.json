@@ -8,15 +8,25 @@
     "start": "ts-node src/index.ts",
     "test": "mocha --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
-    "test:coverage":
-      "nyc  mocha --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+    "test:coverage": "nyc  mocha --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
   "nyc": {
-    "include": ["src/**/*.ts"],
-    "extension": [".ts", ".js", ".tsx"],
-    "require": ["ts-node/register"],
-    "reporter": ["text", "html"],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts",
+      ".js",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
     "sourceMap": true,
     "instrument": true,
     "all": true
@@ -43,6 +53,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "@types/async": "^2.0.44",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",
@@ -65,6 +76,7 @@
     "@types/passport-jwt": "^2.0.24",
     "@types/passport-local": "^1.0.31",
     "@types/puppeteer": "^0.10.2",
+    "async": "^2.5.0",
     "axios": "^0.16.2",
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",

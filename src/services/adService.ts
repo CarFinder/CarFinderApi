@@ -1,6 +1,7 @@
+import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAll, save } from '../repositories/adRepository';
+import { getAdByURL, getAll, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
 
 export const getAllAds = async () => {
@@ -8,24 +9,36 @@ export const getAllAds = async () => {
 };
 
 export const updateAds = async (ads: IAd[]) => {
-  await saveAds(ads);
-};
-
-const saveAds = async (ads: IAd[]) => {
-  for (const ad of ads) {
-    await save(ad);
-  }
-};
-
-const addNewAds = (knownAds: IAd[], ads: IAd[]) => {
-  const newAds: IAd[] = [];
-  ads.forEach(ad => {
-    const isExist = knownAds.find(knownAd => knownAd.sourceUrl === ad.sourceUrl);
-    if (!isExist) {
-      newAds.push(ad);
+  async.each(ads, async ad => {
+    const foundAd = await getAdByURL(ad.sourceUrl);
+    if (foundAd) {
+      await updateFields(ad);
+    } else {
+      await saveAd(ad);
     }
   });
-  return newAds;
+};
+
+const saveAd = async (ad: IAd) => {
+  await save(ad);
+};
+
+const updateFields = async (ad: IAd) => {
+  const payload = {
+    $set: {
+      bodyTypeId: ad.bodyTypeId,
+      description: ad.description,
+      images: ad.images,
+      kms: ad.kms,
+      markId: ad.modelId,
+      modelId: ad.markId,
+      price: ad.price,
+      sourceName: ad.sourceName,
+      sourceUrl: ad.sourceUrl,
+      year: ad.year
+    }
+  };
+  await update(ad.sourceUrl, payload);
 };
 
 export const getAdsByFilter = async (
