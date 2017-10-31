@@ -4,12 +4,11 @@ import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
 import * as request from 'request-promise';
-import { codeErrors, ONLINER_URL } from '../../config/config';
+import { codeErrors, ONLINER_URL, proxy } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
 
-const proxy = process.env.PROXY.split(',');
 request.defaults({
-  proxy
+  proxy: proxy.split(',')
 });
 
 export const getMarks = async () => {
