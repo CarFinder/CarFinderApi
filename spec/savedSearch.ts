@@ -89,20 +89,16 @@ describe('Saved Search', () => {
     });
 
     it('should return status OK, if token and data are valid', async () => {
-      try {
-        const response = await chai
-          .request(app)
-          .post('/api/filter/saved')
-          .set('content-type', 'application/json')
-          .set('authorization', `Bearer ${validToken}`)
-          .send({
-            data: filterFields
-          });
+      const response = await chai
+        .request(app)
+        .post('/api/filter/saved')
+        .set('content-type', 'application/json')
+        .set('authorization', `Bearer ${validToken}`)
+        .send({
+          data: filterFields
+        });
 
-        response.should.have.status(HttpStatus.OK);
-      } catch {
-        assert.fail('No error expected');
-      }
+      response.should.have.status(HttpStatus.OK);
     });
 
     after(async () => {
