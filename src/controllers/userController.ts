@@ -7,9 +7,12 @@ import {
   confirmUserEmail,
   registerUser,
   restoreUserPassword,
-  sendRestorePasswordEmail
+  sendRestorePasswordEmail,
+  updateUserData,
+  updateUserImage,
+  updateUserSettings
 } from '../services/';
-import { emailRegExp, getToken, nameRegExp, passwordRegExp } from '../utils';
+import { emailRegExp, getToken, nameRegExp, passwordRegExp, transformDataForToken } from '../utils';
 import { SecureError } from '../utils/errors';
 
 export const signUp = async (ctx: Koa.Context) => {
@@ -76,6 +79,57 @@ export const restorePassword = async (ctx: Koa.Context) => {
     }
     await restoreUserPassword(userData);
     ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const updateData = async (ctx: Koa.Context) => {
+  const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
+  try {
+    if (!emailRegExp.test(userData.email) || !nameRegExp.test(userData.name)) {
+      throw new SecureError(codeErrors.VALIDATION_ERROR);
+    }
+    const user = await updateUserData(userData, userToken);
+    const token = getToken(transformDataForToken(user));
+    ctx.status = HttpStatus.OK;
+    ctx.body = {
+      token
+    };
+  } catch (error) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const updateSettings = async (ctx: Koa.Context) => {
+  const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
+  try {
+    const user = await updateUserSettings(userData, userToken);
+    const token = getToken(transformDataForToken(user));
+    ctx.status = HttpStatus.OK;
+    ctx.body = {
+      token
+    };
+  } catch (error) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const updateImage = async (ctx: Koa.Context) => {
+  const userData = ctx.request.body;
+  const userToken = ctx.request.header.authorization.split(' ')[1];
+  try {
+    const user = await updateUserImage(userData, userToken);
+    const token = getToken(transformDataForToken(user));
+    ctx.status = HttpStatus.OK;
+    ctx.body = {
+      token
+    };
   } catch (error) {
     ctx.status = HttpStatus.UNAUTHORIZED;
     ctx.body = { error: error.data };

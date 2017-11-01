@@ -18,6 +18,12 @@ export default class RequestError extends Error {
           code: codeErrors.VALIDATION_ERROR,
           type: 'Request Error'
         };
+        break;
+      case codeErrors.IMAGE_UPLOAD_ERROR:
+        this.data = {
+          code: codeErrors.IMAGE_UPLOAD_ERROR,
+          type: 'Request Error'
+        };
     }
   }
 }
