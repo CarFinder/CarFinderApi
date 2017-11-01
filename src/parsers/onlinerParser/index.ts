@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cheerio = require('cheerio');
 import FormData = require('form-data');
 import * as _ from 'lodash';
 import fetch from 'node-fetch';
@@ -36,22 +37,17 @@ export const getBodyTypes = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  let res = await page.content();
-  const bodyTypes: any = [];
-  // remove all spaces for more comfort parsing
-  res = res.replace(/ /g, '');
-  // match all structure constructions of body types select
-  const listOfTypes: any = res.match(
-    /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d+"\>[\r\n]*.*/g
-  );
-  for (const item of listOfTypes) {
-    // match all types
-    const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
-    // match type id for onliner
-    const idMatch = item.match(/\d+/g);
-    bodyTypes[idMatch[0]] = typeMatch[0];
-  }
-  await browser.close();
+  const res = await page.content();
+  const $ = cheerio.load(res, {
+    normalizeWhitespace: true,
+    xmlMode: true
+  });
+  const bodyTypes: any = $('li[class*="body_type-"]')
+    .text()
+    .replace(/["'&nbsp;\d]/g, '')
+    .split(' ')
+    .filter(el => el !== '');
+
   return bodyTypes;
 };
 
@@ -74,19 +70,27 @@ export const getAdsForCurrentModel = async (modelId: number) => {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
 
-    let content = response.result.content;
     const newAds = response.result.advertisements;
     if (response.result.content) {
-      // cause there is no positice look behind
-      const descriptions = content.match(/\<p\>([^\<]*)/g);
-
-      // fix cycle if string length === 0 string = next string
-      descriptions.forEach((description: any, index: any) => {
-        const match = description.match(/[^\<p\>]+/g);
-        descriptions[index] = match[0];
+      const content = response.result.content;
+      const $ = cheerio.load(content, {
+        normalizeWhitespace: true,
+        xmlMode: true
       });
-      content = content.replace(/ /g, '');
-      const prices = content.match(/\d+?(?=\$)/g);
+
+      const descriptions = $('.carRow .txt p')
+        .map(function() {
+          return $(this).text();
+        })
+        .get();
+
+      const prices = $('.cost-i .small')
+        .text()
+        .replace(/\$ (.*?) €/g, '-')
+        .split('-')
+        .map(el => el.trim())
+        .filter(el => el !== '');
+
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {
         newAds[key].price = prices[index];

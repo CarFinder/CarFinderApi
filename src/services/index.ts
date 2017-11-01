@@ -7,7 +7,16 @@ import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
-import { confirm, getUserData, register, restorePassword, sendPasswordEmail } from './userService';
+import {
+  confirm,
+  getUserData,
+  register,
+  restorePassword,
+  sendEmailConfirmation,
+  sendPasswordEmail,
+  updateImage,
+  updateUserProfile
+} from './userService';
 
 import * as UserService from './userService';
 
@@ -29,6 +38,31 @@ export const confirmUserEmail = async (payload: any) => {
   await confirm(data.email);
   const userData = await getUserData(data.email);
   return userData;
+};
+
+export const updateUserData = async (userData: any, token: any) => {
+  const decodedUserData = decodeToken(token);
+  if (userData.email !== decodedUserData.email) {
+    await sendEmailConfirmation(decodedUserData.email, userData.email);
+  }
+  await updateUserProfile(decodedUserData.email, userData);
+  const payload = userData.email ? getUserData(userData.email) : getUserData(decodedUserData.email);
+  return payload;
+};
+
+export const updateUserSettings = async (userData: any, token: any) => {
+  const decodedUserData = decodeToken(token);
+  await updateUserProfile(decodedUserData.email, userData);
+  const payload = getUserData(decodedUserData.email);
+  return payload;
+};
+
+export const updateUserImage = async (userData: any, token: any) => {
+  const decodedUserData = decodeToken(token);
+  const image = await updateImage(decodedUserData.email, userData);
+  await updateUserProfile(decodedUserData.email, image);
+  const payload = getUserData(decodedUserData.email);
+  return payload;
 };
 
 export const updateDBData = async (
