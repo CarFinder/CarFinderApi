@@ -23,6 +23,7 @@ export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
   AUTH_ERROR: 102,
+  IMAGE_UPLOAD_ERROR: 106,
   INCORRECT_EMAIL_OR_PASS: 101,
   INTERNAL_DB_ERROR: 120,
   JWT_DECODE_ERROR: 104,
@@ -40,5 +41,14 @@ export const ONLINER_URL: string = `https://ab.onliner.by/`;
 
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
-  RESTORE_PASSWORD: 'RESTORE_PASSWORD'
+  RESTORE_PASSWORD: 'RESTORE_PASSWORD',
+  UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
+
+export const awsConfig = {
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  region: process.env.AWS_REGION || config.region,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+};
+
+export const bucket = config.bucket;

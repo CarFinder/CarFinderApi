@@ -1,8 +1,8 @@
 import { codeErrors, emailActions } from '../config/config';
-import { IUser } from '../interfaces/index';
+import { IUser, IUserImage } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
-import { DatabaseError, SecureError } from '../utils/errors';
-import { encryptPassword, sendMail } from '../utils/index';
+import { DatabaseError, RequestError, SecureError } from '../utils/errors';
+import { encryptPassword, sendMail, transformDataForMongo, uploadImage } from '../utils/index';
 
 export const register = async (payload: IUser) => {
   try {
@@ -69,7 +69,7 @@ export const getUser = (email: string, done: any) => {
 export const sendPasswordEmail = async (email: string) => {
   try {
     const user = await get(email);
-    sendMail(user.email, user.name, emailActions.RESTORE_PASSWORD);
+    sendMail(user.email, user.name, user.interfaceLang, emailActions.RESTORE_PASSWORD);
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
   }
@@ -86,5 +86,36 @@ export const restorePassword = async (password: string, email: string) => {
     await update(email, payload);
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const updateImage = async (email: string, userData: IUserImage) => {
+  try {
+    const user = await get(email);
+    const imageUrl = uploadImage(user.id, userData);
+    return imageUrl;
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const sendEmailConfirmation = async (email: string, updatedEmail: string) => {
+  try {
+    const user = await get(email);
+    sendMail(updatedEmail, user.name, user.interfaceLang, emailActions.UPDATE_EMAIL);
+  } catch (error) {
+    throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);
+  }
+};
+
+export const updateUserProfile = async (email: string, userData: any) => {
+  try {
+    const payload: any = transformDataForMongo(userData);
+    const updatedData = {
+      $set: payload
+    };
+    await update(email, updatedData);
+  } catch (error) {
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };
