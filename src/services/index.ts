@@ -134,7 +134,8 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
           return {
             ads: await getAds(filter, limitForSavedFilters, 0),
             filterId: filter._id,
-            filterName: filter.name
+            filterName: filter.name,
+            filterUrl: filter.url
           };
         })
       );

@@ -44,7 +44,11 @@ export const getModels = async (ctx: Koa.Context) => {
 
 export const saveFilter = async (ctx: Koa.Context) => {
   try {
-    if (!ctx.request.body.data.markId || !ctx.request.body.data.name) {
+    if (
+      !ctx.request.body.data.markId ||
+      !ctx.request.body.data.name ||
+      !ctx.request.body.data.url
+    ) {
       ctx.status = HttpStatus.BAD_REQUEST;
       ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
       return;

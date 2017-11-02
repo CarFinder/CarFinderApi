@@ -35,6 +35,7 @@ export interface IFilter {
   yearFrom?: number;
   modelId?: string;
   name?: string;
+  url?: string;
   userId?: string;
   sourceName?: string;
 }
@@ -74,6 +75,7 @@ export interface IAdForClient {
 export interface ISavedFilterAds {
   filterName: string;
   filterId: string;
+  filterUrl: string;
   ads: IAdForClient[];
 }
 

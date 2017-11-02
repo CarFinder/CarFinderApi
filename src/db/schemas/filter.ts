@@ -32,6 +32,9 @@ const FilterSchema = new mongoose.Schema(
     priceTo: {
       type: Number
     },
+    url: {
+      type: String
+    },
     userId: {
       required: true,
       type: String

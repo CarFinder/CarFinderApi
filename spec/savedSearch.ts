@@ -24,7 +24,8 @@ describe('Saved Search', () => {
       bodyTypeId: ['59ef6e585eae9114ddfc7e8b'],
       markId: '59ef6e855eae9114ddfc7fe7',
       modelId: ['59ef6e865eae9114ddfc7ff1'],
-      name: 'Unique Test Filter 123454657657567'
+      name: 'Unique Test Filter 123454657657567',
+      url: 'test-url'
     };
 
     before(async () => {
@@ -134,6 +135,7 @@ describe('Saved Search', () => {
           '59ef6fe25eae9114ddfc897b'
         ],
         name: 'Unique Test Filter 56557563453212313135790',
+        url: 'test-url',
         userId: '',
         yearFrom: 2010,
         yearTo: 2017
@@ -172,6 +174,7 @@ describe('Saved Search', () => {
       data.should.have.lengthOf(1);
       data[0].should.have.property('name').equal(filters[0].name);
       data[0].should.have.property('userId').equal(filters[0].userId);
+      data[0].should.have.property('url').equal(filters[0].url);
       data[0].should.have.property('markId').equal(filters[0].markId);
       data[0].should.have.property('modelId').deep.equal(filters[0].modelId);
       data[0].should.have.property('bodyTypeId').deep.equal(filters[0].bodyTypeId);
@@ -198,6 +201,7 @@ describe('Saved Search', () => {
           '59ef6fe25eae9114ddfc897b'
         ],
         name: 'Unique Test Filter 56557563453212313135790',
+        url: 'test-url',
         userId: '',
         yearFrom: 2010,
         yearTo: 2017
@@ -358,6 +362,7 @@ describe('Saved Search', () => {
         markId,
         modelId: [modelId],
         name: 'Unique Test Filter 8978565432',
+        url: 'test-url',
         userId,
         yearFrom: adFields.YEAR
       };
@@ -388,6 +393,7 @@ describe('Saved Search', () => {
       response.should.have.status(HttpStatus.OK);
       data.should.have.lengthOf(1);
       data[0].should.have.property('filterName').equal(filters[0].name);
+      data[0].should.have.property('filterUrl').equal(filters[0].url);
       data[0].should.have.property('filterId').equal(filterId);
       data[0].should.have.property('ads').lengthOf(2);
       data[0].ads[0].bodyType.should.equal(adFields.BODY_NAME);
