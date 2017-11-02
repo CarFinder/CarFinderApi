@@ -9,13 +9,12 @@
     "test": "mocha --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
     "test:coverage":
-      "nyc  mocha --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+      "nyc  mocha --timeout 15000 --require ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
   "nyc": {
     "include": ["src/**/*.ts"],
     "extension": [".ts", ".js", ".tsx"],
-    "require": ["ts-node/register"],
     "reporter": ["text", "html"],
     "sourceMap": true,
     "instrument": true,
