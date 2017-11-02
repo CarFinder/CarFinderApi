@@ -1,3 +1,5 @@
+import * as testData from './test.json';
+// use test.json for local testion
 export const db = process.env.DB;
 export const jwtSecret = process.env.JWT_SECRET;
 export const port = process.env.PORT;
@@ -9,6 +11,8 @@ export const mail = {
   },
   service: 'Gmail'
 };
+
+global.console.log(process.env);
 
 // execute every 3 day
 // see more adout config in dosc for node-schedule

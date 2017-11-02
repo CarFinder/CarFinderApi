@@ -1,0 +1,8 @@
+{
+  "db": "yourdb",
+  "jwt_secret": "key",
+  "mailPass": "pass",
+  "mailUser": "mail",
+  "port": 3000,
+  "url": "clientURL"
+}
