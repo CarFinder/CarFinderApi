@@ -1,4 +1,5 @@
 export interface IUser {
+  id?: string;
   confirmed?: boolean;
   email?: string;
   image?: string;
