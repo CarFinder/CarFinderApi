@@ -49,8 +49,8 @@ export const saveFilter = async (ctx: Koa.Context) => {
       ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
       return;
     }
-    const token = ctx.request.header.authorization.split(' ')[1];
-    await FilterService.saveSavedSearchFilter(ctx.request.body.data, token);
+    const user = ctx.state.user;
+    await FilterService.saveSavedSearchFilter(ctx.request.body.data, user);
     ctx.status = HttpStatus.OK;
   } catch (error) {
     ctx.status = HttpStatus.BAD_REQUEST;
@@ -60,8 +60,8 @@ export const saveFilter = async (ctx: Koa.Context) => {
 
 export const getSavedFilters = async (ctx: Koa.Context) => {
   try {
-    const token = ctx.request.header.authorization.split(' ')[1];
-    const savedFilters = await FilterService.getSavedSearchFilters(token);
+    const user = ctx.state.user;
+    const savedFilters = await FilterService.getSavedSearchFilters(user);
     ctx.status = HttpStatus.OK;
     ctx.body = savedFilters;
   } catch (error) {
@@ -72,8 +72,8 @@ export const getSavedFilters = async (ctx: Koa.Context) => {
 
 export const removeAllSavedFilters = async (ctx: Koa.Context) => {
   try {
-    const token = ctx.request.header.authorization.split(' ')[1];
-    await FilterService.removeAllSavedFilters(token);
+    const user = ctx.state.user;
+    await FilterService.removeAllSavedFilters(user);
     ctx.status = HttpStatus.OK;
   } catch (error) {
     ctx.status = HttpStatus.BAD_REQUEST;

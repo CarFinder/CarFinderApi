@@ -1,7 +1,6 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
 import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
-import { get as getUserByEmail } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { DatabaseError } from '../utils/errors';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
@@ -89,10 +88,10 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
   );
 };
 
-export const getSavedFiltersAds = async (token: string): Promise<ISavedFilterAds[]> => {
+export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]> => {
   let result: ISavedFilterAds[] = [];
   try {
-    const savedFilters = await FilterService.getSavedSearchFilters(token);
+    const savedFilters = await FilterService.getSavedSearchFilters(user);
     if (!savedFilters.length) {
       return [];
     } else {

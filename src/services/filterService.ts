@@ -1,6 +1,6 @@
 import { codeErrors } from '../config/config';
 import { IBodyTypeModel, IFilterModel, IMarkModel, IModelModel } from '../db/';
-import { IFilter } from '../interfaces';
+import { IFilter, IUser } from '../interfaces';
 import {
   getBodyType,
   getBodyTypes,
@@ -13,8 +13,6 @@ import {
   removeFilterById,
   saveFilter
 } from '../repositories/filterRepository';
-import { get as getUserByEmail } from '../repositories/userRepository';
-import { decodeToken } from '../utils';
 import { DatabaseError, SecureError } from '../utils/errors';
 
 export const getAllMarks = async (): Promise<IMarkModel[]> => {
@@ -41,24 +39,20 @@ export const getModelById = async (id: string): Promise<IModelModel> => {
   return await getModel(id);
 };
 
-export const getSavedSearchFilters = async (token: string): Promise<IFilterModel[]> => {
-  const decodedUser = decodeToken(token);
+export const getSavedSearchFilters = async (user: IUser): Promise<IFilterModel[]> => {
   try {
-    const user = await getUserByEmail(decodedUser.email);
-    return await getSavedFiltersByUserId(user._id);
+    return await getSavedFiltersByUserId(user.id);
   } catch {
-    throw new SecureError(codeErrors.AUTH_ERROR);
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };
 
 export const saveSavedSearchFilter = async (
   filterData: IFilter,
-  token: string
+  user: IUser
 ): Promise<IFilterModel> => {
-  const decodedUser = decodeToken(token);
   try {
-    const user = await getUserByEmail(decodedUser.email);
-    filterData.userId = user._id;
+    filterData.userId = user.id;
     return await saveFilter(filterData);
   } catch {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
@@ -73,11 +67,9 @@ export const removeSavedFilterById = async (id: string) => {
   }
 };
 
-export const removeAllSavedFilters = async (token: string) => {
+export const removeAllSavedFilters = async (user: IUser) => {
   try {
-    const decodedUser = decodeToken(token);
-    const user = await getUserByEmail(decodedUser.email);
-    return await removeAllFilters(user._id);
+    return await removeAllFilters(user.id);
   } catch {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }

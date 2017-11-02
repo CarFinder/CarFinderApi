@@ -27,8 +27,8 @@ export const getAds = async (ctx: Koa.Context) => {
 
 export const getSavedSearchAds = async (ctx: Koa.Context) => {
   try {
-    const token = ctx.request.header.authorization.split(' ')[1];
-    const ads = await getSavedFiltersAds(token);
+    const user = ctx.state.user;
+    const ads = await getSavedFiltersAds(user);
     ctx.status = HttpStatus.OK;
     ctx.body = ads;
   } catch (error) {
