@@ -102,8 +102,16 @@ describe('Saved Search', () => {
     });
 
     after(async () => {
-      await User.remove({ email: validUser.email });
-      await Filter.remove({ name: filterFields.name });
+      await User.remove({
+        email: {
+          $in: [validUser.email]
+        }
+      });
+      await Filter.remove({
+        name: {
+          $in: [filterFields.name]
+        }
+      });
     });
   });
 
@@ -170,8 +178,11 @@ describe('Saved Search', () => {
     });
 
     after(async () => {
-      await User.remove({ email: validUser.email });
-      await User.remove({ email: anotherUser.email });
+      await User.remove({
+        email: {
+          $in: [validUser.email, anotherUser.email]
+        }
+      });
       await Filter.remove({ userId });
     });
   });
@@ -256,7 +267,11 @@ describe('Saved Search', () => {
     });
 
     after(async () => {
-      await User.remove({ email: validUser.email });
+      await User.remove({
+        email: {
+          $in: [validUser.email]
+        }
+      });
       await Filter.remove({ userId });
     });
   });
@@ -382,13 +397,32 @@ describe('Saved Search', () => {
     });
 
     after(async () => {
-      await User.remove({ email: validUser.email });
-      await User.remove({ email: anotherUser.email });
+      await User.remove({
+        email: {
+          $in: [validUser.email, anotherUser.email]
+        }
+      });
       await Filter.remove({ userId });
-      await Ad.remove({ sourceName: adFields.SOURCE_NAME });
-      await BodyType.remove({ name: adFields.BODY_NAME });
-      await Model.remove({ name: adFields.MODEL_NAME });
-      await Mark.remove({ name: adFields.MARK_NAME });
+      await Ad.remove({
+        sourceName: {
+          $in: [adFields.SOURCE_NAME]
+        }
+      });
+      await BodyType.remove({
+        name: {
+          $in: [adFields.BODY_NAME]
+        }
+      });
+      await Model.remove({
+        name: {
+          $in: [adFields.MODEL_NAME]
+        }
+      });
+      await Mark.remove({
+        name: {
+          $in: [adFields.MARK_NAME]
+        }
+      });
     });
   });
 });
