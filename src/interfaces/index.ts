@@ -75,6 +75,7 @@ export interface ISavedFilterAds {
   filterName: string;
   filterId: string;
   ads: IAdForClient[];
+}
 
 export interface IUserImage {
   image: string;
