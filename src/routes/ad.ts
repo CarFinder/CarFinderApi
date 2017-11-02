@@ -4,7 +4,7 @@ import { getAds, getSavedSearchAds } from '../controllers/adController';
 
 const router = new Router();
 
-router.get('/saved', getSavedSearchAds);
 router.post('/', getAds);
+router.get('/saved', getSavedSearchAds);
 
 export default router;
