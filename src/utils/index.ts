@@ -68,7 +68,7 @@ export const getToken = (data: any) => {
 
 export const decodeToken = (token: string) => {
   let decoded: any | null = null;
-  jwt.verify(token, jwtSecret, (err, res: string) => {
+  jwt.verify(token, jwtSecret, (err: any, res: string) => {
     if (err) {
       throw new SecureError(codeErrors.JWT_DECODE_ERROR);
     }
