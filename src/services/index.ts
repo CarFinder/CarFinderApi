@@ -1,6 +1,7 @@
 import { IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
+import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
@@ -36,37 +37,28 @@ export const updateDBData = async (
   models: any,
   bodyTypes: string[]
 ) => {
-  await updateBodyTypes(bodyTypes);
-  const mark = marks[2];
-  const markMaket = { name: mark.name };
-  const savedMark: any = await updateMarks(markMaket);
-  const markId = savedMark.id;
-  const listOfModels = models[mark.onlinerMarkId];
-  const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-  await updateModels(transformedModels);
-  const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-  const markAds = await transformAdsData(markId, ads, bodyTypes);
-  await AdService.updateAds(markAds);
-
-  // for (const mark of marks) {
-  //   const markMaket = { name: mark.name };
-  //   const savedMark: any = await updateMarks(markMaket);
-  //   const markId = savedMark.id;
-  //   // if mark name is BMW or Mercedes , don't set models
-  //   // `cause they models setted like series on onliner
-  //   if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-  //     const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-  //     const markAds = await transformAdsData(markId, ads, bodyTypes);
-  //     await AdService.updateAds(markAds);
-  //   } else {
-  //     const listOfModels = models[mark.onlinerMarkId];
-  //     const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-  //     await updateModels(transformedModels);
-  //     const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-  //     const markAds = await transformAdsData(markId, ads, bodyTypes);
-  //     await AdService.updateAds(markAds);
-  //   }
-  // }
+  await AdService.adsPreUpdate();
+  ControllUpdateEmitter.on('finishPrepare', async () => {
+    for (const mark of marks) {
+      const markMaket = { name: mark.name };
+      const savedMark: any = await updateMarks(markMaket);
+      const markId = savedMark.id;
+      // if mark name is BMW or Mercedes , don't set models
+      // `cause they models setted like series on onliner
+      if (mark.name === 'BMW' || mark.name === 'Mercedes') {
+        const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+        const markAds = await transformAdsData(markId, ads, bodyTypes);
+        await AdService.updateAds(markAds);
+      } else {
+        const listOfModels = models[mark.onlinerMarkId];
+        const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+        await updateModels(transformedModels);
+        const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+        const markAds = await transformAdsData(markId, ads, bodyTypes);
+        await AdService.updateAds(markAds);
+      }
+    }
+  });
   return;
 };
 

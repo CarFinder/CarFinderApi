@@ -1,8 +1,12 @@
 import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAdByURL, getAll, save, update } from '../repositories/adRepository';
+import { getAdByURL, getAll, preUpdate, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
+
+export const adsPreUpdate = async () => {
+  await preUpdate();
+};
 
 export const getAllAds = async () => {
   return await getAll();
@@ -29,6 +33,7 @@ const updateFields = async (ad: IAd) => {
       bodyTypeId: ad.bodyTypeId,
       description: ad.description,
       images: ad.images,
+      isSelt: false,
       kms: ad.kms,
       markId: ad.modelId,
       modelId: ad.markId,

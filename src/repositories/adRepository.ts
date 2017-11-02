@@ -1,8 +1,23 @@
 import * as mongoose from 'mongoose';
+import * as stream from 'stream';
 import { codeErrors } from '../config/config';
 import { Ad, IAdModel } from '../db/';
 import { handleDatabaseError } from '../utils';
+import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { SecureError } from '../utils/errors';
+
+// set isSelt flag to true for all ads
+// if ad is still exist flag will changed to false
+export const preUpdate = async () => {
+  const updateStream = await Ad.find({}).stream({ transform: JSON.stringify });
+  updateStream.on('data', async chunk => {
+    updateStream.pause();
+    const data: any = JSON.parse(chunk.toString());
+    await Ad.update({ sourceUrl: data.sourceUrl }, { $set: { isSelt: true } });
+    updateStream.resume();
+  });
+  updateStream.on('close', () => ControllUpdateEmitter.emit('finishPrepare'));
+};
 
 export const save = async (ad: object) => {
   const newAd = new Ad(ad);
@@ -18,7 +33,7 @@ export const getAll = async () => {
 };
 
 export const update = async (url: string, payload: any) => {
-  await Ad.update({ url }, payload);
+  await Ad.update({ sourceUrl: url }, payload);
 };
 
 export const getByFilter = async (

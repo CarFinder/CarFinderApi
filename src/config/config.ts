@@ -14,8 +14,7 @@ export const mail = {
 
 // execute every 3 day
 // see more adout config in dosc for node-schedule
-
-export const triggerSchedule = '*/3 * *';
+export const triggerSchedule = '13 13 * * 2';
 
 export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
 
