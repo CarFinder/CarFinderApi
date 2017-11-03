@@ -1,10 +1,16 @@
 import axios from 'axios';
+import cheerio = require('cheerio');
 import FormData = require('form-data');
 import * as _ from 'lodash';
 import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
-import { codeErrors, ONLINER_URL } from '../../config/config';
+import * as request from 'request-promise';
+import { codeErrors, ONLINER_URL, proxy } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
+
+request.defaults({
+  proxy: proxy.split(',')
+});
 
 export const getMarks = async () => {
   const browser = await puppeteer.launch();
@@ -36,57 +42,63 @@ export const getBodyTypes = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  let res = await page.content();
-  const bodyTypes: any = [];
-  // remove all spaces for more comfort parsing
-  res = res.replace(/ /g, '');
-  // match all structure constructions of body types select
-  const listOfTypes: any = res.match(
-    /\<inputtype="checkbox"name="body_type\[\]"class="f-cb"value="\d+"\>[\r\n]*.*/g
-  );
-  for (const item of listOfTypes) {
-    // match all types
-    const typeMatch = item.match(/[А-Яа-я]*?(?=&)/g);
-    // match type id for onliner
-    const idMatch = item.match(/\d+/g);
-    bodyTypes[idMatch[0]] = typeMatch[0];
-  }
-  await browser.close();
+  const res = await page.content();
+  const $ = cheerio.load(res, {
+    normalizeWhitespace: true,
+    xmlMode: true
+  });
+  const bodyTypes: any = $('li[class*="body_type-"]')
+    .text()
+    .replace(/["'&nbsp;\d]/g, '')
+    .split(' ')
+    .filter(el => el !== '');
+
   return bodyTypes;
 };
 
 export const getAdsForCurrentModel = async (modelId: number) => {
-  const carModel = 'car[0][' + modelId + ']';
+  const carModel = `car[0][${modelId}]`;
   let count = 1;
-  let response;
+  let response: any;
   const ads: any = {};
   do {
-    const form = new FormData();
-    form.append(carModel, '');
-    form.append('currency', 'USD');
-    form.append('page', count);
-    form.append('sort[]', '');
+    const form: any = {
+      currency: 'USD',
+      page: count,
+      'sort[]': ''
+    };
+    form[`car[0][${modelId}]`] = '';
     try {
-      response = await fetch(`https://ab.onliner.by/search`, { method: 'POST', body: form })
-        .then(res => res.json())
-        .then(json => json);
+      response = await request.post({
+        formData: form,
+        json: true,
+        uri: 'https://ab.onliner.by/search'
+      });
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
-
-    let content = response.result.content;
+    // console.log(response);
     const newAds = response.result.advertisements;
     if (response.result.content) {
-      // cause there is no positice look behind
-      const descriptions = content.match(/\<p\>([^\<]*)/g);
-
-      // fix cycle if string length === 0 string = next string
-      descriptions.forEach((description: any, index: any) => {
-        const match = description.match(/[^\<p\>]+/g);
-        descriptions[index] = match[0];
+      const content = response.result.content;
+      const $ = cheerio.load(content, {
+        normalizeWhitespace: true,
+        xmlMode: true
       });
-      content = content.replace(/ /g, '');
-      const prices = content.match(/\d+?(?=\$)/g);
+
+      const descriptions = $('.carRow .txt p')
+        .map(function() {
+          return $(this).text();
+        })
+        .get();
+
+      const prices = $('.cost-i .small')
+        .text()
+        .replace(/\$ (.*?) €/g, '-')
+        .split('-')
+        .map(el => el.trim())
+        .filter(el => el !== '');
+
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {
         newAds[key].price = prices[index];
