@@ -16,6 +16,10 @@ const AdSchema = new mongoose.Schema(
     images: {
       type: Array
     },
+    isSelt: {
+      default: false,
+      type: Boolean
+    },
     kms: {
       type: Number
     },

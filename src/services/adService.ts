@@ -1,31 +1,49 @@
+import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAll, save } from '../repositories/adRepository';
+import { getAdByURL, getAll, preUpdate, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
+
+export const adsPreUpdate = async () => {
+  await preUpdate();
+};
 
 export const getAllAds = async () => {
   return await getAll();
 };
 
 export const updateAds = async (ads: IAd[]) => {
-  await saveAds(ads);
-};
-
-const saveAds = async (ads: IAd[]) => {
-  for (const ad of ads) {
-    await save(ad);
-  }
-};
-
-const addNewAds = (knownAds: IAd[], ads: IAd[]) => {
-  const newAds: IAd[] = [];
-  ads.forEach(ad => {
-    const isExist = knownAds.find(knownAd => knownAd.sourceUrl === ad.sourceUrl);
-    if (!isExist) {
-      newAds.push(ad);
+  async.each(ads, async ad => {
+    const foundAd = await getAdByURL(ad.sourceUrl);
+    if (foundAd) {
+      await updateFields(ad);
+    } else {
+      await saveAd(ad);
     }
   });
-  return newAds;
+};
+
+const saveAd = async (ad: IAd) => {
+  await save(ad);
+};
+
+const updateFields = async (ad: IAd) => {
+  const payload = {
+    $set: {
+      bodyTypeId: ad.bodyTypeId,
+      description: ad.description,
+      images: ad.images,
+      isSelt: false,
+      kms: ad.kms,
+      markId: ad.modelId,
+      modelId: ad.markId,
+      price: ad.price,
+      sourceName: ad.sourceName,
+      sourceUrl: ad.sourceUrl,
+      year: ad.year
+    }
+  };
+  await update(ad.sourceUrl, payload);
 };
 
 export const getAdsByFilter = async (
@@ -113,10 +131,10 @@ export const getAds = async (
   if (filter.markId) {
     searchFilter.markId = filter.markId;
   }
-  if (filter.bodyTypeId) {
+  if (filter.bodyTypeId && filter.bodyTypeId.length) {
     searchFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
   }
-  if (filter.modelId) {
+  if (filter.modelId && filter.modelId.length) {
     searchFilter.modelId = { $in: [...filter.modelId] };
   }
   if (filter.sourceName) {
@@ -171,7 +189,7 @@ export const getAds = async (
     };
   }
   if (sort) {
-    sortParams = { [sort.field]: sort.sort };
+    sortParams = sort;
   }
   return await get(searchFilter, limit, skip, sortParams);
 };
