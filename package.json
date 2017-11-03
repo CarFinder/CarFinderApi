@@ -53,6 +53,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "@types/async": "^2.0.44",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",
@@ -78,6 +79,7 @@
     "@types/puppeteer": "^0.10.2",
     "@types/request": "^2.0.7",
     "@types/request-promise": "^4.1.39",
+    "async": "^2.5.0",
     "aws-sdk": "^2.139.0",
     "axios": "^0.16.2",
     "bcrypt-nodejs": "^0.0.3",

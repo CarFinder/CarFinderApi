@@ -15,6 +15,8 @@ import { updateServiceData } from './utils/parserUtils';
 
 const server = new Koa();
 
+updateServiceData();
+
 // update marks, models, bodyTypes, ads by schedule
 // const parse = schedule.scheduleJob(triggerSchedule, async () => {
 //   await updateServiceData();
