@@ -68,7 +68,6 @@ export const getAdsForCurrentModel = async (modelId: number) => {
       'sort[]': ''
     };
     form[`car[0][${modelId}]`] = '';
-    console.log(request.post);
     try {
       response = await request.post({
         formData: form,
@@ -86,7 +85,6 @@ export const getAdsForCurrentModel = async (modelId: number) => {
         normalizeWhitespace: true,
         xmlMode: true
       });
-      console.log(content);
 
       const descriptions = $('.carRow .txt p')
         .map(function() {

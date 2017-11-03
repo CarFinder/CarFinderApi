@@ -41,29 +41,42 @@ describe.only('Onliner Parser', () => {
       content: `
         <tr class="carRow">
           <td class="txt">
-            <p>внедорожник, бензин 3.7 л
-            </p>
+            <p>внедорожник, бензин 3.7 л</p>
           </td>
           <td>
             <div class="cost-i">
-              <p class="small">7000 $<br>6018 €<br></p>
+              <p class="small">7000 $<br> 6018 €<br></p>
             </div>
           </td>
         </tr>
         <tr class="carRow">
           <td class="txt">
-            <p>внедорожник, бензин 3.7 л
-            </p>
+            <p>внедорожник, бензин 3.7 л</p>
           </td>
           <td>
             <div class="cost-i">
-              <p class="small">8000 $<br>7018 €<br></p>
+              <p class="small">8000 $<br> 7018 €<br></p>
             </div>
           </td>
         </tr>
       `
     },
-    ADS_RESULT: '',
+    ADS_RESULT: {
+      '1': {
+        car: { body: 5, model: { id: '1', name: 'X5 M' }, odometerState: 198000, year: 2011 },
+        description: 'внедорожник, бензин 3.7 л',
+        id: 1,
+        photos: [] as any[],
+        price: '7000'
+      },
+      '2': {
+        car: { body: 5, model: { id: '2', name: 'X3' }, odometerState: 52200, year: 2010 },
+        description: 'внедорожник, бензин 3.7 л',
+        id: 2,
+        photos: [] as any[],
+        price: '8000'
+      }
+    },
     BODY_TYPES: `
       <li class="body_type-1">
         <label>
@@ -125,11 +138,13 @@ describe.only('Onliner Parser', () => {
   });
 
   it('should be return an array of ads', async () => {
-    const requestStub = sinon.stub(request, 'post').returns((opts: any) => {
-      return opts.formData.page === 1 ? { result: parser.ADS } : null;
+    const requestStub = sinon.stub(request, 'post').callsFake((opts: any) => {
+      return opts.formData.page === 1
+        ? { result: parser.ADS }
+        : { result: { advertisements: null, content: null } };
     });
     await api.updateAds(1);
-    console.log(api.getAds());
+    assert.deepEqual(api.getAds(), parser.ADS_RESULT);
     requestStub.restore();
   });
 });
