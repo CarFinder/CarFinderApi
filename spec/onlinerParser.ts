@@ -6,7 +6,7 @@ import { Api } from '../src/parsers/';
 
 import puppeteer = require('puppeteer');
 
-describe.only('Onliner Parser', () => {
+describe('Onliner Parser', () => {
   const api = new Api(1);
   const parser = {
     ADS: {
