@@ -69,16 +69,15 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     };
     form[`car[0][${modelId}]`] = '';
     try {
-      response = await request({
+      response = await request.post({
         formData: form,
         json: true,
-        method: 'POST',
         uri: 'https://ab.onliner.by/search'
       });
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
-
+    // console.log(response);
     const newAds = response.result.advertisements;
     if (response.result.content) {
       const content = response.result.content;

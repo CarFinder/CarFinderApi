@@ -17,8 +17,8 @@
   resolved "https://registry.yarnpkg.com/@types/bcrypt-nodejs/-/bcrypt-nodejs-0.0.30.tgz#4cdd96b49293b3932122e4b7e29543e35e6bae58"
 
 "@types/bluebird@*":
-  version "3.5.17"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.17.tgz#f9eee76920e7aded0f665ee7658c058407bd12ff"
+  version "3.5.18"
+  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.18.tgz#6a60435d4663e290f3709898a4f75014f279c4d6"
 
 "@types/bluebird@^3.5.12":
   version "3.5.14"

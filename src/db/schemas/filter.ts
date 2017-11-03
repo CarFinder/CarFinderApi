@@ -7,7 +7,7 @@ export interface IFilterModel extends IFilter, mongoose.Document {}
 const FilterSchema = new mongoose.Schema(
   {
     bodyTypeId: {
-      type: String
+      type: Array
     },
     kmsFrom: {
       type: Number
@@ -20,7 +20,7 @@ const FilterSchema = new mongoose.Schema(
       type: String
     },
     modelId: {
-      type: String
+      type: Array
     },
     name: {
       required: true,
@@ -31,6 +31,9 @@ const FilterSchema = new mongoose.Schema(
     },
     priceTo: {
       type: Number
+    },
+    url: {
+      type: String
     },
     userId: {
       required: true,
