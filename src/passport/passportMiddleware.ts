@@ -16,6 +16,10 @@ export const jwtLogin = async (ctx: Koa.Context, next?: any) => {
           throw new SecureError(codeErrors.AUTH_ERROR);
         }
         if (user) {
+          ctx.state.user = {
+            email: user.email,
+            id: user._id
+          };
           await next();
         } else {
           throw new SecureError(codeErrors.AUTH_ERROR);
