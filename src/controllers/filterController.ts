@@ -41,3 +41,61 @@ export const getModels = async (ctx: Koa.Context) => {
     ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
   }
 };
+
+export const saveFilter = async (ctx: Koa.Context) => {
+  try {
+    if (
+      !ctx.request.body.data.markId ||
+      !ctx.request.body.data.name ||
+      !ctx.request.body.data.url
+    ) {
+      ctx.status = HttpStatus.BAD_REQUEST;
+      ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
+      return;
+    }
+    const user = ctx.state.user;
+    await FilterService.saveSavedSearchFilter(ctx.request.body.data, user);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const getSavedFilters = async (ctx: Koa.Context) => {
+  try {
+    const user = ctx.state.user;
+    const savedFilters = await FilterService.getSavedSearchFilters(user);
+    ctx.status = HttpStatus.OK;
+    ctx.body = savedFilters;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const removeAllSavedFilters = async (ctx: Koa.Context) => {
+  try {
+    const user = ctx.state.user;
+    await FilterService.removeAllSavedFilters(user);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const removeSavedFilterById = async (ctx: Koa.Context) => {
+  try {
+    if (!ctx.params.id) {
+      ctx.status = HttpStatus.BAD_REQUEST;
+      ctx.body = { error: new RequestError(codeErrors.VALIDATION_ERROR).data };
+      return;
+    }
+    await FilterService.removeSavedFilterById(ctx.params.id);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.BAD_REQUEST;
+    ctx.body = { error: error.data };
+  }
+};

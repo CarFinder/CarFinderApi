@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 export const db = process.env.DB;
 export const jwtSecret = process.env.JWT_SECRET;
 export const port = process.env.PORT;
+=======
+import config from './test';
+
+export const db = process.env.DB || config.db;
+export const jwtSecret = process.env.JWT_SECRET || config.jwt_secret;
+export const port = process.env.PORT || config.port;
+export const proxy: string = process.env.PROXY || config.proxy;
+
+export const proxy = process.env.PROXY || config.proxy;
+
+export const limitForSavedFilters = 2;
+>>>>>>> 8e64415dd5a077ef3bdf21332f66e51f3d31408a
 
 export const mail = {
   auth: {
@@ -19,6 +32,7 @@ export const url = process.env.DEV_CLIENT_HOST_URL;
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
   AUTH_ERROR: 102,
+  IMAGE_UPLOAD_ERROR: 106,
   INCORRECT_EMAIL_OR_PASS: 101,
   INTERNAL_DB_ERROR: 120,
   JWT_DECODE_ERROR: 104,
@@ -36,5 +50,14 @@ export const ONLINER_URL: string = `https://ab.onliner.by/`;
 
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
-  RESTORE_PASSWORD: 'RESTORE_PASSWORD'
+  RESTORE_PASSWORD: 'RESTORE_PASSWORD',
+  UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
+
+export const awsConfig = {
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  region: process.env.AWS_REGION || config.region,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+};
+
+export const bucket = config.bucket;
