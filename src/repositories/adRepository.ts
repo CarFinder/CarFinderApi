@@ -13,17 +13,10 @@ export const preUpdate = async () => {
   const updateStream = await Ad.find({}).stream({ transform: JSON.stringify });
   const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
   transformer._transform = async (chunk: any, encoding: string, cb: any) => {
-    console.log(chunk);
+    await Ad.update({ sourceUrl: chunk.sourceUrl }, { $set: { isSelt: true } });
     cb();
   };
   updateStream.pipe(transformer);
-  // updateStream.on('data', async chunk => {
-  //   updateStream.pause();
-  //   const data: any = JSON.parse(chunk.toString());
-  //   await Ad.update({ sourceUrl: data.sourceUrl }, { $set: { isSelt: true } });
-  //   updateStream.resume();
-  // });
-  // updateStream.on('close', () => ControllUpdateEmitter.emit('finishPrepare'));
 };
 
 export const save = async (ad: object) => {
