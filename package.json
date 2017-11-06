@@ -40,10 +40,8 @@
     "sinon": "^4.0.1",
     "source-map-support": "^0.4.18",
     "text-summary": "^2.0.4",
-    "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
-    "tslint-config-prettier": "^1.5.0",
-    "typescript": "^2.5.2"
+    "tslint-config-prettier": "^1.5.0"
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
@@ -91,6 +89,8 @@
     "nodemailer": "^4.1.2",
     "passport-jwt": "^3.0.0",
     "passport-local": "^1.0.0",
-    "puppeteer": "^0.12.0"
+    "puppeteer": "^0.12.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
   }
 }
