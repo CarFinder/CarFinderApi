@@ -16,5 +16,5 @@ deploy:
   app: carfinderapp
   run: "node dist/src/index.ts"
   on:
-    repo: carfinderapp
-    branch: master
+    repo: CarFinder/CarFinderApi
+    branch: auto-deploy
