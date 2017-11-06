@@ -10,8 +10,6 @@ install:
 script:
   - tslint ./src/**/*.ts
   - yarn test:coverage
-before_deploy: 
-  run: "tsc"
 deploy:
   provider: heroku
   api_key: {{HEROKU_API_KEY}}
