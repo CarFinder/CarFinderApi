@@ -14,7 +14,7 @@ deploy:
   provider: heroku
   api_key: 62a91ab1-fcf2-4c23-82b0-f075a3e6e1c6
   app: carfinderapp
-  run: "node dist/src/index.ts"
+  run: "./node_modules/.bin/tsc && node dist/src/index.js"
   on:
     repo: CarFinder/CarFinderApi
     branch: auto-deploy
