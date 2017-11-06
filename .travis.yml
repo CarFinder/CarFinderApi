@@ -12,7 +12,7 @@ script:
   - yarn test:coverage
 deploy:
   provider: heroku
-  api_key: <%= ENV["HEROKU_API_KEY"] %>
+  api_key: 62a91ab1-fcf2-4c23-82b0-f075a3e6e1c6
   app: carfinderapp
   run: "node dist/src/index.ts"
   on:
