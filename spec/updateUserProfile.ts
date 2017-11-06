@@ -151,8 +151,7 @@ describe('User Profile', () => {
     });
 
     it('should return an object with valid url', async () => {
-      const email = 'email@test.com';
-      const res = await updateImage(email, imageData);
+      const res = await updateImage(user.email, imageData);
       expect(res).to.have.all.keys('image', 'type');
       expect(res.image).to.match(/s3(.*?)amazonaws/i);
     });
