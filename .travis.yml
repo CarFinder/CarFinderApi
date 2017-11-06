@@ -16,4 +16,4 @@ deploy:
   provider: heroku
   api_key: {{HEROKU_API_KEY}}
   app: carfinderapp
-  run: "node dist/src/index.ts"
+  run: "node dist/src/index.js"
