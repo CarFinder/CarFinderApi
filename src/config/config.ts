@@ -1,19 +1,6 @@
-<<<<<<< HEAD
 export const db = process.env.DB;
 export const jwtSecret = process.env.JWT_SECRET;
 export const port = process.env.PORT;
-=======
-import config from './test';
-
-export const db = process.env.DB || config.db;
-export const jwtSecret = process.env.JWT_SECRET || config.jwt_secret;
-export const port = process.env.PORT || config.port;
-export const proxy: string = process.env.PROXY || config.proxy;
-
-export const proxy = process.env.PROXY || config.proxy;
-
-export const limitForSavedFilters = 2;
->>>>>>> 8e64415dd5a077ef3bdf21332f66e51f3d31408a
 
 export const mail = {
   auth: {
@@ -56,8 +43,10 @@ export const emailActions = {
 
 export const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY,
-  region: process.env.AWS_REGION || config.region,
+  region: process.env.AWS_REGION,
   secretAccessKey: process.env.AWS_SECRET_KEY
 };
 
-export const bucket = config.bucket;
+export const bucket = 'carfinder-bucket';
+export const proxy: string = process.env.PROXY;
+export const limitForSavedFilters = 2;
