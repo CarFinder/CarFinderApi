@@ -20,6 +20,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       unique: true
     },
+    expireAt: {
+      default: new Date(),
+      required: true,
+      type: Date
+    },
     image: {
       default: '',
       type: String
@@ -73,7 +78,11 @@ UserSchema.pre('save', function(next) {
 
 UserSchema.post('save', async function() {
   const user = this;
-  await sendMail(this.email, this.name, this.interfaceLang, emailActions.CONFIRM_REGISTRATION);
+  try {
+    await sendMail(this.email, this.name, this.interfaceLang, emailActions.CONFIRM_REGISTRATION);
+  } catch (err) {
+    global.console.log('Mail quota exceeded.');
+  }
 });
 
 UserSchema.methods.comparePassword = function(candidatePassword: string, callback: any) {

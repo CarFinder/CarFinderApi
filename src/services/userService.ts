@@ -15,7 +15,8 @@ export const register = async (payload: IUser) => {
 export const confirm = async (email: string) => {
   const payload = {
     $set: {
-      confirmed: true
+      confirmed: true,
+      expireAt: 0
     }
   };
   await update(email, payload);
