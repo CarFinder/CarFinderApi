@@ -5,3 +5,4 @@ dist/
 env
 .env
 yarn-error.log
+package-lock.json
