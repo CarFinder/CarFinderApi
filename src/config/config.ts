@@ -7,6 +7,8 @@ export const proxy: string = process.env.PROXY || config.proxy;
 
 export const limitForSavedFilters = 2;
 
+export const proxy = process.env.PROXY || config.proxy;
+
 export const limitForSavedFilters = 2;
 
 export const mail = {

@@ -141,7 +141,7 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
     } else {
       return [];
     }
-  } catch {
+  } catch (err) {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };

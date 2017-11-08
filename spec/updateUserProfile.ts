@@ -37,7 +37,7 @@ describe('User Profile', () => {
 
     afterEach(async () => {
       passportStub.restore();
-      await User.remove({ email: { $in: ['email@test.com', 'abracodabra@test.com'] } });
+      await User.remove({ email: { $in: [user.email, 'email@test.com'] } });
     });
 
     it("should throw a validation error if email or name don't pass validation rules", async () => {
