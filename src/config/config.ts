@@ -3,6 +3,9 @@ import config from './test';
 export const db = process.env.DB || config.db;
 export const jwtSecret = process.env.JWT_SECRET || config.jwt_secret;
 export const port = process.env.PORT || config.port;
+export const proxy: string = process.env.PROXY || config.proxy;
+
+export const limitForSavedFilters = 2;
 
 export const proxy = process.env.PROXY || config.proxy;
 
