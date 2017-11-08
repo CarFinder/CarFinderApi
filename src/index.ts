@@ -16,9 +16,9 @@ import { updateServiceData } from './utils/parserUtils';
 const server = new Koa();
 
 // update marks, models, bodyTypes, ads by schedule
-// const parse = schedule.scheduleJob(triggerSchedule, async () => {
-//   await updateServiceData();
-// });
+const parse = schedule.scheduleJob(triggerSchedule, async () => {
+  await updateServiceData();
+});
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
