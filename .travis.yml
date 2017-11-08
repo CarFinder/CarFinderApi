@@ -1,13 +1,20 @@
 sudo: enabled
 language: node_js
 node_js:
-  - "8"
+- '8'
 before_install:
-  - yarn global add typescript tslint
+- yarn global add typescript tslint
 cache: yarn
 install:
-  - yarn
+- yarn
 script:
-  - tslint ./src/**/*.ts
-  - yarn test:coverage
-
+- tslint ./src/**/*.ts
+- yarn test:coverage
+deploy:
+  provider: heroku
+  api_key:
+    secure: FBjFb7euqGT4f3P4pVqsJTqBQJ0ZCRy8sJLnB/9iYUwsd20sVwSoaLXsuKRzmy9hOVMQ4g2vHVUbGn1pVB1c0hiKxbxvkF2Jg6nnPK4LI1NF6kk5nv7HgPt1L4ErlPqrp5w/peMmSR9qmk5c5iQoegQLF9uSK7xlqPsJ712NeHv05A+gelssrqLs2VxU6qM5t5Y0m2uYbZu5pCx4kK9q1Lx+eP6iGLkiAHP8ClACB8muwdQinzwoGBdMo8gM4WIOh5TcSe/SG1u/6TehWBmvrsjP9tWPk4sMD+h/PJjn2JscZnpd1vzCdL9fb4kxAzdEsyoaRaVwFWuxV2zTEzQj6xlW6ambVfLq8FpfciHpcmrWZbnX9bJzYfljEcV+xzgZ7vElBQD6PdiGxzE/WArc1c7O5USvtZJ7uk6GxSCwKOm/n1jskCruYUsEZXpHClNaeZ0d2Zql/fOGf9DATTS7VkYJKTZh2wJUrpOGOmR1ghVdLHAD4h0TfCHcMVWaVN/KOnmDwxuMAVlopVQMhu0vHhg87qob1rkxpt8PcK2QtzxH6W+T45rDrwT3QZtDUUUGR0VyP/ifdKQSzSfHnCGV1nhlOuGE5uaXp++cIQdIl9VqWkEWI/CZNaRSBkbR9AhyVlm19ErHXAYYQo6E9hIGc/cOvi+XNQoiVICLsifyx+4=
+  app: carfinderapp
+  on:
+    repo: CarFinder/CarFinderApi
+    branch: dev
