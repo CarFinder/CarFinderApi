@@ -10,6 +10,7 @@ import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
+import { addTempAds } from './tempAdService';
 import {
   confirm,
   getUserData,
@@ -74,30 +75,36 @@ export const updateDBData = async (
   bodyTypes: string[]
 ) => {
   await updateBodyTypes(bodyTypes);
-  await AdService.adsPreUpdate();
-
-  for (const mark of marks) {
-    const markMaket = { name: mark.name };
-    const savedMark: any = await updateMarks(markMaket);
-    const markId = savedMark.id;
-    // if mark name is BMW or Mercedes , don't set models
-    // `cause they models setted like series on onliner
-    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await AdService.updateAds(markAds);
-    } else {
-      const listOfModels = models[mark.onlinerMarkId];
-      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-      await updateModels(transformedModels);
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await AdService.updateAds(markAds);
-    }
-  }
+  await formingTempAdsData(marks, models, bodyTypes);
   return;
 };
 
+export const formingTempAdsData = async (
+  marks: ITransformedMarks[],
+  models: any,
+  bodyTypes: string[]
+) => {
+  // for (const mark of marks) {
+  // }
+  const mark = marks[0];
+  const markMaket = { name: mark.name };
+  const savedMark: any = await updateMarks(markMaket);
+  const markId = savedMark.id;
+  // if mark name is BMW or Mercedes , don't set models
+  // `cause they models setted like series on onliner
+  if (mark.name === 'BMW' || mark.name === 'Mercedes') {
+    const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+    const markAds = await transformAdsData(markId, ads, bodyTypes);
+    await addTempAds(markAds);
+  } else {
+    const listOfModels = models[mark.onlinerMarkId];
+    const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+    await updateModels(transformedModels);
+    const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+    const markAds = await transformAdsData(markId, ads, bodyTypes);
+    await addTempAds(markAds);
+  }
+};
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;
@@ -135,7 +142,7 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
-            ads: await getAds(filter, limitForSavedFilters, 0),
+            ads: await getAds(filter, limitForSavedFilters),
             filterId: filter._id,
             filterName: filter.name,
             filterUrl: filter.url

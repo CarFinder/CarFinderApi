@@ -3,5 +3,6 @@ node_modules/
 coverage/
 dist/
 
-yarn-error.log
+.env
+tranyarn-error.log
 package-lock.json
