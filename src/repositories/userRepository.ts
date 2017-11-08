@@ -13,7 +13,10 @@ export const create = async (user: IUser) => {
 
 export const update = async (email: string, payload: any) => {
   try {
-    await User.findOneAndUpdate({ email }, payload);
+    const user = await User.findOneAndUpdate({ email }, payload);
+    if (!user) {
+      throw new SecureError(codeErrors.AUTH_ERROR);
+    }
   } catch (error) {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }

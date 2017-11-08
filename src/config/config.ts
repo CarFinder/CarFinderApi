@@ -5,24 +5,21 @@ export const jwtSecret = process.env.JWT_SECRET || config.jwt_secret;
 export const port = process.env.PORT || config.port;
 export const proxy: string = process.env.PROXY || config.proxy;
 
-
 export const limitForSavedFilters = 2;
 
 export const mail = {
   auth: {
-    pass: process.env.MAIL_PASS,
-    user: process.env.MAIL_USER
+    pass: process.env.MAIL_PASS || config.mailPass,
+    user: process.env.MAIL_USER || config.mailUser
   },
   service: 'Gmail'
 };
-
-global.console.log(process.env);
 
 // execute every 3 day
 // see more adout config in dosc for node-schedule
 export const triggerSchedule = '13 13 * * 2';
 
-export const url = process.env.DEV_CLIENT_HOST_URL;
+export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
