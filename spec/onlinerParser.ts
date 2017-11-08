@@ -98,8 +98,17 @@ describe('Onliner Parser', () => {
     MODELS_RESULT: { '183': [{ "'33 Hot Rod": '2581' }, { '818': '2583' }] }
   };
 
+  let puppeteerStub: sinon.SinonStub;
+  let requestStub: sinon.SinonStub;
+
+  afterEach(done => {
+    puppeteerStub.restore();
+    requestStub.restore();
+    done();
+  });
+
   it('should be return an array of marks', async () => {
-    const puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
+    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
       close: () => '',
       newPage: () => ({
         content: () => parser.MARKS,
@@ -108,11 +117,10 @@ describe('Onliner Parser', () => {
     });
     await api.updateMarks();
     assert.deepEqual(api.getMarks() as any, parser.MARKS_RESULT);
-    puppeteerStub.restore();
   });
 
   it('should be return an array of models', async () => {
-    const puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
+    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
       close: () => '',
       newPage: () => ({
         content: () => parser.MODELS,
@@ -121,11 +129,10 @@ describe('Onliner Parser', () => {
     });
     await api.updateModels();
     assert.deepEqual(api.getModels() as any, parser.MODELS_RESULT);
-    puppeteerStub.restore();
   });
 
   it('should be return an array of body types', async () => {
-    const puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
+    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
       close: () => '',
       newPage: () => ({
         content: () => parser.BODY_TYPES,
@@ -134,17 +141,15 @@ describe('Onliner Parser', () => {
     });
     await api.updateBodyTypes();
     assert.deepEqual(api.getBodyTypes() as any, parser.BODY_TYPES_RESULT);
-    puppeteerStub.restore();
   });
 
   it('should be return an array of ads', async () => {
-    const requestStub = sinon.stub(request, 'post').callsFake((opts: any) => {
+    requestStub = sinon.stub(request, 'post').callsFake((opts: any) => {
       return opts.formData.page === 1
         ? { result: parser.ADS }
         : { result: { advertisements: null, content: null } };
     });
     await api.updateAds(1);
     assert.deepEqual(api.getAds(), parser.ADS_RESULT);
-    requestStub.restore();
   });
 });
