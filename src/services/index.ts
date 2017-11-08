@@ -1,6 +1,8 @@
-import { IUser } from '../interfaces/index';
+import { codeErrors, limitForSavedFilters } from '../config/config';
+import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
+import { DatabaseError } from '../utils/errors';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
@@ -118,6 +120,30 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
       };
     })
   );
+};
+
+export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]> => {
+  let result: ISavedFilterAds[] = [];
+  try {
+    const savedFilters = await FilterService.getSavedSearchFilters(user);
+    if (!savedFilters.length) {
+      return [];
+    } else {
+      result = await Promise.all(
+        savedFilters.map(async filter => {
+          return {
+            ads: await getAds(filter, limitForSavedFilters, 0),
+            filterId: filter._id,
+            filterName: filter.name,
+            filterUrl: filter.url
+          };
+        })
+      );
+      return result;
+    }
+  } catch {
+    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
+  }
 };
 
 export { AdService, FilterService, UserService };

@@ -39,10 +39,10 @@ export const getAds = async (
   if (filter.markId) {
     searchFilter.markId = filter.markId;
   }
-  if (filter.bodyTypeId) {
+  if (filter.bodyTypeId && filter.bodyTypeId.length) {
     searchFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
   }
-  if (filter.modelId) {
+  if (filter.modelId && filter.modelId.length) {
     searchFilter.modelId = { $in: [...filter.modelId] };
   }
   if (filter.sourceName) {

@@ -1,4 +1,5 @@
 export interface IUser {
+  id?: string;
   confirmed?: boolean;
   email?: string;
   image?: string;
@@ -34,6 +35,7 @@ export interface IFilter {
   yearFrom?: number;
   modelId?: string;
   name?: string;
+  url?: string;
   userId?: string;
   sourceName?: string;
 }
@@ -54,6 +56,27 @@ export interface IAd {
   sourceName: string;
   sourceUrl: string;
   year: number;
+}
+
+export interface IAdForClient {
+  _id: string;
+  bodyType: string;
+  description: string;
+  images: string[];
+  kms: number;
+  mark: string;
+  model: string;
+  price: number;
+  sourceName: string;
+  sourceUrl: string;
+  year: number;
+}
+
+export interface ISavedFilterAds {
+  filterName: string;
+  filterId: string;
+  filterUrl: string;
+  ads: IAdForClient[];
 }
 
 export interface IUserImage {
