@@ -76,6 +76,7 @@ export const updateDBData = async (
 ) => {
   await updateBodyTypes(bodyTypes);
   await formingTempAdsData(marks, models, bodyTypes);
+  await AdService.updateAds();
   return;
 };
 

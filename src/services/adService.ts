@@ -3,24 +3,17 @@ import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
 import { getAdByURL, getAll, preUpdate, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
-
-export const adsPreUpdate = async () => {
-  await preUpdate();
-};
+import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
   return await getAll();
 };
 
-export const updateAds = async (ads: IAd[]) => {
-  async.each(ads, async ad => {
-    const foundAd = await getAdByURL(ad.sourceUrl);
-    if (foundAd) {
-      await updateFields(ad);
-    } else {
-      await saveAd(ad);
-    }
-  });
+export const updateAds = async () => {
+  // compare ads with tempad
+  const notSelt: string[] = [];
+  const arr = await tempAdRepository.updateAds(notSelt);
+  return;
 };
 
 const saveAd = async (ad: IAd) => {
