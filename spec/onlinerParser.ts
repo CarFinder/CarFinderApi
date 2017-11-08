@@ -103,7 +103,9 @@ describe('Onliner Parser', () => {
 
   afterEach(done => {
     puppeteerStub.restore();
-    requestStub.restore();
+    if (requestStub) {
+      requestStub.restore();
+    }
     done();
   });
 
