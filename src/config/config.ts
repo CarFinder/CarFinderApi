@@ -7,6 +7,8 @@ export const proxy: string = process.env.PROXY || config.proxy;
 
 export const limitForSavedFilters = 2;
 
+export const limitForSavedFilters = 2;
+
 export const mail = {
   auth: {
     pass: process.env.MAIL_PASS || config.mailPass,
@@ -20,7 +22,7 @@ export const mail = {
 
 export const triggerSchedule = '*/3 * *';
 
-export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
+export const url = 'localhost:3001';
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
