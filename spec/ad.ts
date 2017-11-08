@@ -10,6 +10,7 @@ import app from './index';
 import { codeErrors } from '../src/config/config';
 import { Ad, BodyType, Mark, Model } from '../src/db';
 import { AdService } from '../src/services';
+import { getAds } from '../src/services';
 
 describe('Ad', () => {
   describe('Filter results', () => {
@@ -92,7 +93,7 @@ describe('Ad', () => {
     describe('Services', () => {
       it('should be return array of ads', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           bodyTypeIds: bodyTypeId.toString(),
           markId: mark._id.toString(),
           modelIds: modelId.toString(),
@@ -106,7 +107,7 @@ describe('Ad', () => {
 
       it('should be working with only min-max mileFrom values', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           kmsFrom: 1000,
           kmsTo: 22000,
           markId: mark._id.toString()
@@ -115,7 +116,7 @@ describe('Ad', () => {
       });
       it('should be works with only max mileFrom value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           kmsTo: 22000,
           markId: mark._id.toString()
         });
@@ -123,7 +124,7 @@ describe('Ad', () => {
       });
       it('should be works with only min mileFrom value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           kmsFrom: 10000,
           markId: mark._id.toString()
         });
@@ -131,7 +132,7 @@ describe('Ad', () => {
       });
       it('should be works with only min-max price values', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           priceFrom: 800,
           priceTo: 1200
@@ -140,7 +141,7 @@ describe('Ad', () => {
       });
       it('should be works with only max price value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           priceTo: 1100
         });
@@ -148,7 +149,7 @@ describe('Ad', () => {
       });
       it('should be works with only min price value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           priceFrom: 800
         });
@@ -156,7 +157,7 @@ describe('Ad', () => {
       });
       it('should be works with only min-max year values', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           yearFrom: 2008,
           yearTo: 2017
@@ -165,7 +166,7 @@ describe('Ad', () => {
       });
       it('should be works with only max year value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           yearTo: 2017
         });
@@ -173,7 +174,7 @@ describe('Ad', () => {
       });
       it('should be works with only min year value', async () => {
         const mark = await Mark.findOne();
-        const ads = await AdService.getAdsByFilter({
+        const ads = await getAds({
           markId: mark._id.toString(),
           yearFrom: 2008
         });
