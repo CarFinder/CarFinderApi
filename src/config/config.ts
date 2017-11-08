@@ -17,7 +17,7 @@ export const mail = {
 
 export const triggerSchedule = '*/3 * *';
 
-export const url = process.env.DEV_CLIENT_HOST_URL || config.url;
+export const url = 'localhost:3001';
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
