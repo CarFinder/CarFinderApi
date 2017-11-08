@@ -8,25 +8,15 @@
     "start": "ts-node src/index.ts",
     "test": "mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
-    "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+    "test:coverage":
+      "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
   "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "extension": [
-      ".ts",
-      ".js",
-      ".tsx"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text",
-      "html"
-    ],
+    "include": ["src/**/*.ts"],
+    "extension": [".ts", ".js", ".tsx"],
+    "require": ["ts-node/register"],
+    "reporter": ["text", "html"],
     "sourceMap": true,
     "instrument": true,
     "all": true
@@ -47,7 +37,6 @@
     "sinon": "^4.0.1",
     "source-map-support": "^0.4.18",
     "text-summary": "^2.0.4",
-    "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "tslint-config-prettier": "^1.5.0"
   },
@@ -99,6 +88,7 @@
     "passport-jwt": "^3.0.0",
     "passport-local": "^1.0.0",
     "puppeteer": "^0.12.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "ts-node": "^3.3.0"
   }
 }
