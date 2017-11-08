@@ -2,9 +2,6 @@
   "name": "car-finder",
   "version": "1.0.0",
   "main": "index.js",
-  "engines": {
-    "node": "8.9.0"
-  },
   "scripts": {
     "dev-server": "nodemon -w src -x ts-node  src/index.ts",
     "test:watch": "mocha --opts mocha.opts --watch",
@@ -69,6 +66,7 @@
     "@types/passport-jwt": "^2.0.24",
     "@types/passport-local": "^1.0.31",
     "@types/puppeteer": "^0.10.2",
+    "@types/request-promise": "^4.1.39",
     "aws-sdk": "^2.139.0",
     "axios": "^0.16.2",
     "bcrypt-nodejs": "^0.0.3",
@@ -93,6 +91,7 @@
     "passport-jwt": "^3.0.0",
     "passport-local": "^1.0.0",
     "puppeteer": "^0.12.0",
+    "request-promise": "^4.2.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.1"
   }
