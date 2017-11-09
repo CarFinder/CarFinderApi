@@ -42,3 +42,8 @@ export interface IOnlinerMark {
   id?: number;
   name?: string;
 }
+
+export interface IAvMark {
+  url?: string;
+  name: string;
+}

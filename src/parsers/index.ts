@@ -1,4 +1,5 @@
 import { Imark, Imodel, IParser } from '../interfaces/parserInterface';
+import * as av from './avParser/';
 import * as onliner from './onlinerParser/';
 
 export class Api implements IParser {
@@ -8,18 +9,22 @@ export class Api implements IParser {
   public bodyTypes: string[];
 
   // * this fields should be changed is we use another source for ads
-  public scrumAndGetMarks: any;
-  public scrumAndGetBodyTypes: any;
-  public scrumAndGetModels: any;
-  public scrumAndGetAds: any;
+  public scrapeAndGetMarks: any;
+  public scrapeAndGetBodyTypes: any;
+  public scrapeAndGetModels: any;
+  public scrapeAndGetAds: any;
 
   constructor(codeOfSource: number) {
     switch (codeOfSource) {
       case 1:
-        this.scrumAndGetMarks = onliner.getMarks;
-        this.scrumAndGetModels = onliner.getModels;
-        this.scrumAndGetAds = onliner.getAdsForCurrentModel;
-        this.scrumAndGetBodyTypes = onliner.getBodyTypes;
+        this.scrapeAndGetMarks = onliner.getMarks;
+        this.scrapeAndGetModels = onliner.getModels;
+        this.scrapeAndGetAds = onliner.getAdsForCurrentModel;
+        this.scrapeAndGetBodyTypes = onliner.getBodyTypes;
+        break;
+      case 2:
+        this.scrapeAndGetMarks = av.getMarks;
+        this.scrapeAndGetModels = av.getModels;
     }
   }
 
@@ -56,22 +61,24 @@ export class Api implements IParser {
   }
 
   public async updateMarks() {
-    const marks: any = await this.scrumAndGetMarks();
+    const marks: any = await this.scrapeAndGetMarks();
     await this.setMarks(marks);
   }
 
-  public async updateModels() {
-    const models: any = await this.scrumAndGetModels();
+  public async updateModels(marks?: any) {
+    const models: any = marks
+      ? await this.scrapeAndGetModels(marks)
+      : await this.scrapeAndGetModels();
     await this.setModels(models);
   }
 
-  public async updateAds(markId: number) {
-    const ads: any = await this.scrumAndGetAds(markId);
+  public async updateAds(mark: any) {
+    const ads: any = await this.scrapeAndGetAds(mark);
     await this.setAds(ads);
   }
 
   public async updateBodyTypes() {
-    const types = await this.scrumAndGetBodyTypes();
+    const types = await this.scrapeAndGetBodyTypes();
     await this.setBodyTypes(types);
   }
 }

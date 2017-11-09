@@ -13,11 +13,17 @@ import config from './config/test';
 import routes from './routes';
 import { updateServiceData } from './utils/parserUtils';
 
+import { Api } from './parsers';
+
 const server = new Koa();
 
-const parse = schedule.scheduleJob(triggerSchedule, async () => {
-  await updateServiceData();
-});
+// const parse = schedule.scheduleJob(triggerSchedule, async () => {
+//  await updateServiceData();
+// });
+
+const api = new Api(2);
+
+api.updateMarks();
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);

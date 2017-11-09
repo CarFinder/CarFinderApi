@@ -14,6 +14,12 @@ export default class ParserError extends Error {
           type: 'Parser Error'
         };
         break;
+      case codeErrors.AV_PARSE_ERROR:
+        this.data = {
+          code: codeErrors.AV_PARSE_ERROR,
+          type: 'Parser Error'
+        };
+        break;
     }
   }
 }

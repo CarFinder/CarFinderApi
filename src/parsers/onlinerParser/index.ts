@@ -1,8 +1,6 @@
-import axios from 'axios';
 import cheerio = require('cheerio');
 import FormData = require('form-data');
 import * as _ from 'lodash';
-import fetch from 'node-fetch';
 import puppeteer = require('puppeteer');
 import * as request from 'request-promise';
 import { codeErrors, ONLINER_URL, proxy } from '../../config/config';
@@ -77,7 +75,7 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
-    
+
     const newAds = response.result.advertisements;
     if (response.result.content) {
       const content = response.result.content;
