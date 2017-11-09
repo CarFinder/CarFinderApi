@@ -5,16 +5,49 @@ import { Ad, IAdModel } from '../db/';
 import { TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 
-export const updateAds = async (notSelt: string[]) => {
-  const reader = await Ad.find({}).stream();
+export const updateAds = async () => {
+  const reader = await TempAd.find({}).stream();
   const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
-  transformer._transform = async (chunk: any, encoding: string, next: any) => {
-    await Ad.update({ sourceUrl: chunk.sourceUrl }, { $set: chunk });
-    notSelt.push(chunk.sourceUrl);
-    next();
+  transformer._transform = async (chunk: any, encoding: string, cb: any) => {
+    const ad = await Ad.findOne({ sourceUrl: chunk.sourceUrl });
+    if (ad) {
+      await Ad.update(
+        { sourceUrl: chunk.sourceUrl },
+        {
+          $set: {
+            bodyTypeId: chunk.bodyTypeId,
+            description: chunk.description,
+            images: chunk.images,
+            isSelt: false,
+            kns: chunk.kms,
+            markId: chunk.markId,
+            modelId: chunk.modelId,
+            price: chunk.price,
+            sourceName: chunk.sourceName,
+            sourceUrl: chunk.sourceUrl,
+            year: chunk.year
+          }
+        }
+      );
+    } else {
+      const newAd = new Ad({
+        bodyTypeId: chunk.bodyTypeId,
+        description: chunk.description,
+        images: chunk.images,
+        isSelt: false,
+        kns: chunk.kms,
+        markId: chunk.markId,
+        modelId: chunk.modelId,
+        price: chunk.price,
+        sourceName: chunk.sourceName,
+        sourceUrl: chunk.sourceUrl,
+        year: chunk.year
+      });
+      await newAd.save();
+    }
+    cb();
   };
-
-  return notSelt;
+  reader.pipe(transformer);
 };
 
 export const dropCollection = async () => {

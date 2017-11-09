@@ -1,7 +1,7 @@
 import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAdByURL, getAll, preUpdate, save, update } from '../repositories/adRepository';
+import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
 import * as tempAdRepository from '../repositories/tempAdRepository';
 
@@ -10,10 +10,7 @@ export const getAllAds = async () => {
 };
 
 export const updateAds = async () => {
-  // compare ads with tempad
-  const notSelt: string[] = [];
-  const arr = await tempAdRepository.updateAds(notSelt);
-  return;
+  await tempAdRepository.updateAds();
 };
 
 const saveAd = async (ad: IAd) => {
@@ -186,3 +183,5 @@ export const getAds = async (
   }
   return await get(searchFilter, limit, skip, sortParams);
 };
+
+export { markSeltAds };

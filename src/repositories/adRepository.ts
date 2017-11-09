@@ -1,22 +1,15 @@
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
 import { codeErrors } from '../config/config';
-import { Ad, IAdModel } from '../db/';
+import { Ad, IAdModel, TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { SecureError } from '../utils/errors';
 
-// set isSelt flag to true for all ads
-// if ad is still exist flag will changed to false
-
-export const preUpdate = async () => {
-  const updateStream = await Ad.find({}).stream({ transform: JSON.stringify });
-  const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
-  transformer._transform = async (chunk: any, encoding: string, cb: any) => {
-    await Ad.update({ sourceUrl: chunk.sourceUrl }, { $set: { isSelt: true } });
-    cb();
-  };
-  updateStream.pipe(transformer);
+export const markSeltAds = async () => {
+  const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
+  const existingAds = response.map(item => item.sourceUrl);
+  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSelt: true }, { multi: true });
 };
 
 export const save = async (ad: object) => {
