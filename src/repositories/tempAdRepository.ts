@@ -6,7 +6,6 @@ import { TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 
 export const updateAds = async () => {
-  const reader = await TempAd.find({}).stream();
   const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
   transformer._transform = async (chunk: any, encoding: string, cb: any) => {
     const ad = await Ad.findOne({ sourceUrl: chunk.sourceUrl });
@@ -47,7 +46,52 @@ export const updateAds = async () => {
     }
     cb();
   };
-  reader.pipe(transformer);
+  await TempAd.find({})
+    .stream()
+    .pipe(transformer);
+  // cursor.eachAsync(async doc => {
+  //   const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
+  //   if (ad) {
+  //     await Ad.update(
+  //       { sourceUrl: doc.sourceUrl },
+  //       {
+  //         $set: {
+  //           bodyTypeId: doc.bodyTypeId,
+  //           description: doc.description,
+  //           images: doc.images,
+  //           isSelt: false,
+  //           kns: doc.kms,
+  //           markId: doc.markId,
+  //           modelId: doc.modelId,
+  //           price: doc.price,
+  //           sourceName: doc.sourceName,
+  //           sourceUrl: doc.sourceUrl,
+  //           year: doc.year
+  //         }
+  //       }
+  //     );
+  //   } else {
+  //     const newAd = new Ad({
+  //       bodyTypeId: doc.bodyTypeId,
+  //       description: doc.description,
+  //       images: doc.images,
+  //       isSelt: false,
+  //       kns: doc.kms,
+  //       markId: doc.markId,
+  //       modelId: doc.modelId,
+  //       price: doc.price,
+  //       sourceName: doc.sourceName,
+  //       sourceUrl: doc.sourceUrl,
+  //       year: doc.year
+  //     });
+  //     await newAd.save();
+  //   }
+  // });
+  // cursor.on('end', async () => {
+  //   console.log(1);
+  //   await dropCollection();
+  // });
+  await dropCollection();
 };
 
 export const dropCollection = async () => {

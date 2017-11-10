@@ -17,25 +17,6 @@ const saveAd = async (ad: IAd) => {
   await save(ad);
 };
 
-const updateFields = async (ad: IAd) => {
-  const payload = {
-    $set: {
-      bodyTypeId: ad.bodyTypeId,
-      description: ad.description,
-      images: ad.images,
-      isSelt: false,
-      kms: ad.kms,
-      markId: ad.modelId,
-      modelId: ad.markId,
-      price: ad.price,
-      sourceName: ad.sourceName,
-      sourceUrl: ad.sourceUrl,
-      year: ad.year
-    }
-  };
-  await update(ad.sourceUrl, payload);
-};
-
 export const getAdsByFilter = async (
   filter?: any,
   limit?: number,

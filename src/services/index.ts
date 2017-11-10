@@ -78,8 +78,8 @@ export const updateDBData = async (
   await updateBodyTypes(bodyTypes);
   await formingTempAdsData(marks, models, bodyTypes);
   await AdService.markSeltAds();
-  await updateAds();
-  await dropCollection();
+  await AdService.updateAds();
+  // await dropCollection();
   return;
 };
 
@@ -88,7 +88,9 @@ export const formingTempAdsData = async (
   models: any,
   bodyTypes: string[]
 ) => {
-  for (const mark of marks) {
+  //for (const mark of marks) {
+  for (let i = 0; i < 3; i++) {
+    const mark = marks[i];
     const markMaket = { name: mark.name };
     const savedMark: any = await updateMarks(markMaket);
     const markId = savedMark.id;
