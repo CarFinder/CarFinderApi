@@ -46,52 +46,16 @@ export const updateAds = async () => {
     }
     cb();
   };
-  await TempAd.find({})
+
+  const reader = await TempAd.find({})
     .stream()
     .pipe(transformer);
-  // cursor.eachAsync(async doc => {
-  //   const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
-  //   if (ad) {
-  //     await Ad.update(
-  //       { sourceUrl: doc.sourceUrl },
-  //       {
-  //         $set: {
-  //           bodyTypeId: doc.bodyTypeId,
-  //           description: doc.description,
-  //           images: doc.images,
-  //           isSelt: false,
-  //           kns: doc.kms,
-  //           markId: doc.markId,
-  //           modelId: doc.modelId,
-  //           price: doc.price,
-  //           sourceName: doc.sourceName,
-  //           sourceUrl: doc.sourceUrl,
-  //           year: doc.year
-  //         }
-  //       }
-  //     );
-  //   } else {
-  //     const newAd = new Ad({
-  //       bodyTypeId: doc.bodyTypeId,
-  //       description: doc.description,
-  //       images: doc.images,
-  //       isSelt: false,
-  //       kns: doc.kms,
-  //       markId: doc.markId,
-  //       modelId: doc.modelId,
-  //       price: doc.price,
-  //       sourceName: doc.sourceName,
-  //       sourceUrl: doc.sourceUrl,
-  //       year: doc.year
-  //     });
-  //     await newAd.save();
-  //   }
-  // });
-  // cursor.on('end', async () => {
-  //   console.log(1);
-  //   await dropCollection();
-  // });
-  await dropCollection();
+
+  reader.resume();
+
+  reader.on('end', async () => {
+    await dropCollection();
+  });
 };
 
 export const dropCollection = async () => {
