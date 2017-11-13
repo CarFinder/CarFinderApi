@@ -48,3 +48,5 @@ export const awsConfig = {
 export const bucket = 'carfinder-bucket';
 export const proxy: string = process.env.PROXY;
 export const limitForSavedFilters = 2;
+
+export const healthCheckLink = 'https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052';
