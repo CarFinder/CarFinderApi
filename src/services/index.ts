@@ -139,9 +139,7 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   let result: ISavedFilterAds[] = [];
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(user);
-    if (!savedFilters.length) {
-      return [];
-    } else {
+    if (savedFilters.length) {
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
@@ -153,8 +151,10 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
         })
       );
       return result;
+    } else {
+      return [];
     }
-  } catch {
+  } catch (err) {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };

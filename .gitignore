@@ -4,5 +4,6 @@ coverage/
 dist/
 
 .env
-tranyarn-error.log
+yarn-error.log
+
 package-lock.json

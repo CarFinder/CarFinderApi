@@ -76,8 +76,8 @@ export const getAdsForCurrentModel = async (modelId: number) => {
       });
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
-      // remove(drop) tempads table and restart update
     }
+
     const newAds = response.result.advertisements;
     if (response.result.content) {
       const content = response.result.content;
