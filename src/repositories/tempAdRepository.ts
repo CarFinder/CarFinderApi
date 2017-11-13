@@ -51,6 +51,7 @@ export const updateAds = async () => {
     .stream()
     .pipe(transformer);
 
+  //  used to fully consume the data from a stream
   reader.resume();
 
   reader.on('end', async () => {
