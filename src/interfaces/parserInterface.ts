@@ -21,7 +21,7 @@ export interface ITransformedAd {
   markId: string;
   milesFrom?: number;
   modelId: string;
-  price?: number;
+  price?: string;
   sourceName: string;
   sourceUrl: string;
   year: number;

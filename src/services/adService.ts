@@ -1,123 +1,20 @@
 import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAdByURL, getAll, preUpdate, save, update } from '../repositories/adRepository';
+import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
-
-export const adsPreUpdate = async () => {
-  await preUpdate();
-};
+import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
   return await getAll();
 };
 
-export const updateAds = async (ads: IAd[]) => {
-  async.each(ads, async ad => {
-    const foundAd = await getAdByURL(ad.sourceUrl);
-    if (foundAd) {
-      await updateFields(ad);
-    } else {
-      await saveAd(ad);
-    }
-  });
+export const updateAds = async () => {
+  await tempAdRepository.updateAds();
 };
 
 const saveAd = async (ad: IAd) => {
   await save(ad);
-};
-
-const updateFields = async (ad: IAd) => {
-  const payload = {
-    $set: {
-      bodyTypeId: ad.bodyTypeId,
-      description: ad.description,
-      images: ad.images,
-      isSelt: false,
-      kms: ad.kms,
-      markId: ad.modelId,
-      modelId: ad.markId,
-      price: ad.price,
-      sourceName: ad.sourceName,
-      sourceUrl: ad.sourceUrl,
-      year: ad.year
-    }
-  };
-  await update(ad.sourceUrl, payload);
-};
-
-export const getAdsByFilter = async (
-  filter?: any,
-  limit?: number,
-  skip?: number,
-  sort?: any
-): Promise<IAdModel[]> => {
-  const searchFilter: any = {};
-  let sortParams = null;
-  if (filter.markId) {
-    searchFilter.markId = filter.markId;
-  }
-  if (filter.bodyTypeId) {
-    searchFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
-  }
-  if (filter.modelId) {
-    searchFilter.modelId = { $in: [...filter.modelId] };
-  }
-  if (filter.sourceName) {
-    searchFilter.sourceName = filter.sourceName;
-  }
-  if (filter.priceFrom && !filter.priceTo) {
-    searchFilter.price = {
-      $gt: filter.priceFrom
-    };
-  }
-  if (!filter.priceFrom && filter.priceTo) {
-    searchFilter.price = {
-      $lt: filter.priceTo
-    };
-  }
-  if (filter.priceFrom && filter.priceTo) {
-    searchFilter.price = {
-      $gt: filter.priceFrom,
-      $lt: filter.priceTo
-    };
-  }
-  if (filter.kmsFrom && !filter.kmsTo) {
-    searchFilter.kms = {
-      $gt: filter.kmsFrom
-    };
-  }
-  if (!filter.kmsFrom && filter.kmsTo) {
-    searchFilter.kms = {
-      $lt: filter.kmsTo
-    };
-  }
-  if (filter.kmsFrom && filter.kmsTo) {
-    searchFilter.kms = {
-      $gt: filter.kmsFrom,
-      $lt: filter.kmsTo
-    };
-  }
-  if (filter.yearFrom && !filter.yearTo) {
-    searchFilter.year = {
-      $gt: filter.yearFrom
-    };
-  }
-  if (!filter.yearFrom && filter.yearTo) {
-    searchFilter.year = {
-      $lt: filter.yearTo
-    };
-  }
-  if (filter.yearFrom && filter.yearTo) {
-    searchFilter.year = {
-      $gt: filter.yearFrom,
-      $lt: filter.yearTo
-    };
-  }
-  if (sort) {
-    sortParams = { [sort.field]: sort.sort };
-  }
-  return await getByFilter(searchFilter, limit, skip, sortParams);
 };
 
 export const getAds = async (
@@ -193,3 +90,5 @@ export const getAds = async (
   }
   return await get(searchFilter, limit, skip, sortParams);
 };
+
+export { markSeltAds };

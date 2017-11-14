@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 before(done => {
   dotenv.config();
+  process.env.NODE_ENV = 'test';
   done();
 });
 

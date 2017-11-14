@@ -2,7 +2,8 @@
 node_modules/
 coverage/
 dist/
+
 .env
-env
 yarn-error.log
+
 package-lock.json

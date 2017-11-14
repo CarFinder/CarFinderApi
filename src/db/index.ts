@@ -4,11 +4,13 @@ import { BodyTypeSchema, IBodyTypeModel } from './schemas/bodyType';
 import { FilterSchema, IFilterModel } from './schemas/filter';
 import { IMarkModel, MarkSchema } from './schemas/mark';
 import { IModelModel, ModelSchema } from './schemas/model';
+import { tempAdSchema } from './schemas/tempAd';
 import { IUserModel, UserSchema } from './schemas/user';
-
 export { IUserModel, IModelModel, IAdModel, IBodyTypeModel, IFilterModel, IMarkModel };
 
 export const User: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', UserSchema);
+
+export const TempAd: mongoose.Model<IAdModel> = mongoose.model<IAdModel>('TempAd', tempAdSchema);
 
 export const Model: mongoose.Model<IModelModel> = mongoose.model<IModelModel>('Model', ModelSchema);
 

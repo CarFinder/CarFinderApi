@@ -77,7 +77,7 @@ export const getAdsForCurrentModel = async (modelId: number) => {
     } catch (e) {
       throw new ParserError(codeErrors.ONLINER_PARSE_ERROR);
     }
-    // console.log(response);
+
     const newAds = response.result.advertisements;
     if (response.result.content) {
       const content = response.result.content;
@@ -96,8 +96,13 @@ export const getAdsForCurrentModel = async (modelId: number) => {
         .text()
         .replace(/\$ (.*?) €/g, '-')
         .split('-')
-        .map(el => el.trim())
-        .filter(el => el !== '');
+        .map(el => {
+          el.trim();
+          const transformedPrice = el.replace(/\s+/g, '');
+          if (transformedPrice !== '') {
+            return parseInt(transformedPrice, 10);
+          }
+        });
 
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {

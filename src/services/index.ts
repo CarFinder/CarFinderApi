@@ -10,6 +10,7 @@ import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
+import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
   getUserData,
@@ -73,29 +74,38 @@ export const updateDBData = async (
   models: any,
   bodyTypes: string[]
 ) => {
-  await AdService.adsPreUpdate();
-  ControllUpdateEmitter.on('finishPrepare', async () => {
-    for (const mark of marks) {
-      const markMaket = { name: mark.name };
-      const savedMark: any = await updateMarks(markMaket);
-      const markId = savedMark.id;
-      // if mark name is BMW or Mercedes , don't set models
-      // `cause they models setted like series on onliner
-      if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-        const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-        const markAds = await transformAdsData(markId, ads, bodyTypes);
-        await AdService.updateAds(markAds);
-      } else {
-        const listOfModels = models[mark.onlinerMarkId];
-        const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-        await updateModels(transformedModels);
-        const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-        const markAds = await transformAdsData(markId, ads, bodyTypes);
-        await AdService.updateAds(markAds);
-      }
-    }
-  });
+  const buffer: string[] = [];
+  await updateBodyTypes(bodyTypes);
+  await formingTempAdsData(marks, models, bodyTypes);
+  await AdService.markSeltAds();
+  await AdService.updateAds();
   return;
+};
+
+export const formingTempAdsData = async (
+  marks: ITransformedMarks[],
+  models: any,
+  bodyTypes: string[]
+) => {
+  for (const mark of marks) {
+    const markMaket = { name: mark.name };
+    const savedMark: any = await updateMarks(markMaket);
+    const markId = savedMark.id;
+    // if mark name is BMW or Mercedes , don't set models
+    // `cause they models setted like series on onliner
+    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await addTempAds(markAds);
+    } else {
+      const listOfModels = models[mark.onlinerMarkId];
+      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+      await updateModels(transformedModels);
+      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+      const markAds = await transformAdsData(markId, ads, bodyTypes);
+      await addTempAds(markAds);
+    }
+  }
 };
 
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
@@ -129,13 +139,11 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   let result: ISavedFilterAds[] = [];
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(user);
-    if (!savedFilters.length) {
-      return [];
-    } else {
+    if (savedFilters.length) {
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
-            ads: await getAds(filter, limitForSavedFilters, 0),
+            ads: await getAds(filter, limitForSavedFilters),
             filterId: filter._id,
             filterName: filter.name,
             filterUrl: filter.url
@@ -143,8 +151,10 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
         })
       );
       return result;
+    } else {
+      return [];
     }
-  } catch {
+  } catch (err) {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };

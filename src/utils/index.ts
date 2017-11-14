@@ -28,23 +28,25 @@ export const handleDatabaseError = (err: any) => {
 };
 
 export const sendMail = (email: string, name: string, language: string, action: string): void => {
-  const token: any = getToken({ email });
-  const html = generateEmail(name, email, language, token, action);
-  const subject = getEmailSubject(action);
-  transport.sendMail(
-    {
-      from: 'Car Finder',
-      html,
-      subject,
-      to: email
-    },
-    (err, info) => {
-      global.console.log(`The mail sent to ${email}`);
-      if (err) {
-        throw err;
+  if (process.env.NODE_ENV !== 'test') {
+    const token: any = getToken({ email });
+    const html = generateEmail(name, email, language, token, action);
+    const subject = getEmailSubject(action);
+    transport.sendMail(
+      {
+        from: 'Car Finder',
+        html,
+        subject,
+        to: email
+      },
+      (err, info) => {
+        global.console.log(`The mail sent to ${email}`);
+        if (err) {
+          throw err;
+        }
       }
-    }
-  );
+    );
+  }
 };
 
 const generateEmail = (
