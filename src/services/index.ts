@@ -1,5 +1,5 @@
-import { codeErrors, limitForSavedFilters } from '../config/config';
-import { ISavedFilterAds, IUser } from '../interfaces/index';
+import { codeErrors, emailActions, limitForSavedFilters } from '../config/config';
+import { IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
@@ -17,6 +17,7 @@ import {
   register,
   restorePassword,
   sendEmailConfirmation,
+  sendMessage,
   sendPasswordEmail,
   updateImage,
   updateUserProfile
@@ -30,6 +31,10 @@ export const registerUser = async (payload: IUser) => {
 
 export const sendRestorePasswordEmail = async (payload: string) => {
   await sendPasswordEmail(payload);
+};
+
+export const sendUserMessage = async (data: IMessage) => {
+  await sendMessage(data);
 };
 
 export const restoreUserPassword = async (payload: { password: string; token: string }) => {
