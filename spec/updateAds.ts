@@ -1,90 +1,80 @@
+import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
-import { Ad, TempAd } from '../src/db/';
+import { Ad, IAdModel, Mark, Model, TempAd } from '../src/db/';
 import { updateDBData } from '../src/services';
+import * as AdService from '../src/services//adService';
+import { addTempAds, dropCollection, updateAds } from '../src/services/tempAdService';
 import * as parserUtils from '../src/utils/parserUtils';
 
 const adFields = {
   KMS: 20000,
-  MARK_NAME: 'MarkName',
-  MODEL_NAME: 'ModelTest',
+  MARK_ID: '1',
+  MODEL_ID: '2',
   PRICE: 1000,
   SOURCE_NAME: 'onlinerTest',
   SOURCE_URL: 'url',
   YEAR: 2010
 };
 
-const mark = {
-  id: 3,
-  name: adFields.MARK_NAME
-};
-
-const models = { 3: [{ name: 'abracodabra' }] };
-
-const onlinerStub = sinon.stub(parserUtils, 'getOnlinerAds');
-const transformStub = sinon.stub(parserUtils, 'transformAdsData');
-
-const bodyTypes = ['тип1', 'тип2', 'тип3'];
-
 const ads = [
   {
-    bodyTypeId: 1,
+    bodyTypeId: '1',
     description: 'descrip',
     images: ['url'],
     kms: adFields.KMS,
-    markId: mark.id,
-    modelName: adFields.MODEL_NAME,
+    markId: adFields.MARK_ID,
+    modelId: adFields.MODEL_ID,
     price: adFields.PRICE,
     sourceName: adFields.SOURCE_NAME,
     sourceUrl: adFields.SOURCE_URL + 0,
     year: adFields.YEAR
   },
   {
-    bodyTypeId: 2,
+    bodyTypeId: '2',
     description: 'descrip',
     images: ['url'],
     kms: adFields.KMS,
-    markId: mark.id,
-    modelName: adFields.MODEL_NAME,
+    markId: adFields.MARK_ID,
+    modelId: adFields.MODEL_ID,
+    price: adFields.PRICE,
     sourceName: adFields.SOURCE_NAME,
     sourceUrl: adFields.SOURCE_URL + 1,
     year: adFields.YEAR
   },
   {
-    bodyTypeId: 3,
+    bodyTypeId: '3',
     description: 'descrip',
     images: ['url'],
     kms: adFields.KMS,
-    markId: mark.id,
-    modelName: adFields.MODEL_NAME,
+    markId: adFields.MARK_ID,
+    modelId: adFields.MODEL_ID,
     price: adFields.PRICE,
     sourceName: adFields.SOURCE_NAME,
     sourceUrl: adFields.SOURCE_URL + 2,
     year: adFields.YEAR
   }
 ];
-
-onlinerStub.returns(ads);
-transformStub.returns(ads);
 
 const newAds = [
   {
-    bodyTypeId: 2,
-    description: 'descrip',
+    bodyTypeId: '2',
+    description: 'yaaaaahhooo',
     images: ['url'],
     kms: adFields.KMS,
-    markId: mark.id,
-    modelName: adFields.MODEL_NAME,
+    markId: adFields.MARK_ID,
+    modelId: adFields.MODEL_ID,
+    price: adFields.PRICE,
     sourceName: adFields.SOURCE_NAME,
     sourceUrl: adFields.SOURCE_URL + 1,
     year: adFields.YEAR
   },
   {
-    bodyTypeId: 3,
-    description: 'descrip',
+    bodyTypeId: '3',
+    description: 'yaaaaahhooo',
     images: ['url'],
     kms: adFields.KMS,
-    markId: mark.id,
-    modelName: adFields.MODEL_NAME,
+    markId: adFields.MARK_ID,
+    modelId: adFields.MODEL_ID,
     price: adFields.PRICE,
     sourceName: adFields.SOURCE_NAME,
     sourceUrl: adFields.SOURCE_URL + 2,
@@ -92,18 +82,60 @@ const newAds = [
   }
 ];
 
-describe('Ad update', () => {
-  after(async () => {
-    // drop ad collection
-    await Ad.remove({});
-  });
-  afterEach(async () => {
-    // drop tempAd collection
-    await TempAd.remove({});
+describe('Ad update', async () => {
+  describe('temp ads', async () => {
+    before(async () => {
+      await addTempAds(ads);
+    });
+
+    it('should insert temp ads', async () => {
+      const tmpAds = await TempAd.find({});
+      assert.equal(ads.length, tmpAds.length);
+    });
+
+    after(async () => {
+      await TempAd.remove({});
+    });
   });
 
-  it('should insert ads', async () => {
-    const marks = [mark];
-    await updateDBData(marks, models, bodyTypes);
+  describe('ads updating', async () => {
+    before(async () => {
+      await addTempAds(newAds);
+      await updateAds();
+      await TempAd.remove({});
+    });
+
+    it('should insert temp ads', async () => {
+      await addTempAds(ads);
+      await updateAds();
+      const tmpAds = await TempAd.find({});
+      assert.equal(ads.length, tmpAds.length);
+    });
+
+    after(async () => {
+      await TempAd.remove({});
+      await Ad.remove({});
+    });
+  });
+
+  describe('should set flag false to selt car', () => {
+    before(async () => {
+      await addTempAds(ads);
+      await updateAds();
+      await TempAd.remove({});
+    });
+
+    it('should insert temp ads', async () => {
+      await addTempAds(newAds);
+      await updateAds();
+      const tmpAd: IAdModel = await Ad.findOne({ sourceUrl: adFields.SOURCE_URL + 0 });
+
+      assert.equal(false, tmpAd.isSold);
+    });
+
+    after(async () => {
+      await TempAd.remove({});
+      await Ad.remove({});
+    });
   });
 });

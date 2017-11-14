@@ -9,7 +9,7 @@ import { SecureError } from '../utils/errors';
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);
-  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSelt: true }, { multi: true });
+  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSold: true }, { multi: true });
 };
 
 export const save = async (ad: object) => {

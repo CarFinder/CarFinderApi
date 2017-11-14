@@ -14,7 +14,7 @@ const tempAdSchema = new mongoose.Schema(
     images: {
       type: Array
     },
-    isSelt: {
+    isSold: {
       default: false,
       type: Boolean
     },

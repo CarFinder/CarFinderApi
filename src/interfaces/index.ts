@@ -49,6 +49,7 @@ export interface IAd {
   bodyTypeId: string;
   description?: string;
   images?: string[];
+  isSold: boolean;
   markId: string;
   kms?: number;
   modelId: string;
