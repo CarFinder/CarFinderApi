@@ -101,10 +101,6 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "ts-node": "^3.3.0",
-<<<<<<< HEAD
-    "typescript": "^2.5.2"
-=======
     "typescript": "^2.6.1"
->>>>>>> dev
   }
 }
