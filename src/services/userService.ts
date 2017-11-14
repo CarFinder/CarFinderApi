@@ -1,14 +1,23 @@
 import { codeErrors, emailActions } from '../config/config';
-import { IUser, IUserImage } from '../interfaces/index';
+import { IMessage, IUser, IUserImage } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError, RequestError, SecureError } from '../utils/errors';
 import { encryptPassword, sendMail, transformDataForMongo, uploadImage } from '../utils/index';
+import { sendUserEmail } from '../utils/userMessage';
 
 export const register = async (payload: IUser) => {
   try {
     await create(payload);
   } catch (error) {
     throw new DatabaseError(error.code);
+  }
+};
+
+export const sendMessage = async (data: IMessage) => {
+  try {
+    await sendUserEmail(data, emailActions.SEND_USER_MESSAGE);
+  } catch (error) {
+    throw new SecureError(codeErrors.SEND_EMAIL_ERROR);
   }
 };
 
