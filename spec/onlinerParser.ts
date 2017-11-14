@@ -67,14 +67,14 @@ describe('Onliner Parser', () => {
         description: 'внедорожник, бензин 3.7 л',
         id: 1,
         photos: [] as any[],
-        price: '7000'
+        price: 7000
       },
       '2': {
         car: { body: 5, model: { id: '2', name: 'X3' }, odometerState: 52200, year: 2010 },
         description: 'внедорожник, бензин 3.7 л',
         id: 2,
         photos: [] as any[],
-        price: '8000'
+        price: 8000
       }
     },
     BODY_TYPES: `

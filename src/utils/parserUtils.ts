@@ -60,7 +60,8 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
 
   // used for of loop, cause async-await is present
   for (const ad of transformedAds) {
-    const bodyName = bodyTypes[ad.bodyTypeId];
+    // positions in array starts with 0 but bodyType id's start with 1
+    const bodyName = bodyTypes[ad.bodyTypeId - 1];
     const bodyType = await getBodyTypeByName(bodyName);
     let modelId;
     try {

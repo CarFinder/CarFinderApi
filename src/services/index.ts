@@ -2,6 +2,7 @@ import { codeErrors, limitForSavedFilters } from '../config/config';
 import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
+import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
@@ -9,6 +10,7 @@ import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
+import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
   getUserData,
@@ -72,7 +74,19 @@ export const updateDBData = async (
   models: any,
   bodyTypes: string[]
 ) => {
+  const buffer: string[] = [];
   await updateBodyTypes(bodyTypes);
+  await formingTempAdsData(marks, models, bodyTypes);
+  await AdService.markSeltAds();
+  await AdService.updateAds();
+  return;
+};
+
+export const formingTempAdsData = async (
+  marks: ITransformedMarks[],
+  models: any,
+  bodyTypes: string[]
+) => {
   for (const mark of marks) {
     const markMaket = { name: mark.name };
     const savedMark: any = await updateMarks(markMaket);
@@ -82,17 +96,16 @@ export const updateDBData = async (
     if (mark.name === 'BMW' || mark.name === 'Mercedes') {
       const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await AdService.updateAds(markAds);
+      await addTempAds(markAds);
     } else {
       const listOfModels = models[mark.onlinerMarkId];
       const transformedModels = transformOnlinerModelsData(listOfModels, markId);
       await updateModels(transformedModels);
       const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await AdService.updateAds(markAds);
+      await addTempAds(markAds);
     }
   }
-  return;
 };
 
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
@@ -130,7 +143,7 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
-            ads: await getAds(filter, limitForSavedFilters, 0),
+            ads: await getAds(filter, limitForSavedFilters),
             filterId: filter._id,
             filterName: filter.name,
             filterUrl: filter.url

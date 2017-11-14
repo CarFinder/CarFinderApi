@@ -2,6 +2,7 @@ import * as bluebird from 'bluebird';
 import * as dotenv from 'dotenv';
 import * as schedule from 'node-schedule';
 dotenv.config();
+import * as https from 'https';
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as jwt from 'koa-jwt';
@@ -9,7 +10,6 @@ import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
-import config from './config/test';
 import routes from './routes';
 import { updateServiceData } from './utils/parserUtils';
 

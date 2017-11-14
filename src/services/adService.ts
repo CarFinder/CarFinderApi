@@ -1,31 +1,20 @@
+import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAll, save } from '../repositories/adRepository';
+import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
+import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
   return await getAll();
 };
 
-export const updateAds = async (ads: IAd[]) => {
-  await saveAds(ads);
+export const updateAds = async () => {
+  await tempAdRepository.updateAds();
 };
 
-const saveAds = async (ads: IAd[]) => {
-  for (const ad of ads) {
-    await save(ad);
-  }
-};
-
-const addNewAds = (knownAds: IAd[], ads: IAd[]) => {
-  const newAds: IAd[] = [];
-  ads.forEach(ad => {
-    const isExist = knownAds.find(knownAd => knownAd.sourceUrl === ad.sourceUrl);
-    if (!isExist) {
-      newAds.push(ad);
-    }
-  });
-  return newAds;
+const saveAd = async (ad: IAd) => {
+  await save(ad);
 };
 
 export const getAds = async (
@@ -101,3 +90,5 @@ export const getAds = async (
   }
   return await get(searchFilter, limit, skip, sortParams);
 };
+
+export { markSeltAds };

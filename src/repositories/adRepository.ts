@@ -1,6 +1,16 @@
 import * as mongoose from 'mongoose';
-import { Ad, IAdModel } from '../db/';
+import { Transform } from 'stream';
+import { codeErrors } from '../config/config';
+import { Ad, IAdModel, TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
+import { ControllUpdateEmitter } from '../utils/controllEvents';
+import { SecureError } from '../utils/errors';
+
+export const markSeltAds = async () => {
+  const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
+  const existingAds = response.map(item => item.sourceUrl);
+  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSold: true }, { multi: true });
+};
 
 export const save = async (ad: object) => {
   const newAd = new Ad(ad);
@@ -13,6 +23,10 @@ export const save = async (ad: object) => {
 
 export const getAll = async () => {
   return await Ad.find();
+};
+
+export const update = async (url: string, payload: any) => {
+  await Ad.update({ sourceUrl: url }, payload);
 };
 
 export const getByFilter = async (
@@ -83,4 +97,8 @@ export const get = async (
     .limit(limit || 20)
     .skip(skip || 0)
     .sort(sort || { year: 1 })) as IAdModel[];
+};
+
+export const getAdByURL = async (url: string) => {
+  return await Ad.findOne({ sourceUrl: url });
 };
