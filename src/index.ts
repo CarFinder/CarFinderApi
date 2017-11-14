@@ -17,6 +17,7 @@ const server = new Koa();
 
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
+  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
 });
 
 mongoose.connect(db, { useMongoClient: true });
