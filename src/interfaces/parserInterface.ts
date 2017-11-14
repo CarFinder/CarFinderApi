@@ -1,6 +1,8 @@
 export interface Imark {
-  id: number;
-  model: string;
+  id?: number;
+  model?: string;
+  name?: string;
+  url?: string;
 }
 
 export interface Imodel {
