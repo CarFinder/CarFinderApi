@@ -15,6 +15,9 @@
       "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
+  "engines": {
+    "node": "9.x.x"
+  },
   "nyc": {
     "include": ["src/**/*.ts"],
     "extension": [".ts", ".js", ".tsx"],
