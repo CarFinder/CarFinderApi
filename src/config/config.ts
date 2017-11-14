@@ -1,6 +1,9 @@
 export const db = process.env.DB;
 export const jwtSecret = process.env.JWT_SECRET;
 export const port = process.env.PORT;
+export const proxy: string = process.env.PROXY;
+
+export const limitForSavedFilters = 2;
 
 export const mail = {
   auth: {
@@ -45,8 +48,4 @@ export const awsConfig = {
   secretAccessKey: process.env.AWS_SECRET_KEY
 };
 
-export const bucket = 'carfinder-bucket';
-export const proxy: string = process.env.PROXY;
-export const limitForSavedFilters = 2;
-
-export const healthCheckLink = 'https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052';
+export const bucket = process.env.AWS_BUCKET;
