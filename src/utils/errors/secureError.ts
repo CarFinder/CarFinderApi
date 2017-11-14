@@ -37,6 +37,11 @@ export default class SecureError extends Error {
           code: codeErrors.VALIDATION_ERROR,
           type: 'Auth error'
         };
+      case codeErrors.SEND_EMAIL_ERROR:
+        this.data = {
+          code: codeErrors.SEND_EMAIL_ERROR,
+          type: 'Auth error'
+        };
     }
   }
 }
