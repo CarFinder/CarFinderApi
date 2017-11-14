@@ -25,6 +25,8 @@ export class Api implements IParser {
       case 2:
         this.scrapeAndGetMarks = av.getMarks;
         this.scrapeAndGetModels = av.getModels;
+        this.scrapeAndGetBodyTypes = av.getBodyTypes;
+        this.scrapeAndGetAds = av.getAdsForCurrentModel;
     }
   }
 
@@ -66,7 +68,7 @@ export class Api implements IParser {
   }
 
   public async updateModels() {
-    const models: any = await this.scrapeAndGetModels(this.marks);
+    const models: any = await this.scrapeAndGetModels(this.marks.slice(0, 2));
     await this.setModels(models);
   }
 

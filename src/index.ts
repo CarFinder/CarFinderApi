@@ -23,7 +23,12 @@ const server = new Koa();
 
 const api = new Api(2);
 
-api.updateMarks();
+(async () => {
+  // await api.updateMarks();
+  // await api.updateBodyTypes();
+  // await api.updateModels();
+  await api.updateAds('https://cars.av.by/audi/a6-allroad');
+})();
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
