@@ -9,7 +9,7 @@ import * as jwt from 'koa-jwt';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
-import { db, healthCheckLink, port, triggerSchedule } from './config/config';
+import { db, port, triggerSchedule } from './config/config';
 import routes from './routes';
 import { updateServiceData } from './utils/parserUtils';
 
@@ -17,7 +17,6 @@ const server = new Koa();
 
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
-  await https.get(healthCheckLink);
 });
 
 mongoose.connect(db, { useMongoClient: true });
