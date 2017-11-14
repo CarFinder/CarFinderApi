@@ -1,4 +1,5 @@
 import {
+  Ad,
   BodyType,
   Filter,
   IBodyTypeModel,
@@ -6,9 +7,10 @@ import {
   IMarkModel,
   IModelModel,
   Mark,
-  Model
+  Model,
+  User
 } from '../db/';
-import { IFilter } from '../interfaces';
+import { IFilter, IStats } from '../interfaces';
 
 export const getMarks = async (): Promise<IMarkModel[]> => {
   return (await Mark.find()) as IMarkModel[];
@@ -36,6 +38,16 @@ export const getModel = async (id: string): Promise<IModelModel> => {
 
 export const getSavedFiltersByUserId = async (id: string): Promise<IFilterModel[]> => {
   return (await Filter.find({ userId: id })) as IFilterModel[];
+};
+
+export const getStats = async () => {
+  const data: IStats = {
+    ads: await Ad.count({}),
+    models: await Model.count({}),
+    users: await User.count({})
+  };
+
+  return data;
 };
 
 export const saveFilter = async (filterData: IFilter): Promise<IFilterModel> => {
