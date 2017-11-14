@@ -11,9 +11,8 @@
     "lib": ["es2015", "dom"],
     "experimentalDecorators": true,
     "noImplicitThis": false,
-    "strictNullChecks": false,
-    "typeRoots": ["custom_typings", "node_modules/@types"]
-  },
+    "strictNullChecks": false
+    },
   "include": ["src/**/*", "spec/**/*.ts"],
   "exclude": ["node_modules"]
 }
