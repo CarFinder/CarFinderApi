@@ -5,6 +5,7 @@ import {
   getMarks,
   getModels,
   getSavedFilters,
+  getStats,
   removeAllSavedFilters,
   removeSavedFilterById,
   saveFilter
@@ -19,5 +20,6 @@ router.get('/saved', getSavedFilters);
 router.post('/saved', saveFilter);
 router.delete('/saved/all', removeAllSavedFilters);
 router.delete('/saved/:id', removeSavedFilterById);
+router.get('/stats', getStats);
 
 export default router;
