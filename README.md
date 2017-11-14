@@ -9,7 +9,7 @@ This document provides a guildlines for CarFinder API.
 ___
 ## API Reference
 
-### Defenition
+### Definition
 *Note: Every request should contain `api/` prefix in URL.*
 
 | Route | HTTP Medthod | URL Params | Success Response| Error Response | Description |
