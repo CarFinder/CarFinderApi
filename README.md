@@ -11,6 +11,7 @@ ___
 
 ### Defenition
 *Note: Every request should contain `api/` prefix in URL.*
+
 | Route | HTTP Medthod | URL Params | Success Response| Error Response | Description |
 |-------|--------------|------------|-------------------|---------------| ------------|
 |**USERS**|
@@ -39,10 +40,10 @@ ___
 
 #### Users
 + **Sign up**
-  *URL*: `/api/user/register/`
-  *Method*: `POST`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/register/`
+  * *Method*: `POST`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         name: String;
@@ -50,53 +51,53 @@ ___
         password: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response:*
-    *Code:* `409`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response:*
+  *  *Code:* `409`
+  *  *Content*: `Error Message`
 
 + **Confirm Email**
-   *URL*: `/api/user/confirm/`
-  *Method*: `POST`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/confirm/`
+  * *Method*: `POST`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         token: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: `{ token }`
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: `{ token }`
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
     
 + **Sign in**
-   *URL*: `/api/user/signin/`
-  *Method*: `POST`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/signin/`
+  * *Method*: `POST`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         email: String;
         password: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 + **Forgot Password**
-   *URL*: `/api/user/forgot/`
-  *Method*: `POST`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/forgot/`
+  * *Method*: `POST`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         email: String;
@@ -110,90 +111,90 @@ ___
     *Content*: `Error Message`
     
 + **Restore Password**
-   *URL*: `/api/user/restore/`
-  *Method*: `POST`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/restore/`
+  * *Method*: `POST`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         password: String;
         token: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 + **Update User Data**
-   *URL*: `/api/user/update-user-data/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/update-user-data/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         name: String;
         email: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: `{ token }`
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: `{ token }`
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
     
 + **Update User Settings**
-   *URL*: `/api/user/update-user-settings/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/update-user-settings/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         interfaceLanguage: String;
         subscription: Boolean;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: `{ token }`
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: `{ token }`
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 + **Update User Image**
-   *URL*: `/api/user/update-user-image/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/user/update-user-image/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         image: String;
         type: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: `{ token }`
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: `{ token }`
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 ___
 #### Filters
 + **Get Car Marks**
-   *URL*: `/api/filter/marks/`
-  *Method*: `GET`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  * *URL*: `/api/filter/marks/`
+  * *Method*: `GET`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         [
@@ -205,18 +206,18 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `500`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `500`
+  *  *Content*: `Error Message`
 + **Get Car Body Types**
-   *URL*: `/api/filter/bodyTypes/`
-  *Method*: `GET`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  * *URL*: `/api/filter/bodyTypes/`
+  * *Method*: `GET`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         [
@@ -228,23 +229,23 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `500`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `500`
+  *  *Content*: `Error Message`
 + **Get Car Models**
-   *URL*: `/api/filter/models/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/filter/models/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         markId: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         [
@@ -256,19 +257,19 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `500`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `500`
+  *  *Content*: `Error Message`
 
 + **Get Saved Filters**
-   *URL*: `/api/filter/saved/`
-  *Method*: `GET`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  * *URL*: `/api/filter/saved/`
+  * *Method*: `GET`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         [
@@ -291,15 +292,15 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `400`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `400`
+  *  *Content*: `Error Message`
 + **Create New Saved Filter**
-   *URL*: `/api/filter/saved/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: 
+  * *URL*: `/api/filter/saved/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: 
     ```javascript
     {
         name: String;
@@ -315,47 +316,47 @@ ___
         kmsTo: Number;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 + **Delete All Saved Filters**
-   *URL*: `/api/filter/saved/all`
-  *Method*: `DELETE`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: `all`
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  * *URL*: `/api/filter/saved/all`
+  * *Method*: `DELETE`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: `all`
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 + **Delete Saved Filter By Id**
-   *URL*: `/api/filter/saved/:id`
-  *Method*: `DELETE`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: `:id`
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  * *URL*: `/api/filter/saved/:id`
+  * *Method*: `DELETE`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: `:id`
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
 
 ___
 #### Ads
 + **Get Car Ads**
-   *URL*: `/api/posts/`
-  *Method*: `POST`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*:
+  * *URL*: `/api/posts/`
+  * *Method*: `POST`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*:
     ```javascript
     {
         filter: {
@@ -378,9 +379,9 @@ ___
         }
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         [
@@ -401,19 +402,19 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `500`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `500`
+  *  *Content*: `Error Message`
     
 + **Get Car Ads For Saved Filters**
-   *URL*: `/api/posts/saved`
-  *Method*: `GET`
-  *Header*s: `authorization: Bearer ${token}`
-  *URL Params*: None
-  *Data Params*: None
-    *Success Response*:
-    *Code*: `200`
-    *Content*: 
+  * *URL*: `/api/posts/saved`
+  * *Method*: `GET`
+  * *Header*s: `authorization: Bearer ${token}`
+  * *URL Params*: None
+  * *Data Params*: None
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: 
     ```javascript
     {
         filterId: String;
@@ -437,9 +438,9 @@ ___
         ]
     }
     ```
-    *Error Response*:
-    *Code*: `500`
-    *Content*: `Error Message`
+  *  *Error Response*:
+  *  *Code*: `500`
+  *  *Content*: `Error Message`
 ___
 ## Technologies
 
