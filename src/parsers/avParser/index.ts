@@ -88,7 +88,11 @@ export const getModels = async (marks: IAvMark[]) => {
     let currentMarks = _.slice(marks, i, i + 3);
     models = _.concat(
       models,
-      await Promise.all(_.slice([..._.map(currentMarks, get), bluebird.delay(1000)], 0, -1))
+      await Promise.all(_.slice(
+        [..._.map(currentMarks, get), bluebird.delay(1000)],
+        0,
+        -1
+      ) as Promise<any>[])
     );
     global.console.log(`:::Loaded ${Math.round(models.length / marks.length * 100)}% of models`);
   }
@@ -133,7 +137,7 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
       },
       url: modelUrl
     });
-    const $ = cheerio.load(response, {
+    let $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
     });
@@ -147,6 +151,18 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
     let ads: any[] = [];
 
     for (let page = 1; page <= pagesCount; page++) {
+      let response = await request.get({
+        agentClass: Agent,
+        agentOptions: {
+          socksHost: 'localhost',
+          socksPort: 9060
+        },
+        url: `${modelUrl}/page/${page}`
+      });
+      let $ = cheerio.load(response, {
+        normalizeWhitespace: true,
+        xmlMode: true
+      });
       const adsURLs: string[] = $('.listing-item-image-in')
         .find('a')
         .map(function() {
@@ -182,8 +198,12 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
               // car images
               const imageUrl = 'https://static.av.by/public_images/big/';
               let images = response.match(/photos: \[.*\]/g);
-              images = images[0].match(/[{][^\}]*[}]/g);
-              images = _.map(images, (image: any) => `${imageUrl}${JSON.parse(image).image}`);
+              if (images) {
+                images = images[0].match(/[{][^\}]*[}]/g);
+                images = _.map(images, (image: any) => `${imageUrl}${JSON.parse(image).image}`);
+              } else {
+                images = [];
+              }
               //car description
               const description: string = $('.js-card-description')
                 .find('p')
@@ -207,7 +227,11 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
         let currentAds = _.slice(adsURLs, i, i + 3);
         pageAds = _.concat(
           pageAds,
-          await Promise.all(_.slice([..._.map(currentAds, get), bluebird.delay(1000)], 0, -1))
+          await Promise.all(_.slice(
+            [..._.map(currentAds, get), bluebird.delay(1000)],
+            0,
+            -1
+          ) as Promise<any>[])
         );
         global.console.log(
           `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ads on page ${page}`
