@@ -8,6 +8,7 @@ import {
   registerUser,
   restoreUserPassword,
   sendRestorePasswordEmail,
+  sendUserMessage,
   updateUserData,
   updateUserImage,
   updateUserSettings
@@ -132,6 +133,20 @@ export const updateImage = async (ctx: Koa.Context) => {
     };
   } catch (error) {
     ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = { error: error.data };
+  }
+};
+
+export const sendMessage = async (ctx: Koa.Context) => {
+  const data = ctx.request.body;
+  try {
+    if (!emailRegExp.test(data.email) || !nameRegExp.test(data.name)) {
+      throw new SecureError(codeErrors.VALIDATION_ERROR);
+    }
+    await sendUserMessage(data);
+    ctx.status = HttpStatus.OK;
+  } catch (error) {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
     ctx.body = { error: error.data };
   }
 };
