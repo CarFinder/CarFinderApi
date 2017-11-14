@@ -14,7 +14,6 @@ ___
 
 | Route | HTTP Medthod | URL Params | Success Response| Error Response | Description |
 |-------|--------------|------------|-------------------|---------------| ------------|
-|**USERS**|
 | user/register/| POST | n/a | `CREATED: 201` | `CONFLICT: 409` | Creates a new user |
 | user/confirm/| POST | n/a | `OK: 200` | `UNAUTHORIZED: 401` | Confirms a new user creation |
 | user/signin/| POST | n/a | `OK: 200` | `UNAUTHORIZED: 401` | Authorizes an user|
@@ -23,7 +22,6 @@ ___
 | user/update-user-data/| POST | n/a | `OK: 200` | `UNAUTHORIZED: 401` | Updates user personal information |
 | user/update-user-settings/| POST | n/a | `OK: 200` | `UNAUTHORIZED: 401` | Updates user settings |
 | user/update-user-image/| POST | n/a | `OK: 200` | `UNAUTHORIZED: 401` | Updates user avatar |
-|**FILTERS**|
 | filter/marks/| GET | n/a | `OK: 200` | `INTERNAL SERVER ERROR: 500` | Returns an array of all car marks |
 | filter/bodyTypes/| GET | n/a | `OK: 200` | `INTERNAL SERVER ERROR: 500` | Returns an array of all car body types |
 | filter/bodyTypes/| GET | n/a | `OK: 200` | `INTERNAL SERVER ERROR: 500` | Returns an array of all car body types |
@@ -32,7 +30,6 @@ ___
 | filter/saved/| POST | n/a | `OK: 200` | `BAD REQUEST: 400` | Creates new saved filter for a current user |
 | filter/saved/| DELETE | `all` | `OK: 200` | `BAD REQUEST: 400` | Deletes all saved filters for a current user |
 | filter/saved/| DELETE | `:id` | `OK: 200` | `BAD REQUEST: 400` | Deletes a specified saved filter for a current user |
-|**ADS**|
 | posts/| POST | n/a | `OK: 200` | `INTERNAL SERVER ERROR: 500` | Returns a list of car ads for specified filter parameters |
 | posts/saved| GET | n/a | `OK: 200` | `INTERNAL SERVER ERROR: 500` | Returns a list of new car ads for all saved filter parameters for a current user |
 ___
