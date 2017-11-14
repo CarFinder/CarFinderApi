@@ -100,12 +100,12 @@ ___
         email: String;
     }
     ```
-    *Success Response*:
-    *Code*: `200`
-    *Content*: None
-    *Error Response*:
-    *Code*: `401`
-    *Content*: `Error Message`
+  *  *Success Response*:
+  *  *Code*: `200`
+  *  *Content*: None
+  *  *Error Response*:
+  *  *Code*: `401`
+  *  *Content*: `Error Message`
     
 + **Restore Password**
   * *URL*: `/api/user/restore/`
