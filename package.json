@@ -6,27 +6,20 @@
     "dev-server": "nodemon -w src -x ts-node  src/index.ts",
     "test:watch": "mocha --opts mocha.opts --watch",
     "start": "ts-node src/index.ts",
-    "test": "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
+
+    "test":
+      "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
+
     "debug": "tsc --watch",
-    "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+    "test:coverage":
+      "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
   "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "extension": [
-      ".ts",
-      ".js",
-      ".tsx"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text",
-      "html"
-    ],
+    "include": ["src/**/*.ts"],
+    "extension": [".ts", ".js", ".tsx"],
+    "require": ["ts-node/register"],
+    "reporter": ["text", "html"],
     "sourceMap": true,
     "instrument": true,
     "all": true
