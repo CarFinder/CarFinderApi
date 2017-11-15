@@ -1,5 +1,4 @@
 import {
-  Ad,
   BodyType,
   Filter,
   IBodyTypeModel,
@@ -7,8 +6,7 @@ import {
   IMarkModel,
   IModelModel,
   Mark,
-  Model,
-  User
+  Model
 } from '../db/';
 import { IFilter } from '../interfaces';
 

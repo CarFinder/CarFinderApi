@@ -1,4 +1,4 @@
-import { codeErrors, emailActions, limitForSavedFilters } from '../config/config';
+import { codeErrors, limitForSavedFilters } from '../config/config';
 import { IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';

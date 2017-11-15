@@ -32,16 +32,12 @@ describe('Send message to carfinder', () => {
   });
 
   it('should be status OK, if email and name pass validation rules', async () => {
-    try {
-      const response = await chai
-        .request(app)
-        .post('/api/user/send-message')
-        .set('content-type', 'application/json')
-        .send(validMessage);
-      response.should.have.status(HttpStatus.OK);
-    } catch {
-      assert.fail('Test failed. Should have been status OK');
-    }
+    const response = await chai
+      .request(app)
+      .post('/api/user/send-message')
+      .set('content-type', 'application/json')
+      .send(validMessage);
+    response.should.have.status(HttpStatus.OK);
   });
 });
 
@@ -111,12 +107,8 @@ describe('Return number of ads, users and models from DB', () => {
     await Mark.remove({ name: adFields.MARK_NAME });
   });
   it('should be status OK', async () => {
-    try {
-      const response = await chai.request(app).get('/api/stats/landing-stats');
-      response.should.have.status(HttpStatus.OK);
-    } catch {
-      assert.fail('Test failed. Should have been status OK');
-    }
+    const response = await chai.request(app).get('/api/stats/landing-stats');
+    response.should.have.status(HttpStatus.OK);
   });
 
   it('should return data in the right format', async () => {
