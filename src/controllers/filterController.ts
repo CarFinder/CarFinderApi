@@ -42,17 +42,6 @@ export const getModels = async (ctx: Koa.Context) => {
   }
 };
 
-export const getStats = async (ctx: Koa.Context) => {
-  try {
-    const stats = await FilterService.getStatsFromDatabase();
-    ctx.status = HttpStatus.OK;
-    ctx.body = stats;
-  } catch {
-    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-    ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
-  }
-};
-
 export const saveFilter = async (ctx: Koa.Context) => {
   try {
     if (
