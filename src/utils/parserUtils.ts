@@ -6,7 +6,7 @@ import { updateDBData, updateDBDateFromAvBy } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
-import { getModelByName, saveNewModel } from '../services/modelService';
+import { getModelByName, getModelByNameAndMarkId, saveNewModel } from '../services/modelService';
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
   const transformedModels: any = [];
@@ -112,10 +112,35 @@ export const transformAvByBodyTypes = (bodyTypes: any[]) => {
     .value();
 };
 
-export const getAvByAds = async (modelUrl: string) => {
+export const transformAvByMarks = (marks: any[]) => {
+  return _.map(marks, mark => ({ name: mark.name }));
+};
+
+export const getAvByAds = async (model: any) => {
   const api = new Api(sourceCodes.AV);
-  await api.updateAds(modelUrl);
+  await api.updateAds(model);
   return api.getAds();
+};
+
+export const transformAvByAds = async (ads: any[], markId: string) => {
+  let transformedAds: any[] = [];
+  for (const ad of ads) {
+    const model: any = await getModelByNameAndMarkId(ad.model, markId);
+    const bodyType: any = await getBodyTypeByName(ad.bodyType);
+    const transformedAd = {
+      kms: ad.kms,
+      year: ad.year,
+      bodyTypeId: bodyType.id,
+      images: ad.images,
+      description: ad.description,
+      markId,
+      modelId: model.id,
+      sourceUrl: ad.sourceUrl,
+      sourceName: ad.sourceName
+    };
+    transformedAds = [...transformedAds, transformedAd];
+  }
+  return transformedAds;
 };
 
 export const updateAvByData = async () => {
@@ -123,8 +148,8 @@ export const updateAvByData = async () => {
   await api.updateBodyTypes();
   const trandformedBodyTypes = transformAvByBodyTypes(api.getBodyTypes());
   await api.updateMarks();
-  const marks = api.getMarks();
+  const marks = transformAvByMarks(api.getMarks());
   await api.updateModels();
   const models = api.getModels();
-  await updateDBDateFromAvBy(models, trandformedBodyTypes);
+  await updateDBDateFromAvBy(marks, models, trandformedBodyTypes);
 };

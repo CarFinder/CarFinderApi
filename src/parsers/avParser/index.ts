@@ -126,7 +126,7 @@ export const getBodyTypes = async () => {
   }
 };
 
-export const getAdsForCurrentModel = async (modelUrl: string) => {
+export const getAdsForCurrentModel = async (model: any) => {
   let response: any;
   try {
     response = await request.get({
@@ -135,7 +135,7 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
         socksHost: 'localhost',
         socksPort: 9060
       },
-      url: modelUrl
+      url: model.url
     });
     let $ = cheerio.load(response, {
       normalizeWhitespace: true,
@@ -157,7 +157,7 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
           socksHost: 'localhost',
           socksPort: 9060
         },
-        url: `${modelUrl}/page/${page}`
+        url: `${model.url}/page/${page}`
       });
       let $ = cheerio.load(response, {
         normalizeWhitespace: true,
@@ -210,19 +210,22 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
                 .text()
                 .trim();
               let bodyType = _.capitalize(adInfo[6]);
-              bodyType === 'Легковой фургон'
-                ? bodyType
-                : _.chain(bodyType)
-                    .split(' ')
-                    .shift()
-                    .value();
+              bodyType =
+                bodyType === 'Легковой фургон'
+                  ? bodyType
+                  : _.chain(bodyType)
+                      .split(' ')
+                      .shift()
+                      .value();
               const ad = {
-                kms: adInfo[2].split(' ').shift(),
-                year: adInfo[0],
-                bodyType: adInfo[6],
+                kms: +adInfo[2].split(' ').shift(),
+                year: +adInfo[0],
+                bodyType,
                 images,
                 description,
-                url
+                model: model.name,
+                sourceUrl: url,
+                sourceName: 'av.by'
               };
               resolve(ad);
             });

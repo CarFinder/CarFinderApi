@@ -1,6 +1,6 @@
 import { IModelModel } from '../db/';
 import { IModel } from '../interfaces/';
-import { getAll, getByName, update } from '../repositories/modelRepository';
+import { getAll, getByName, update, getByNameAndMarkId } from '../repositories/modelRepository';
 
 export const getAllModels = async () => {
   return await getAll();
@@ -36,6 +36,10 @@ const addNewModel = (knownModels: IModel[], model: IModel, newModels: IModel[]) 
 
 export const getModelByName = async (name: string) => {
   return await getByName(name);
+};
+
+export const getModelByNameAndMarkId = async (name: string, markId: string) => {
+  return await getByNameAndMarkId(name, markId);
 };
 
 export const saveNewModel = async (name: string, markId: string) => {

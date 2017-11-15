@@ -3,7 +3,13 @@ import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
 import { DatabaseError } from '../utils/errors';
-import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
+import {
+  getOnlinerAds,
+  transformAvByAds,
+  transformAdsData,
+  transformOnlinerModelsData,
+  getAvByAds
+} from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
@@ -19,6 +25,9 @@ import {
   updateImage,
   updateUserProfile
 } from './userService';
+import * as _ from 'lodash';
+import { Api } from '../parsers';
+import { sourceCodes } from '../config/config';
 
 import * as UserService from './userService';
 
@@ -95,8 +104,31 @@ export const updateDBData = async (
   return;
 };
 
-export const updateDBDateFromAvBy = async (models: any[], bodyTypes: string[]) => {
+export const getAvAdsByModels = async (models: any[]) => {
+  let ads: any[] = [];
+  for (const model of models) {
+    ads = [...ads, ...(await getAvByAds(model))];
+  }
+  return ads;
+};
+
+export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyTypes: string[]) => {
   await updateBodyTypes(bodyTypes);
+  const listOfModels = _.chain(models)
+    .map(mark => {
+      const markName = Object.keys(mark).shift();
+      return { mark: markName, models: mark[markName] };
+    })
+    .value();
+  for (const mark of marks) {
+    const savedMark: any = await updateMarks(mark);
+    const markId = savedMark.id;
+    const markName = savedMark.name;
+    const models = _.find(listOfModels, { mark: markName }).models;
+    await updateModels(_.map(models, (model: any) => ({ name: model.name, markId })));
+    const ads = await getAvAdsByModels(models);
+    const transformedAds = await transformAvByAds(ads, markId);
+  }
 };
 
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {

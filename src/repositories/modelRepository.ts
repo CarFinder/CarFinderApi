@@ -18,3 +18,7 @@ export const update = async (model: IModel) => {
 export const getByName = async (name: string) => {
   return await Model.findOne({ name });
 };
+
+export const getByNameAndMarkId = async (name: string, markId: string) => {
+  return await Model.findOne({ markId: markId, name });
+};
