@@ -146,7 +146,7 @@ export const sendMessage = async (ctx: Koa.Context) => {
     await sendUserMessage(data);
     ctx.status = HttpStatus.OK;
   } catch (error) {
-    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.status = HttpStatus.UNAUTHORIZED;
     ctx.body = { error: error.data };
   }
 };

@@ -17,7 +17,7 @@ export const sendMessage = async (data: IMessage) => {
   try {
     await sendUserEmail(data, emailActions.SEND_USER_MESSAGE);
   } catch (error) {
-    throw new SecureError(codeErrors.SEND_EMAIL_ERROR);
+    throw error;
   }
 };
 
