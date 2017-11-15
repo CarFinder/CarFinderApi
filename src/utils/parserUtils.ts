@@ -1,6 +1,10 @@
 import * as _ from 'lodash';
 import { sourceCodes } from '../config/config';
-import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
+import {
+  IOnlinerMark,
+  ITransformedAd,
+  ITransformedMarks
+} from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
 import { updateDBData } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
@@ -41,14 +45,20 @@ const transformOnlinerMarks = (marks: IOnlinerMark[]) => {
   return transformedMarks;
 };
 
-export const transformAdsData = async (markId: string, ads: object, bodyTypes: string[]) => {
+export const transformAdsData = async (
+  markId: string,
+  ads: object,
+  bodyTypes: string[]
+) => {
   const transformedAds: any = [];
-  _.forEach(ads, (val, key) => {
+  _.forEach(ads, (val: any, key: any) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
+      creationDate: val.creationDate.date.substring(0, 10),
       description: val.description,
       images: val.photos,
       kms: val.car.odometerState,
+      lastTimeUpDate: val.lastTimeUp.date.substring(0, 10),
       markId,
       modelName: val.car.model.name,
       price: val.price,

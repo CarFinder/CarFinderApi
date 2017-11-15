@@ -6,7 +6,10 @@ import { TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 
 export const updateAds = async () => {
-  const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
+  const transformer = new Transform({
+    readableObjectMode: true,
+    writableObjectMode: true
+  });
   transformer._transform = async (chunk: any, encoding: string, cb: any) => {
     const ad = await Ad.findOne({ sourceUrl: chunk.sourceUrl });
     if (ad) {
@@ -15,10 +18,12 @@ export const updateAds = async () => {
         {
           $set: {
             bodyTypeId: chunk.bodyTypeId,
+            creationDate: chunk.creationDate,
             description: chunk.description,
             images: chunk.images,
             isSold: false,
             kns: chunk.kms,
+            lastTimeUpDate: chunk.lastTimeUpDate,
             markId: chunk.markId,
             modelId: chunk.modelId,
             price: chunk.price,
@@ -31,10 +36,12 @@ export const updateAds = async () => {
     } else {
       const newAd = new Ad({
         bodyTypeId: chunk.bodyTypeId,
+        creationDate: chunk.creationDate,
         description: chunk.description,
         images: chunk.images,
         isSold: false,
         kns: chunk.kms,
+        lastTimeUpDate: chunk.lastTimeUpDate,
         markId: chunk.markId,
         modelId: chunk.modelId,
         price: chunk.price,

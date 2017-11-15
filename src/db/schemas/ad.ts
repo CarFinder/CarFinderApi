@@ -10,6 +10,9 @@ const AdSchema = new mongoose.Schema(
       required: true,
       type: String
     },
+    creationDate: {
+      type: String
+    },
     description: {
       type: String
     },
@@ -23,6 +26,9 @@ const AdSchema = new mongoose.Schema(
     kms: {
       type: Number
     },
+    lastTimeUpDate: {
+      type: String
+    },
     markId: {
       required: true,
       type: String
@@ -33,6 +39,10 @@ const AdSchema = new mongoose.Schema(
     },
     price: {
       type: Number
+    },
+    soldDate: {
+      default: '',
+      type: String
     },
     sourceName: {
       required: true,
