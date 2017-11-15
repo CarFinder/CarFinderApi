@@ -95,6 +95,10 @@ export const updateDBData = async (
   return;
 };
 
+export const updateDBDateFromAvBy = async (models: any[], bodyTypes: string[]) => {
+  await updateBodyTypes(bodyTypes);
+};
+
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;

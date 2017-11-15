@@ -37,6 +37,7 @@ export const codeErrors = {
 };
 
 export enum sourceCodes {
+  AV = 2,
   ONLINER = 1
 }
 

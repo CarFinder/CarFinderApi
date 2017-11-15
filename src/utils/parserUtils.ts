@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
-import { updateDBData } from '../services/';
+import { updateDBData, updateDBDateFromAvBy } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
@@ -95,4 +95,36 @@ export const updateServiceData = async () => {
   await api.updateBodyTypes();
   const bodyTypes = api.getBodyTypes();
   await updateDBData(transfomedMarks, models, bodyTypes);
+};
+
+export const transformAvByBodyTypes = (bodyTypes: any[]) => {
+  return _.chain(bodyTypes)
+    .map(type => {
+      let name = _.capitalize(type);
+      return name === 'Легковой фургон'
+        ? name
+        : _.chain(name)
+            .split(' ')
+            .shift()
+            .value();
+    })
+    .uniq()
+    .value();
+};
+
+export const getAvByAds = async (modelUrl: string) => {
+  const api = new Api(sourceCodes.AV);
+  await api.updateAds(modelUrl);
+  return api.getAds();
+};
+
+export const updateAvByData = async () => {
+  const api = new Api(sourceCodes.AV);
+  await api.updateBodyTypes();
+  const trandformedBodyTypes = transformAvByBodyTypes(api.getBodyTypes());
+  await api.updateMarks();
+  const marks = api.getMarks();
+  await api.updateModels();
+  const models = api.getModels();
+  await updateDBDateFromAvBy(models, trandformedBodyTypes);
 };

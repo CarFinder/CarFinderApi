@@ -209,6 +209,13 @@ export const getAdsForCurrentModel = async (modelUrl: string) => {
                 .find('p')
                 .text()
                 .trim();
+              let bodyType = _.capitalize(adInfo[6]);
+              bodyType === 'Легковой фургон'
+                ? bodyType
+                : _.chain(bodyType)
+                    .split(' ')
+                    .shift()
+                    .value();
               const ad = {
                 kms: adInfo[2].split(' ').shift(),
                 year: adInfo[0],
