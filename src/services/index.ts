@@ -10,6 +10,7 @@ import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
+import * as StatsService from './statsService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
@@ -164,4 +165,4 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   }
 };
 
-export { AdService, FilterService, UserService };
+export { AdService, FilterService, StatsService, UserService };

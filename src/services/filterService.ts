@@ -1,6 +1,6 @@
 import { codeErrors } from '../config/config';
 import { IBodyTypeModel, IFilterModel, IMarkModel, IModelModel } from '../db/';
-import { IFilter, IStats, IUser } from '../interfaces';
+import { IFilter, IUser } from '../interfaces';
 import {
   getBodyType,
   getBodyTypes,
@@ -9,7 +9,6 @@ import {
   getModel,
   getModelsByMark,
   getSavedFiltersByUserId,
-  getStats,
   removeAllFilters,
   removeFilterById,
   saveFilter
@@ -38,14 +37,6 @@ export const getBodyTypeById = async (id: string): Promise<IBodyTypeModel> => {
 
 export const getModelById = async (id: string): Promise<IModelModel> => {
   return await getModel(id);
-};
-
-export const getStatsFromDatabase = async (): Promise<IStats> => {
-  try {
-    return await getStats();
-  } catch {
-    throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
-  }
 };
 
 export const getSavedSearchFilters = async (user: IUser): Promise<IFilterModel[]> => {
