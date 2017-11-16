@@ -141,7 +141,9 @@ export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyType
     await updateModels(_.map(modelsChosedMark, (model: any) => ({ name: model.name, markId })));
     const ads = await getAvAdsByModels(modelsChosedMark);
     const transformedAds = await transformAvByAds(ads, markId);
-    await AdService.updateAds(transformedAds);
+    await addTempAds(transformedAds);
+    await AdService.markSeltAds();
+    await AdService.updateAds();
   }
 };
 
