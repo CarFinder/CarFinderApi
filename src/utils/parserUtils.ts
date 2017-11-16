@@ -136,6 +136,7 @@ export const transformAvByAds = async (ads: any[], markId: string) => {
       lastTimeUpDate: ad.lastTimeUpDate,
       markId,
       modelId: model.id,
+      price: ad.price,
       sourceName: ad.sourceName,
       sourceUrl: ad.sourceUrl,
       year: ad.year

@@ -234,6 +234,10 @@ export const getAdsForCurrentModel = async (model: any) => {
                     .value()
                 )
                 .value();
+              const price = +$('.card-price-approx')
+                .text()
+                .split(' ')
+                .join('');
               const ad = {
                 bodyType,
                 creationDate: new Date(...transformedDates[0]),
@@ -242,6 +246,7 @@ export const getAdsForCurrentModel = async (model: any) => {
                 kms: +adInfo[2].split(' ').shift(),
                 lastTimeUpDate: new Date(...(transformedDates[1] || transformedDates[0])),
                 model: model.name,
+                price,
                 sourceName: 'av.by',
                 sourceUrl: url,
                 year: +adInfo[0]

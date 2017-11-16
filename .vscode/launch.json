@@ -18,7 +18,8 @@
       "args": ["-r", "ts-node/register", "${workspaceRoot}/spec/**/*.ts"],
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
-      "internalConsoleOptions": "openOnSessionStart"
+      "internalConsoleOptions": "openOnSessionStart",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }
