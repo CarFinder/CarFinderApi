@@ -4,7 +4,11 @@ import { ITransformedMarks } from '../interfaces/parserInterface';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
-import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
+import {
+  getOnlinerAds,
+  transformAdsData,
+  transformOnlinerModelsData
+} from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
@@ -32,7 +36,10 @@ export const sendRestorePasswordEmail = async (payload: string) => {
   await sendPasswordEmail(payload);
 };
 
-export const restoreUserPassword = async (payload: { password: string; token: string }) => {
+export const restoreUserPassword = async (payload: {
+  password: string;
+  token: string;
+}) => {
   const data = decodeToken(payload.token);
   await restorePassword(payload.password, data.email);
 };
@@ -50,7 +57,9 @@ export const updateUserData = async (userData: any, token: any) => {
     await sendEmailConfirmation(decodedUserData.email, userData.email);
   }
   await updateUserProfile(decodedUserData.email, userData);
-  const payload = userData.email ? getUserData(userData.email) : getUserData(decodedUserData.email);
+  const payload = userData.email
+    ? getUserData(userData.email)
+    : getUserData(decodedUserData.email);
   return payload;
 };
 
@@ -99,7 +108,10 @@ export const formingTempAdsData = async (
       await addTempAds(markAds);
     } else {
       const listOfModels = models[mark.onlinerMarkId];
-      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+      const transformedModels = transformOnlinerModelsData(
+        listOfModels,
+        markId
+      );
       await updateModels(transformedModels);
       const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
@@ -108,7 +120,12 @@ export const formingTempAdsData = async (
   }
 };
 
-export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
+export const getAds = async (
+  filter?: any,
+  limit?: number,
+  skip?: number,
+  sort?: any
+) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;
 
@@ -135,15 +152,18 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
   );
 };
 
-export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]> => {
+export const getSavedFiltersAds = async (
+  user: IUser
+): Promise<ISavedFilterAds[]> => {
   let result: ISavedFilterAds[] = [];
+  const sortParams = '-lastTimeUpDate';
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(user);
     if (savedFilters.length) {
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
-            ads: await getAds(filter, limitForSavedFilters),
+            ads: await getAds(filter, limitForSavedFilters, 0, sortParams),
             filterId: filter._id,
             filterName: filter.name,
             filterUrl: filter.url
