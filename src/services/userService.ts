@@ -14,11 +14,7 @@ export const register = async (payload: IUser) => {
 };
 
 export const sendMessage = async (data: IMessage) => {
-  try {
-    await sendUserEmail(data, emailActions.SEND_USER_MESSAGE);
-  } catch (error) {
-    throw error;
-  }
+  await sendUserEmail(data, emailActions.SEND_USER_MESSAGE);
 };
 
 export const confirm = async (email: string) => {
