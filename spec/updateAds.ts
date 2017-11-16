@@ -138,6 +138,7 @@ describe('Ad update', async () => {
 
     after(async () => {
       await Ad.remove({});
+      await BodyType.remove({});
     });
   });
 });
