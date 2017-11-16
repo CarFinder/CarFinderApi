@@ -41,7 +41,6 @@ const AdSchema = new mongoose.Schema(
       type: Number
     },
     soldDate: {
-      default: '',
       type: Date
     },
     sourceName: {

@@ -9,7 +9,7 @@ const tempAdSchema = new mongoose.Schema(
       type: String
     },
     creationDate: {
-      type: String
+      type: Date
     },
     description: {
       type: String
@@ -39,8 +39,7 @@ const tempAdSchema = new mongoose.Schema(
       type: Number
     },
     soldDate: {
-      default: '',
-      type: String
+      type: Date
     },
     sourceName: {
       required: true,
