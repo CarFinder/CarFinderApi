@@ -11,6 +11,7 @@ import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
 import routes from './routes';
+import { sendNewsletter } from './services';
 import { updateServiceData } from './utils/parserUtils';
 
 const server = new Koa();
@@ -18,6 +19,7 @@ const server = new Koa();
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
   await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
+  await sendNewsletter();
 });
 
 mongoose.connect(db, { useMongoClient: true });

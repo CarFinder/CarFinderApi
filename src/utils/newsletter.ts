@@ -4,7 +4,7 @@ import { IAdForClient } from '../interfaces/index';
 
 const transport = nodemailer.createTransport(mail);
 
-export const sendNewsletter = async (
+const sendNewsletter = async (
   name: string,
   email: string,
   ads: IAdForClient[]
@@ -31,7 +31,7 @@ const generateEmail = (name: string, ads: IAdForClient[]) => {
     </div>
     <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
       <h1>Hi, ${name}</h1>
-      <p style="margin-bottom: 40px;">Newsletter</p>
+      <p style="margin-bottom: 40px;">Newsletter based on your saved filters</p>
       <div style="display: flex; justify-content: flex-end;"> 
         <ul>
         ${listOfUrls}
@@ -43,3 +43,5 @@ const generateEmail = (name: string, ads: IAdForClient[]) => {
   </div>
 </div>`;
 };
+
+export default sendNewsletter;

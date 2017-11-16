@@ -5,6 +5,7 @@ import { getAllUsers } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
+import sendMailsWithNewsletter from '../utils/newsletter';
 import {
   getOnlinerAds,
   transformAdsData,
@@ -183,4 +184,19 @@ export { AdService, FilterService, UserService };
 
 export const sendNewsletter = async () => {
   const users: IUser[] = await getAllUsers();
+  if (!users.length) {
+    return;
+  }
+  await Promise.all(
+    users.map(async (user: IUser) => {
+      const savedFilters: ISavedFilterAds[] = await getSavedFiltersAds(user);
+      if (!savedFilters.length) {
+        return;
+      }
+      savedFilters.forEach(
+        async (savedFilter: ISavedFilterAds) =>
+          await sendMailsWithNewsletter(user.name, user.email, savedFilter.ads)
+      );
+    })
+  );
 };
