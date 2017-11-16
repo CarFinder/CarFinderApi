@@ -1,6 +1,7 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
 import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
+import { getAllUsers } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
@@ -25,7 +26,6 @@ import {
   updateImage,
   updateUserProfile
 } from './userService';
-
 import * as UserService from './userService';
 
 export const registerUser = async (payload: IUser) => {
@@ -180,3 +180,7 @@ export const getSavedFiltersAds = async (
 };
 
 export { AdService, FilterService, UserService };
+
+export const sendNewsletter = async () => {
+  const users: IUser[] = await getAllUsers();
+};
