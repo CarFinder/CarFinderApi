@@ -11,16 +11,12 @@ export const sendUserEmail = async (data: IMessage, action: string) => {
   }
   const html = generateEmail(data.name, data.email, data.message);
   const subject = getEmailSubject(action);
-  transport
-    .sendMail({
-      from: data.email,
-      html,
-      subject,
-      to: mail.auth.user
-    })
-    .catch(error => {
-      throw error;
-    });
+  await transport.sendMail({
+    from: data.email,
+    html,
+    subject,
+    to: mail.auth.user
+  });
 };
 
 const generateEmail = (name: string, email: string, message: string): string => {
