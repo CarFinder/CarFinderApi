@@ -4,8 +4,7 @@ import { IAd } from '../../interfaces';
 
 const tempAdSchema = new mongoose.Schema(
   {
-    bodyTypeId: {
-      required: true,
+    creationDate: {
       type: String
     },
     description: {
@@ -21,6 +20,9 @@ const tempAdSchema = new mongoose.Schema(
     kms: {
       type: Number
     },
+    lastTimeUpDate: {
+      type: String
+    },
     markId: {
       required: true,
       type: String
@@ -31,6 +33,10 @@ const tempAdSchema = new mongoose.Schema(
     },
     price: {
       type: Number
+    },
+    soldDate: {
+      default: '',
+      type: String
     },
     sourceName: {
       required: true,
