@@ -11,7 +11,7 @@ const AdSchema = new mongoose.Schema(
       type: String
     },
     creationDate: {
-      type: String
+      type: Date
     },
     description: {
       type: String
@@ -27,7 +27,7 @@ const AdSchema = new mongoose.Schema(
       type: Number
     },
     lastTimeUpDate: {
-      type: String
+      type: Date
     },
     markId: {
       required: true,
@@ -42,7 +42,7 @@ const AdSchema = new mongoose.Schema(
     },
     soldDate: {
       default: '',
-      type: String
+      type: Date
     },
     sourceName: {
       required: true,

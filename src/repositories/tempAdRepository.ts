@@ -17,10 +17,12 @@ export const updateAds = async () => {
           {
             $set: {
               bodyTypeId: doc.bodyTypeId,
+              creationDate: doc.creationDate,
               description: doc.description,
               images: doc.images,
               isSold: false,
               kns: doc.kms,
+              lastTimeUpDate: doc.lastTimeUpDate,
               markId: doc.markId,
               modelId: doc.modelId,
               price: doc.price,
@@ -33,10 +35,12 @@ export const updateAds = async () => {
       } else {
         const newAd = new Ad({
           bodyTypeId: doc.bodyTypeId,
+          creationDate: doc.creationDate,
           description: doc.description,
           images: doc.images,
           isSold: false,
           kns: doc.kms,
+          lastTimeUpDate: doc.lastTimeUpDate,
           markId: doc.markId,
           modelId: doc.modelId,
           price: doc.price,
