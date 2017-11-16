@@ -9,8 +9,8 @@ describe('Ad update', async () => {
   const adFields = {
     BODY_NAME: 'superpcutecoupe',
     KMS: 20000,
-    MARK_ID: '1',
-    MODEL_ID: '2',
+    MARK_ID: '4',
+    MODEL_ID: '56',
     PRICE: 1000,
     SOURCE_NAME: 'onlinerTest',
     SOURCE_URL: 'url',
@@ -89,6 +89,9 @@ describe('Ad update', async () => {
       year: adFields.YEAR
     }
   ];
+
+  await BodyType.remove({});
+
   describe('should set flag false to selt car', () => {
     before(async () => {
       await addTempAds(ads);
@@ -138,7 +141,6 @@ describe('Ad update', async () => {
 
     after(async () => {
       await Ad.remove({});
-      await BodyType.remove({});
     });
   });
 });
