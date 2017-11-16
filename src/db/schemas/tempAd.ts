@@ -2,9 +2,7 @@ import * as mongoose from 'mongoose';
 
 import { IAd } from '../../interfaces';
 
-export interface IAdModel extends IAd, mongoose.Document {}
-
-const AdSchema = new mongoose.Schema(
+const tempAdSchema = new mongoose.Schema(
   {
     bodyTypeId: {
       required: true,
@@ -50,4 +48,4 @@ const AdSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-export { AdSchema };
+export { tempAdSchema };

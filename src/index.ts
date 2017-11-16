@@ -2,6 +2,7 @@ import * as bluebird from 'bluebird';
 import * as dotenv from 'dotenv';
 import * as schedule from 'node-schedule';
 dotenv.config();
+import * as https from 'https';
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as jwt from 'koa-jwt';
@@ -20,6 +21,7 @@ const server = new Koa();
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
   await updateAvByData();
+  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
 });
 
 mongoose.connect(db, { useMongoClient: true });

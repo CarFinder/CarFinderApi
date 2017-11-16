@@ -90,8 +90,13 @@ export const getAdsForCurrentModel = async (modelId: number) => {
         .text()
         .replace(/\$ (.*?) €/g, '-')
         .split('-')
-        .map(el => el.trim())
-        .filter(el => el !== '');
+        .map(el => {
+          el.trim();
+          const transformedPrice = el.replace(/\s+/g, '');
+          if (transformedPrice !== '') {
+            return parseInt(transformedPrice, 10);
+          }
+        });
 
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {
