@@ -1,6 +1,6 @@
 import { IModelModel } from '../db/';
 import { IModel } from '../interfaces/';
-import { getAll, getByName, update, getByNameAndMarkId } from '../repositories/modelRepository';
+import { getAll, getByName, getByNameAndMarkId, update } from '../repositories/modelRepository';
 
 export const getAllModels = async () => {
   return await getAll();
