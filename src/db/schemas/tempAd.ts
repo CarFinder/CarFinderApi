@@ -4,6 +4,10 @@ import { IAd } from '../../interfaces';
 
 const tempAdSchema = new mongoose.Schema(
   {
+    bodyTypeId: {
+      required: true,
+      type: String
+    },
     creationDate: {
       type: String
     },
