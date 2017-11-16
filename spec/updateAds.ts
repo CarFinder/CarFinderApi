@@ -82,34 +82,18 @@ const newAds = [
   }
 ];
 
-describe('Ad update', async () => {
-  describe('temp ads', async () => {
+describe('Ad update', () => {
+  describe('should set flag false to selt car', () => {
     before(async () => {
       await addTempAds(ads);
+      await updateAds();
     });
 
     it('should insert temp ads', async () => {
-      const tmpAds = await TempAd.find({});
-      assert.equal(ads.length, tmpAds.length);
-    });
-
-    after(async () => {
-      await TempAd.remove({});
-    });
-  });
-
-  describe('ads updating', async () => {
-    before(async () => {
       await addTempAds(newAds);
-      await updateAds();
-      await TempAd.remove({});
-    });
-
-    it('should insert temp ads', async () => {
-      await addTempAds(ads);
-      await updateAds();
-      const tmpAds = await TempAd.find({});
-      assert.equal(ads.length, tmpAds.length);
+      await AdService.markSeltAds();
+      const tmpAd: IAdModel = await Ad.findOne({ sourceUrl: adFields.SOURCE_URL + 0 });
+      assert.equal(tmpAd.isSold, true);
     });
 
     after(async () => {
@@ -118,23 +102,35 @@ describe('Ad update', async () => {
     });
   });
 
-  describe('should set flag false to selt car', () => {
+  describe('temp ads', () => {
     before(async () => {
       await addTempAds(ads);
-      await updateAds();
-      await TempAd.remove({});
     });
 
     it('should insert temp ads', async () => {
-      await addTempAds(newAds);
-      await updateAds();
-      const tmpAd: IAdModel = await Ad.findOne({ sourceUrl: adFields.SOURCE_URL + 0 });
-
-      assert.equal(false, tmpAd.isSold);
+      const tmpAds = await TempAd.find({});
+      assert.equal(tmpAds.length, ads.length);
     });
 
     after(async () => {
       await TempAd.remove({});
+    });
+  });
+
+  describe('ads updating', () => {
+    before(async () => {
+      await addTempAds(newAds);
+      await updateAds();
+    });
+
+    it('should insert ads if ads collection empty', async () => {
+      await addTempAds(ads);
+      await updateAds();
+      const Ads = await Ad.find({});
+      assert.equal(Ads.length, ads.length);
+    });
+
+    after(async () => {
       await Ad.remove({});
     });
   });

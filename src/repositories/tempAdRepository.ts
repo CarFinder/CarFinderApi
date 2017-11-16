@@ -6,57 +6,48 @@ import { TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 
 export const updateAds = async () => {
-  const transformer = new Transform({ readableObjectMode: true, writableObjectMode: true });
-  transformer._transform = async (chunk: any, encoding: string, cb: any) => {
-    const ad = await Ad.findOne({ sourceUrl: chunk.sourceUrl });
-    if (ad) {
-      await Ad.update(
-        { sourceUrl: chunk.sourceUrl },
-        {
-          $set: {
-            bodyTypeId: chunk.bodyTypeId,
-            description: chunk.description,
-            images: chunk.images,
-            isSold: false,
-            kns: chunk.kms,
-            markId: chunk.markId,
-            modelId: chunk.modelId,
-            price: chunk.price,
-            sourceName: chunk.sourceName,
-            sourceUrl: chunk.sourceUrl,
-            year: chunk.year
+  const reader = await TempAd.find({}).cursor();
+
+  await reader
+    .eachAsync(async doc => {
+      const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
+      if (ad) {
+        await Ad.update(
+          { sourceUrl: doc.sourceUrl },
+          {
+            $set: {
+              bodyTypeId: doc.bodyTypeId,
+              description: doc.description,
+              images: doc.images,
+              isSold: false,
+              kns: doc.kms,
+              markId: doc.markId,
+              modelId: doc.modelId,
+              price: doc.price,
+              sourceName: doc.sourceName,
+              sourceUrl: doc.sourceUrl,
+              year: doc.year
+            }
           }
-        }
-      );
-    } else {
-      const newAd = new Ad({
-        bodyTypeId: chunk.bodyTypeId,
-        description: chunk.description,
-        images: chunk.images,
-        isSold: false,
-        kns: chunk.kms,
-        markId: chunk.markId,
-        modelId: chunk.modelId,
-        price: chunk.price,
-        sourceName: chunk.sourceName,
-        sourceUrl: chunk.sourceUrl,
-        year: chunk.year
-      });
-      await newAd.save();
-    }
-    cb();
-  };
-
-  const reader = await TempAd.find({})
-    .stream()
-    .pipe(transformer);
-
-  //  used to fully consume the data from a stream
-  reader.resume();
-
-  reader.on('end', async () => {
-    await dropCollection();
-  });
+        );
+      } else {
+        const newAd = new Ad({
+          bodyTypeId: doc.bodyTypeId,
+          description: doc.description,
+          images: doc.images,
+          isSold: false,
+          kns: doc.kms,
+          markId: doc.markId,
+          modelId: doc.modelId,
+          price: doc.price,
+          sourceName: doc.sourceName,
+          sourceUrl: doc.sourceUrl,
+          year: doc.year
+        });
+        await newAd.save();
+      }
+    })
+    .then(async () => await dropCollection());
 };
 
 export const dropCollection = async () => {
