@@ -5,25 +5,22 @@ import { getEmailSubject } from './index';
 
 const transport = nodemailer.createTransport(mail);
 
-export const sendUserEmail = (data: IMessage, action: string): void => {
-  if (process.env.NODE_ENV !== 'test') {
-    const html = generateEmail(data.name, data.email, data.message);
-    const subject = getEmailSubject(action);
-    transport.sendMail(
-      {
-        from: data.email,
-        html,
-        subject,
-        to: mail.auth.user
-      },
-      (err, info) => {
-        global.console.log(`The mail sent to ${mail.auth.user}`);
-        if (err) {
-          throw err;
-        }
-      }
-    );
+export const sendUserEmail = async (data: IMessage, action: string) => {
+  if (process.env.NODE_ENV === 'test') {
+    return;
   }
+  const html = generateEmail(data.name, data.email, data.message);
+  const subject = getEmailSubject(action);
+  transport
+    .sendMail({
+      from: data.email,
+      html,
+      subject,
+      to: mail.auth.user
+    })
+    .catch(error => {
+      throw error;
+    });
 };
 
 const generateEmail = (name: string, email: string, message: string): string => {
