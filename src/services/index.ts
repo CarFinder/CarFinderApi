@@ -1,14 +1,17 @@
+import * as _ from 'lodash';
 import { codeErrors, limitForSavedFilters } from '../config/config';
+import { sourceCodes } from '../config/config';
 import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
+import { Api } from '../parsers';
 import { decodeToken } from '../utils';
 import { DatabaseError } from '../utils/errors';
 import {
+  getAvByAds,
   getOnlinerAds,
-  transformAvByAds,
   transformAdsData,
-  transformOnlinerModelsData,
-  getAvByAds
+  transformAvByAds,
+  transformOnlinerModelsData
 } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
@@ -25,9 +28,6 @@ import {
   updateImage,
   updateUserProfile
 } from './userService';
-import * as _ from 'lodash';
-import { Api } from '../parsers';
-import { sourceCodes } from '../config/config';
 
 import * as UserService from './userService';
 
@@ -124,10 +124,11 @@ export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyType
     const savedMark: any = await updateMarks(mark);
     const markId = savedMark.id;
     const markName = savedMark.name;
-    const models = _.find(listOfModels, { mark: markName }).models;
-    await updateModels(_.map(models, (model: any) => ({ name: model.name, markId })));
-    const ads = await getAvAdsByModels(models);
+    const modelsChosedMark = _.find(listOfModels, { mark: markName }).models;
+    await updateModels(_.map(modelsChosedMark, (model: any) => ({ name: model.name, markId })));
+    const ads = await getAvAdsByModels(modelsChosedMark);
     const transformedAds = await transformAvByAds(ads, markId);
+    await AdService.updateAds(transformedAds);
   }
 };
 

@@ -11,24 +11,17 @@ import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
 import config from './config/test';
 import routes from './routes';
-import { updateServiceData } from './utils/parserUtils';
+import { updateAvByData, updateServiceData } from './utils/parserUtils';
 
 import { Api } from './parsers';
+global.Promise = bluebird;
 
 const server = new Koa();
 
-// const parse = schedule.scheduleJob(triggerSchedule, async () => {
-//  await updateServiceData();
-// });
-
-const api = new Api(2);
-
-(async () => {
-  // await api.updateMarks();
-  // await api.updateBodyTypes();
-  // await api.updateModels();
-  await api.updateAds('https://cars.av.by/audi/a6-allroad');
-})();
+const parse = schedule.scheduleJob(triggerSchedule, async () => {
+  await updateServiceData();
+  await updateAvByData();
+});
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);

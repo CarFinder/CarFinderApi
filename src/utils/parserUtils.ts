@@ -100,7 +100,7 @@ export const updateServiceData = async () => {
 export const transformAvByBodyTypes = (bodyTypes: any[]) => {
   return _.chain(bodyTypes)
     .map(type => {
-      let name = _.capitalize(type);
+      const name = _.capitalize(type);
       return name === 'Легковой фургон'
         ? name
         : _.chain(name)
@@ -128,15 +128,17 @@ export const transformAvByAds = async (ads: any[], markId: string) => {
     const model: any = await getModelByNameAndMarkId(ad.model, markId);
     const bodyType: any = await getBodyTypeByName(ad.bodyType);
     const transformedAd = {
-      kms: ad.kms,
-      year: ad.year,
       bodyTypeId: bodyType.id,
-      images: ad.images,
+      creationDate: ad.creationDate,
       description: ad.description,
+      images: ad.images,
+      kms: ad.kms,
+      lastTimeUpDate: ad.lastTimeUpDate,
       markId,
       modelId: model.id,
+      sourceName: ad.sourceName,
       sourceUrl: ad.sourceUrl,
-      sourceName: ad.sourceName
+      year: ad.year
     };
     transformedAds = [...transformedAds, transformedAd];
   }

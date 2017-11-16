@@ -1,11 +1,12 @@
+import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
+import * as _ from 'lodash';
 import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
 import { ParserError } from '../../utils/errors/';
-import * as bluebird from 'bluebird';
-import * as _ from 'lodash';
 
+// tslint:disable-next-line:no-var-requires
 const Agent = require('socks5-https-client/lib/Agent');
 
 export const getMarks = async () => {
@@ -73,11 +74,11 @@ export const getModels = async (marks: IAvMark[]) => {
               return $(this).text();
             })
             .get();
-          const models: any[] = _.map(modelsNames, (name, index) => ({
+          const transformedModels: any[] = _.map(modelsNames, (name, index) => ({
             name,
             url: modelsURLs[index]
           }));
-          resolve({ [mark.name]: models });
+          resolve({ [mark.name]: transformedModels });
         });
     });
   };
@@ -85,16 +86,18 @@ export const getModels = async (marks: IAvMark[]) => {
   let models: any[] = [];
   const date = new Date();
   for (let i = 0; i < marks.length; i += 3) {
-    let currentMarks = _.slice(marks, i, i + 3);
+    const currentMarks = _.slice(marks, i, i + 3);
     models = _.concat(
       models,
       await Promise.all(_.slice(
         [..._.map(currentMarks, get), bluebird.delay(1000)],
         0,
         -1
-      ) as Promise<any>[])
+      ) as Array<Promise<any>>)
     );
-    global.console.log(`:::Loaded ${Math.round(models.length / marks.length * 100)}% of models`);
+    global.console.log(
+      `:::Loaded ${Math.round(models.length / marks.length * 100)}% of a av.by car models`
+    );
   }
   return models;
 };
@@ -142,7 +145,7 @@ export const getAdsForCurrentModel = async (model: any) => {
       xmlMode: true
     });
 
-    let pagesCount =
+    const pagesCount =
       +$('.pages-arrows-index')
         .text()
         .split(' ')
@@ -151,7 +154,7 @@ export const getAdsForCurrentModel = async (model: any) => {
     let ads: any[] = [];
 
     for (let page = 1; page <= pagesCount; page++) {
-      let response = await request.get({
+      response = await request.get({
         agentClass: Agent,
         agentOptions: {
           socksHost: 'localhost',
@@ -159,7 +162,7 @@ export const getAdsForCurrentModel = async (model: any) => {
         },
         url: `${model.url}/page/${page}`
       });
-      let $ = cheerio.load(response, {
+      $ = cheerio.load(response, {
         normalizeWhitespace: true,
         xmlMode: true
       });
@@ -179,10 +182,10 @@ export const getAdsForCurrentModel = async (model: any) => {
                 socksHost: 'localhost',
                 socksPort: 9060
               },
-              uri: url
+              url
             })
-            .then(response => {
-              const $ = cheerio.load(response, {
+            .then(res => {
+              $ = cheerio.load(res, {
                 normalizeWhitespace: true,
                 xmlMode: true
               });
@@ -195,16 +198,13 @@ export const getAdsForCurrentModel = async (model: any) => {
                     .trim();
                 })
                 .get();
-              // car images
-              const imageUrl = 'https://static.av.by/public_images/big/';
-              let images = response.match(/photos: \[.*\]/g);
-              if (images) {
-                images = images[0].match(/[{][^\}]*[}]/g);
-                images = _.map(images, (image: any) => `${imageUrl}${JSON.parse(image).image}`);
-              } else {
-                images = [];
-              }
-              //car description
+              const images: string[] = $('.fotorama')
+                .find('a')
+                .map(function() {
+                  return $(this).attr('href');
+                })
+                .get();
+              // car description
               const description: string = $('.js-card-description')
                 .find('p')
                 .text()
@@ -217,34 +217,54 @@ export const getAdsForCurrentModel = async (model: any) => {
                       .split(' ')
                       .shift()
                       .value();
+              const dates: string[] = $('.card-about-item-dates')
+                .find('dd')
+                .map(function() {
+                  return $(this)
+                    .text()
+                    .trim();
+                })
+                .get();
+              const transformedDates = _.chain(dates)
+                .map(date =>
+                  _.chain(date)
+                    .split('.')
+                    .reverse()
+                    .map((item, i) => (i === 1 ? +item - 1 : +item))
+                    .value()
+                )
+                .value();
               const ad = {
-                kms: +adInfo[2].split(' ').shift(),
-                year: +adInfo[0],
                 bodyType,
-                images,
+                creationDate: new Date(...transformedDates[0]),
                 description,
+                images,
+                kms: +adInfo[2].split(' ').shift(),
+                lastTimeUpDate: new Date(...(transformedDates[1] || transformedDates[0])),
                 model: model.name,
+                sourceName: 'av.by',
                 sourceUrl: url,
-                sourceName: 'av.by'
+                year: +adInfo[0]
               };
               resolve(ad);
             });
         });
       };
       let pageAds: any[] = [];
-      const date = new Date();
       for (let i = 0; i < adsURLs.length; i += 3) {
-        let currentAds = _.slice(adsURLs, i, i + 3);
+        const currentAds = _.slice(adsURLs, i, i + 3);
         pageAds = _.concat(
           pageAds,
           await Promise.all(_.slice(
             [..._.map(currentAds, get), bluebird.delay(1000)],
             0,
             -1
-          ) as Promise<any>[])
+          ) as Array<Promise<any>>)
         );
         global.console.log(
-          `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ads on page ${page}`
+          `:::Loaded ${Math.round(
+            pageAds.length / adsURLs.length * 100
+          )}% of ${model.name} ads on page ${page}`
         );
       }
       ads = _.concat(ads, pageAds);
