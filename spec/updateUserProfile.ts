@@ -87,7 +87,7 @@ describe('User Profile', () => {
 
     afterEach(async () => {
       passportStub.restore();
-      await User.remove({ email: user.email });
+      await User.remove({ email: { $in: [user.email, 'email@test.com'] } });
     });
 
     it('should return updated token with new user settings', async () => {
@@ -134,7 +134,7 @@ describe('User Profile', () => {
 
     afterEach(async () => {
       passportStub.restore();
-      await User.remove({ email: user.email });
+      await User.remove({ email: { $in: [user.email, 'email@test.com'] } });
     });
 
     it('should return updated token with new user image', async () => {

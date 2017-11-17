@@ -99,13 +99,13 @@ const generateEmail = (
       return `
       <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
         <div style="background-color: white; border-radius: 5px;">
-          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">
             <span>CARFINDER</span>
           </div>
           <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
             <h1>${text.greetings}</h1>
             <p style="margin-bottom: 40px;">${text.confirmRegistration}</p>
-            <div style="display: flex; justify-content: flex-end;"> 
+            <div style="display: flex; justify-content: flex-end;">
               <button style="padding: 0px; background-color: #ffdd57; margin-bottom: 20px; border-color: transparent; font-size: 0.9rem; border-radius: 3px;">
                 <a href="http://${url}/confirmation/?token=${token}" style="display: block; padding: 10px; text-decoration: none; color: rgba(0, 0, 0, 0.7);">${text.confirmButton}</a>
               </button>
@@ -119,13 +119,13 @@ const generateEmail = (
       return `
       <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
         <div style="background-color: white; border-radius: 5px;">
-          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">
             <span>CARFINDER</span>
           </div>
           <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
             <h1>${text.greetings}</h1>
             <p style="margin-bottom: 40px;">${text.restorePassword}</p>
-            <div style="display: flex; justify-content: flex-end;"> 
+            <div style="display: flex; justify-content: flex-end;">
               <button style="padding: 0px; background-color: #ffdd57; margin-bottom: 20px; border-color: transparent; font-size: 0.9rem; border-radius: 3px;">
                 <a href="http://${url}/restore/?token=${token}" style="display: block; padding: 10px; text-decoration: none; color: rgba(0, 0, 0, 0.7);">${text.confirmButton}</a>
               </button>
@@ -140,7 +140,7 @@ const generateEmail = (
       return `
       <div style="background-color:#282834; padding: 10px; font-family: BlinkMacSystemFont, Segoe UI, Arial, sans-serif; ">
         <div style="background-color: white; border-radius: 5px;">
-          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">     
+          <div style="background-color: #ffdd57; color: #4a4a4a;  padding: 20px; border-radius: 5px 5px 0 0;">
             <span>CARFINDER</span>
           </div>
           <div style="background-color: white; padding: 40px 30px 30px; border-radius: 5px; color: #4a4a4a;">
