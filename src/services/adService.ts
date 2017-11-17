@@ -2,7 +2,7 @@ import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
 import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
-import { get, getByFilter, getSoldCars } from '../repositories/adRepository';
+import { get, getByFilter, getSoldCarsNumber } from '../repositories/adRepository';
 import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
@@ -104,7 +104,7 @@ export const getLiquidity = async (filter: any) => {
   }
   adFilter.isSold = true;
 
-  return await getSoldCars(adFilter);
+  return await getSoldCarsNumber(adFilter);
 };
 
 export { markSeltAds };
