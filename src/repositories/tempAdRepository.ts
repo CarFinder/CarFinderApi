@@ -8,7 +8,7 @@ import { handleDatabaseError } from '../utils';
 export const updateAds = async () => {
   const reader = await TempAd.find({}).cursor();
 
-  await reader.eachAsync(async doc => {
+  await reader.eachAsync(async (doc: any) => {
     const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
     if (ad) {
       await Ad.update(
