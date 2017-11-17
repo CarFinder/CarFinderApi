@@ -8,50 +8,49 @@ import { handleDatabaseError } from '../utils';
 export const updateAds = async () => {
   const reader = await TempAd.find({}).cursor();
 
-  await reader
-    .eachAsync(async doc => {
-      const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
-      if (ad) {
-        await Ad.update(
-          { sourceUrl: doc.sourceUrl },
-          {
-            $set: {
-              bodyTypeId: doc.bodyTypeId,
-              creationDate: doc.creationDate,
-              description: doc.description,
-              images: doc.images,
-              isSold: false,
-              kns: doc.kms,
-              lastTimeUpDate: doc.lastTimeUpDate,
-              markId: doc.markId,
-              modelId: doc.modelId,
-              price: doc.price,
-              sourceName: doc.sourceName,
-              sourceUrl: doc.sourceUrl,
-              year: doc.year
-            }
+  await reader.eachAsync(async doc => {
+    const ad = await Ad.findOne({ sourceUrl: doc.sourceUrl });
+    if (ad) {
+      await Ad.update(
+        { sourceUrl: doc.sourceUrl },
+        {
+          $set: {
+            bodyTypeId: doc.bodyTypeId,
+            creationDate: doc.creationDate,
+            description: doc.description,
+            images: doc.images,
+            isSold: false,
+            kns: doc.kms,
+            lastTimeUpDate: doc.lastTimeUpDate,
+            markId: doc.markId,
+            modelId: doc.modelId,
+            price: doc.price,
+            sourceName: doc.sourceName,
+            sourceUrl: doc.sourceUrl,
+            year: doc.year
           }
-        );
-      } else {
-        const newAd = new Ad({
-          bodyTypeId: doc.bodyTypeId,
-          creationDate: doc.creationDate,
-          description: doc.description,
-          images: doc.images,
-          isSold: false,
-          kns: doc.kms,
-          lastTimeUpDate: doc.lastTimeUpDate,
-          markId: doc.markId,
-          modelId: doc.modelId,
-          price: doc.price,
-          sourceName: doc.sourceName,
-          sourceUrl: doc.sourceUrl,
-          year: doc.year
-        });
-        await newAd.save();
-      }
-    })
-    .then(async () => await dropCollection());
+        }
+      );
+    } else {
+      const newAd = new Ad({
+        bodyTypeId: doc.bodyTypeId,
+        creationDate: doc.creationDate,
+        description: doc.description,
+        images: doc.images,
+        isSold: false,
+        kns: doc.kms,
+        lastTimeUpDate: doc.lastTimeUpDate,
+        markId: doc.markId,
+        modelId: doc.modelId,
+        price: doc.price,
+        sourceName: doc.sourceName,
+        sourceUrl: doc.sourceUrl,
+        year: doc.year
+      });
+      await newAd.save();
+    }
+  });
+  await dropCollection();
 };
 
 export const dropCollection = async () => {
