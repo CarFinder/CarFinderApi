@@ -2,7 +2,7 @@ import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
 import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
-import { get, getByFilter } from '../repositories/adRepository';
+import { get, getByFilter, getSoldCars } from '../repositories/adRepository';
 import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
@@ -89,6 +89,22 @@ export const getAds = async (
     sortParams = sort;
   }
   return await get(searchFilter, limit, skip, sortParams);
+};
+
+export const getLiquidity = async (filter: any) => {
+  const adFilter: any = {};
+  if (filter.markId) {
+    adFilter.markId = filter.markId;
+  }
+  if (filter.bodyTypeId && filter.bodyTypeId.length) {
+    adFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
+  }
+  if (filter.modelId && filter.modelId.length) {
+    adFilter.modelId = { $in: [...filter.modelId] };
+  }
+  adFilter.isSold = true;
+
+  return await getSoldCars(adFilter);
 };
 
 export { markSeltAds };
