@@ -110,3 +110,8 @@ export const get = async (
 export const getAdByURL = async (url: string) => {
   return await Ad.findOne({ sourceUrl: url });
 };
+
+export const getSoldCars = async (adFilter: any) => {
+  const time = new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
+  return await Ad.find(adFilter && { soldDate: { $gt: new Date(time) } }).count({});
+};
