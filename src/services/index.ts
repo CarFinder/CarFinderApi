@@ -1,16 +1,12 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
-import { ISavedFilterAds, IUser } from '../interfaces/index';
+import { ISavedFilterAds, IUser, IAdForClient } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { getAllUsers } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
 import sendMailsWithNewsletter from '../utils/newsletter';
-import {
-  getOnlinerAds,
-  transformAdsData,
-  transformOnlinerModelsData
-} from '../utils/parserUtils';
+import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
@@ -28,6 +24,7 @@ import {
   updateUserProfile
 } from './userService';
 import * as UserService from './userService';
+import { filter } from 'request-promise/node_modules/@types/bluebird';
 
 export const registerUser = async (payload: IUser) => {
   await register(payload);
@@ -37,10 +34,7 @@ export const sendRestorePasswordEmail = async (payload: string) => {
   await sendPasswordEmail(payload);
 };
 
-export const restoreUserPassword = async (payload: {
-  password: string;
-  token: string;
-}) => {
+export const restoreUserPassword = async (payload: { password: string; token: string }) => {
   const data = decodeToken(payload.token);
   await restorePassword(payload.password, data.email);
 };
@@ -58,9 +52,7 @@ export const updateUserData = async (userData: any, token: any) => {
     await sendEmailConfirmation(decodedUserData.email, userData.email);
   }
   await updateUserProfile(decodedUserData.email, userData);
-  const payload = userData.email
-    ? getUserData(userData.email)
-    : getUserData(decodedUserData.email);
+  const payload = userData.email ? getUserData(userData.email) : getUserData(decodedUserData.email);
   return payload;
 };
 
@@ -109,10 +101,7 @@ export const formingTempAdsData = async (
       await addTempAds(markAds);
     } else {
       const listOfModels = models[mark.onlinerMarkId];
-      const transformedModels = transformOnlinerModelsData(
-        listOfModels,
-        markId
-      );
+      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
       await updateModels(transformedModels);
       const ads: any = await getOnlinerAds(mark.onlinerMarkId);
       const markAds = await transformAdsData(markId, ads, bodyTypes);
@@ -121,12 +110,7 @@ export const formingTempAdsData = async (
   }
 };
 
-export const getAds = async (
-  filter?: any,
-  limit?: number,
-  skip?: number,
-  sort?: any
-) => {
+export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;
 
@@ -153,11 +137,9 @@ export const getAds = async (
   );
 };
 
-export const getSavedFiltersAds = async (
-  user: IUser
-): Promise<ISavedFilterAds[]> => {
+export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]> => {
   let result: ISavedFilterAds[] = [];
-  const sortParams = '-lastTimeUpDate';
+  const sortParams = 'lastTimeUpDate';
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(user);
     if (savedFilters.length) {
@@ -193,10 +175,9 @@ export const sendNewsletter = async () => {
       if (!savedFilters.length) {
         return;
       }
-      savedFilters.forEach(
-        async (savedFilter: ISavedFilterAds) =>
-          await sendMailsWithNewsletter(user.name, user.email, savedFilter.ads)
-      );
+      let ads: IAdForClient[] = [];
+      ads = ads.concat(...savedFilters.map(filter => filter.ads));
+      await sendMailsWithNewsletter(user.name, user.email, ads);
     })
   );
 };
