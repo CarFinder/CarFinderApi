@@ -1,5 +1,5 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
-import { ISavedFilterAds, IUser, IAdForClient } from '../interfaces/index';
+import { IAdForClient, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { getAllUsers } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
@@ -24,7 +24,6 @@ import {
   updateUserProfile
 } from './userService';
 import * as UserService from './userService';
-import { filter } from 'request-promise/node_modules/@types/bluebird';
 
 export const registerUser = async (payload: IUser) => {
   await register(payload);
@@ -176,7 +175,7 @@ export const sendNewsletter = async () => {
         return;
       }
       let ads: IAdForClient[] = [];
-      ads = ads.concat(...savedFilters.map(filter => filter.ads));
+      ads = ads.concat(...savedFilters.map(savedFilter => savedFilter.ads));
       await sendMailsWithNewsletter(user.name, user.email, ads);
     })
   );
