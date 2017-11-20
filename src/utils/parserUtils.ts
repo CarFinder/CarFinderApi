@@ -9,7 +9,7 @@ import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
 import { getModelByName, saveNewModel } from '../services/modelService';
 
-export const transformOnlinerDate = (onlinerDate: string) => {
+export const transformOnlinerDate = (onlinerDate: string): string => {
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);
