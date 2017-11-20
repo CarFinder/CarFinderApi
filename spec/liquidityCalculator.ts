@@ -2,6 +2,7 @@ import { assert, expect } from 'chai';
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 import * as HttpStatus from 'http-status-codes';
+import * as moment from 'moment';
 import * as passport from 'passport';
 import * as sinon from 'sinon';
 import { codeErrors } from '../src/config/config';
@@ -41,40 +42,42 @@ describe('Calculate liquidity', () => {
       name: adFields.MODEL_NAME
     };
     const model = await Model.create(modelObj);
-    const date = new Date().getTime() - 1 * 24 * 60 * 60 * 1000;
     const ads = [
       {
         bodyTypeId: body._id,
+        creationDate: moment('2016-11-10'),
         isSold: true,
         kms: adFields.KMS,
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: new Date(date),
+        soldDate: moment('2017-11-10'),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 0,
         year: adFields.YEAR
       },
       {
         bodyTypeId: body._id,
+        creationDate: moment('2016-11-10'),
         isSold: true,
         kms: adFields.KMS,
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: new Date(date),
+        soldDate: moment('2017-11-11'),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 1,
         year: adFields.YEAR
       },
       {
         bodyTypeId: body._id,
+        creationDate: moment('2016-11-10'),
         isSold: true,
         kms: adFields.KMS,
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: new Date(date),
+        soldDate: moment('2017-11-14'),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 2,
         year: adFields.YEAR
@@ -99,6 +102,5 @@ describe('Calculate liquidity', () => {
       .set('content-type', 'application/json')
       .send(filters);
     response.should.have.status(HttpStatus.OK);
-    response.body.should.equal(3);
   });
 });
