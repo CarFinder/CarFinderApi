@@ -34,6 +34,10 @@ const addNewModel = (knownModels: IModel[], model: IModel, newModels: IModel[]) 
   }
 };
 
+export const getModels = async () => {
+  return await getAll();
+};
+
 export const getModelByName = async (name: string) => {
   return await getByName(name);
 };

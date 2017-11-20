@@ -1,12 +1,41 @@
 import * as async from 'async';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
-import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
+import {
+  countSold,
+  getAdByURL,
+  getAll,
+  getSold,
+  markSeltAds,
+  save,
+  update
+} from '../repositories/adRepository';
 import { get, getByFilter } from '../repositories/adRepository';
 import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
   return await getAll();
+};
+
+export const countSoldWithFilter = async (model: string, bodytype: string) => {
+  const payload = {
+    bodytTypeId: bodytype,
+    isSold: true,
+    modelId: model
+  };
+  return await countSold(payload);
+};
+
+export const getSoldAd = async (
+  modelsBuffer: string[],
+  bodyTypeIdsBuffer: string[]
+): Promise<any> => {
+  const payload = {
+    bodyTypeId: { $nin: bodyTypeIdsBuffer },
+    isSold: true,
+    modelId: { $nin: modelsBuffer }
+  };
+  return await getSold(payload);
 };
 
 export const updateAds = async () => {
@@ -15,6 +44,10 @@ export const updateAds = async () => {
 
 const saveAd = async (ad: IAd) => {
   await save(ad);
+};
+
+export const countSoldAds = async (): Promise<any> => {
+  return await countSold({ isSold: true });
 };
 
 export const getAds = async (

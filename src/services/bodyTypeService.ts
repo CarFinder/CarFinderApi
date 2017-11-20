@@ -26,3 +26,7 @@ const addNew = async (knownBodyTypes: IBodyType[], type: string) => {
 export const getBodyTypeByName = async (name: string) => {
   return await getByName(name);
 };
+
+export const getAllBodyTypes = async () => {
+  return await getAll();
+};

@@ -6,6 +6,10 @@ import { handleDatabaseError } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { SecureError } from '../utils/errors';
 
+export const getSold = async (payload: any) => {
+  return await Ad.findOne(payload);
+};
+
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);
@@ -19,6 +23,10 @@ export const save = async (ad: object) => {
       handleDatabaseError(err);
     }
   });
+};
+
+export const countSold = async (payload: any) => {
+  return await Ad.count(payload);
 };
 
 export const getAll = async () => {

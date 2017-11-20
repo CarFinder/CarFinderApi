@@ -1,3 +1,4 @@
+import * as async from 'async';
 import { codeErrors, limitForSavedFilters } from '../config/config';
 import { ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
@@ -6,10 +7,10 @@ import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
-import { updateBodyTypes } from './bodyTypeService';
+import { getAllBodyTypes, updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
-import { updateModels } from './modelService';
+import { getModels, updateModels } from './modelService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
@@ -157,6 +158,17 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   } catch (err) {
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
+};
+
+export const calculateLiquidity = async () => {
+  const bodyTypes = await getAllBodyTypes();
+  const models = await getModels();
+  const totalSold = await AdService.countSoldAds();
+  async.each(models, async model => {
+    for (const bodyType of bodyTypes) {
+      const totalSoldInConfig = await AdService.countSoldWithFilter(model, bodyType);
+    }
+  });
 };
 
 export { AdService, FilterService, UserService };
