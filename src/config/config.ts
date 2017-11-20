@@ -17,7 +17,7 @@ export const mail = {
 // see more adout config in dosc for node-schedule
 export const triggerSchedule = '13 13 * * 2';
 
-export const url = 'localhost:3001';
+export const url = process.env.NOVE_ENV === 'production' ? 'carfinder.github.io' : 'localhost:3001';
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
@@ -41,6 +41,7 @@ export const ONLINER_URL: string = `https://ab.onliner.by/`;
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
   RESTORE_PASSWORD: 'RESTORE_PASSWORD',
+  SEND_USER_MESSAGE: 'SEND_USER_MESSAGE',
   UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
 
@@ -51,3 +52,8 @@ export const awsConfig = {
 };
 
 export const bucket = process.env.AWS_BUCKET;
+
+export const healthCheckUrls = {
+  NEWSLETTER: 'https://hchk.io/cb2832f5-e7db-45d0-b8a5-d808f529b684',
+  UPDATE: 'https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052'
+};

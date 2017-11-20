@@ -1,15 +1,18 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
-import { ISavedFilterAds, IUser } from '../interfaces/index';
+import { IAdForClient, IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
+import { getAllUsersByField } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
+import sendMailsWithNewsletter from '../utils/newsletter';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import { getAllMarks, updateMarks } from './markService';
 import { updateModels } from './modelService';
+import * as StatsService from './statsService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
@@ -17,11 +20,11 @@ import {
   register,
   restorePassword,
   sendEmailConfirmation,
+  sendMessage,
   sendPasswordEmail,
   updateImage,
   updateUserProfile
 } from './userService';
-
 import * as UserService from './userService';
 
 export const registerUser = async (payload: IUser) => {
@@ -30,6 +33,10 @@ export const registerUser = async (payload: IUser) => {
 
 export const sendRestorePasswordEmail = async (payload: string) => {
   await sendPasswordEmail(payload);
+};
+
+export const sendUserMessage = async (data: IMessage) => {
+  await sendMessage(data);
 };
 
 export const restoreUserPassword = async (payload: { password: string; token: string }) => {
@@ -137,13 +144,14 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
 
 export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]> => {
   let result: ISavedFilterAds[] = [];
+  const sortParams = 'lastTimeUpDate';
   try {
     const savedFilters = await FilterService.getSavedSearchFilters(user);
     if (savedFilters.length) {
       result = await Promise.all(
         savedFilters.map(async filter => {
           return {
-            ads: await getAds(filter, limitForSavedFilters),
+            ads: await getAds(filter, limitForSavedFilters, 0, sortParams),
             filterId: filter._id,
             filterName: filter.name,
             filterUrl: filter.url
@@ -159,4 +167,22 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   }
 };
 
-export { AdService, FilterService, UserService };
+export const sendNewsletter = async () => {
+  const users: IUser[] = await getAllUsersByField({ subscription: true });
+  if (!users.length) {
+    return;
+  }
+  await Promise.all(
+    users.map(async (user: IUser) => {
+      const savedFilters: ISavedFilterAds[] = await getSavedFiltersAds(user);
+      if (!savedFilters.length) {
+        return;
+      }
+      let ads: IAdForClient[] = [];
+      ads = ads.concat(...savedFilters.map(savedFilter => savedFilter.ads));
+      await sendMailsWithNewsletter(user.name, user.email, ads);
+    })
+  );
+};
+
+export { AdService, FilterService, StatsService, UserService };
