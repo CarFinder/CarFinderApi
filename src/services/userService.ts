@@ -1,8 +1,9 @@
 import { codeErrors, emailActions } from '../config/config';
-import { IUser, IUserImage } from '../interfaces/index';
+import { IMessage, IUser, IUserImage } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError, RequestError, SecureError } from '../utils/errors';
 import { encryptPassword, sendMail, transformDataForMongo, uploadImage } from '../utils/index';
+import { sendUserEmail } from '../utils/userMessage';
 
 export const register = async (payload: IUser) => {
   try {
@@ -10,6 +11,10 @@ export const register = async (payload: IUser) => {
   } catch (error) {
     throw new DatabaseError(error.code);
   }
+};
+
+export const sendMessage = async (data: IMessage) => {
+  await sendUserEmail(data, emailActions.SEND_USER_MESSAGE);
 };
 
 export const confirm = async (email: string) => {

@@ -154,7 +154,7 @@ const generateEmail = (
   }
 };
 
-const getEmailSubject = (action: string) => {
+export const getEmailSubject = (action: string) => {
   switch (action) {
     case emailActions.CONFIRM_REGISTRATION:
       return 'Confirm your registration';
@@ -162,6 +162,8 @@ const getEmailSubject = (action: string) => {
       return 'CarFinder Password Reset';
     case emailActions.UPDATE_EMAIL:
       return 'Confirm New Email';
+    case emailActions.SEND_USER_MESSAGE:
+      return 'Message from user';
   }
 };
 

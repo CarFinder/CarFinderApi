@@ -186,7 +186,7 @@ describe('Ad', () => {
       it('should be return array of ads', async () => {
         const res = await chai
           .request(app)
-          .post('/api/ad')
+          .post('/api/posts')
           .set('content-type', 'application/json')
           .send({
             filter: {
@@ -206,7 +206,7 @@ describe('Ad', () => {
         try {
           await chai
             .request(app)
-            .post('/api/ad')
+            .post('/api/posts')
             .set('content-type', 'application/json')
             .send({
               filter: {
@@ -226,7 +226,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({});
             assert.fail(
@@ -241,7 +241,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -261,7 +261,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -281,7 +281,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -301,7 +301,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -321,7 +321,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -342,7 +342,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -362,7 +362,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -382,7 +382,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -403,7 +403,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -423,7 +423,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
@@ -443,7 +443,7 @@ describe('Ad', () => {
           try {
             await chai
               .request(app)
-              .post('/api/ad')
+              .post('/api/posts')
               .set('content-type', 'application/json')
               .send({
                 filter: {
