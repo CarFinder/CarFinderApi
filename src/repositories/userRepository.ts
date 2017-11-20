@@ -29,3 +29,7 @@ export const get = async (email: string): Promise<IUserModel> => {
 export const getAllUsers = async (): Promise<IUserModel[]> => {
   return (await User.find({})) as IUserModel[];
 };
+
+export const getAllUsersByField = async (findParams: any): Promise<IUserModel[]> => {
+  return (await User.find(findParams)) as IUserModel[];
+};

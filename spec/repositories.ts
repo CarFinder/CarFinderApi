@@ -1,10 +1,12 @@
 import { assert } from 'chai';
 import { Ad, BodyType, Mark, Model } from '../src/db';
+import { User } from '../src/db';
 import { IAd } from '../src/interfaces';
 import * as adRepository from '../src/repositories/adRepository';
 import * as bodyTypeRepository from '../src/repositories/bodyTypeRepository';
 import * as markRepository from '../src/repositories/markRepository';
 import * as modelRepository from '../src/repositories/modelRepository';
+import * as userRepository from '../src/repositories/userRepository';
 
 describe('Repositories', () => {
   describe('Mark Repositories', () => {
@@ -117,6 +119,52 @@ describe('Repositories', () => {
       await Ad.remove({
         sourceUrl: {
           $in: [ads[0].sourceUrl, ads[1].sourceUrl, ads[2].sourceUrl]
+        }
+      });
+    });
+  });
+  describe('User Repositories', () => {
+    const users = [
+      {
+        confirmed: true,
+        email: '666testtest@test.com',
+        name: 'TestName',
+        password: 'Password1#',
+        subscription: true
+      },
+      {
+        confirmed: true,
+        email: '999testtest@test.com',
+        name: 'TestName',
+        password: 'Password1#',
+        subscription: true
+      },
+      {
+        confirmed: true,
+        email: '888testtest@test.com',
+        name: 'TestName',
+        password: 'Password1#',
+        subscription: false
+      }
+    ];
+    const findParams = {
+      subscription: true
+    };
+    before(async () => {
+      await User.create(users);
+    });
+    it('should return an array of all users', async () => {
+      const userData = await userRepository.getAllUsers();
+      assert.lengthOf(userData, users.length);
+    });
+    it('should return an array of users with subscription', async () => {
+      const userData = await userRepository.getAllUsersByField(findParams);
+      assert.lengthOf(userData, 2);
+    });
+    after(async () => {
+      await User.remove({
+        email: {
+          $in: [users[0].email, users[1].email, users[2].email]
         }
       });
     });
