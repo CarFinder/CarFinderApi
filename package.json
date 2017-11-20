@@ -68,6 +68,7 @@
     "@types/koa-passport": "^2.0.4",
     "@types/koa-router": "^7.0.23",
     "@types/lodash": "^4.14.85",
+    "@types/moment": "^2.13.0", 
     "@types/mongodb": "^2.2.11",
     "@types/mongoose": "^4.7.21",
     "@types/node-fetch": "^1.6.7",
