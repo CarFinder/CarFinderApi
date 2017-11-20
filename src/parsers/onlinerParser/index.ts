@@ -8,10 +8,6 @@ import * as request from 'request-promise';
 import { codeErrors, ONLINER_URL, proxy } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
 
-request.defaults({
-  proxy: proxy.split(',')
-});
-
 export const getMarks = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();

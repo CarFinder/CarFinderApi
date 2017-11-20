@@ -6,23 +6,27 @@
     "dev-server": "nodemon -w src -x ts-node  src/index.ts",
     "test:watch": "mocha --opts mocha.opts --watch",
     "start": "ts-node src/index.ts",
-
-    "test":
-      "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
-
+    "test": "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
-    "test:coverage":
-      "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+    "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
-  "engines": {
-    "node": "9.x.x"
-  },
   "nyc": {
-    "include": ["src/**/*.ts"],
-    "extension": [".ts", ".js", ".tsx"],
-    "require": ["ts-node/register"],
-    "reporter": ["text", "html"],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts",
+      ".js",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
     "sourceMap": true,
     "instrument": true,
     "all": true
@@ -48,7 +52,7 @@
     "tslint-config-prettier": "^1.5.0"
   },
   "dependencies": {
-    "@types/async": "^2.0.44",
+    "@types/async": "^2.0.45",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",
@@ -63,7 +67,7 @@
     "@types/koa-logger": "^2.0.2",
     "@types/koa-passport": "^2.0.4",
     "@types/koa-router": "^7.0.23",
-    "@types/lodash": "^4.14.77",
+    "@types/lodash": "^4.14.85",
     "@types/mongodb": "^2.2.11",
     "@types/mongoose": "^4.7.21",
     "@types/node-fetch": "^1.6.7",
@@ -74,7 +78,7 @@
     "@types/puppeteer": "^0.10.2",
     "@types/request": "^2.0.7",
     "@types/request-promise": "^4.1.39",
-    "async": "^2.5.0",
+    "async": "^2.6.0",
     "aws-sdk": "^2.139.0",
     "axios": "^0.16.2",
     "bcrypt-nodejs": "^0.0.3",

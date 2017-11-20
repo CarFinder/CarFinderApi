@@ -8,6 +8,18 @@ import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
 import { getModelByName, saveNewModel } from '../services/modelService';
 
+export const transformOnlinerDate = (onlinerDate: string) => {
+  let date = onlinerDate.substring(0, 10);
+  const arrayofDate: any = date.split('-');
+  arrayofDate[1] = parseInt(arrayofDate[1], 10);
+  arrayofDate[1] += 1;
+  if (arrayofDate[1] > 12) {
+    arrayofDate[1] = arrayofDate[1] - 12;
+  }
+  date = arrayofDate.join('-');
+  return new Date(date);
+};
+
 export const transformOnlinerModelsData = (models: any, markId: string) => {
   const transformedModels: any = [];
   if (!models) {
@@ -43,12 +55,14 @@ const transformOnlinerMarks = (marks: IOnlinerMark[]) => {
 
 export const transformAdsData = async (markId: string, ads: object, bodyTypes: string[]) => {
   const transformedAds: any = [];
-  _.forEach(ads, (val, key) => {
+  _.forEach(ads, (val: any, key: any) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
+      creationDate: transformOnlinerDate(val.creationDate.date),
       description: val.description,
       images: val.photos,
       kms: val.car.odometerState,
+      lastTimeUpDate: transformOnlinerDate(val.lastTimeUp.date),
       markId,
       modelName: val.car.model.name,
       price: val.price,
