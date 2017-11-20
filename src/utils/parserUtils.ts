@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
@@ -17,7 +18,7 @@ export const transformOnlinerDate = (onlinerDate: string) => {
     arrayofDate[1] = arrayofDate[1] - 12;
   }
   date = arrayofDate.join('-');
-  return new Date(date);
+  return moment(date).format('DD-MM-YYYY');
 };
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
