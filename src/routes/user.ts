@@ -5,6 +5,7 @@ import {
   confirmEmail,
   forgotPassword,
   restorePassword,
+  sendMessage,
   signUp,
   updateData,
   updateImage,
@@ -32,5 +33,7 @@ router.post('/update-user-data', jwtLogin, updateData);
 router.post('/update-user-settings', jwtLogin, updateSettings);
 
 router.post('/update-user-image', jwtLogin, updateImage);
+
+router.post('/send-message', sendMessage);
 
 export default router;
