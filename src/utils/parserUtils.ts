@@ -157,3 +157,20 @@ export const updateAvByData = async () => {
   const models = api.getModels();
   await updateDBDateFromAvBy(marks, models, trandformedBodyTypes);
 };
+
+export const transformBmvAvModel = (name: string): string => {
+  let transformedName;
+  transformedName = name.indexOf('-') === -1 ? name.split(' ').shift() : name;
+  transformedName = transformedName.indexOf('-') !== -1 ? `Серия ${name[0]}` : transformedName;
+  return transformedName;
+};
+
+export const transformMercedesAvModel = (name: string): string => {
+  if (name.length <= 3) {
+    return `${name}-класс`;
+  }
+  if (name.indexOf('-') !== -1) {
+    return `${name.split('-').shift()}-класс`;
+  }
+  return name;
+};

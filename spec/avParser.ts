@@ -3,6 +3,7 @@ import { assert, expect } from 'chai';
 import * as request from 'request-promise';
 import * as sinon from 'sinon';
 import { Api } from '../src/parsers/';
+import { transformBmvAvModel, transformMercedesAvModel } from '../src/utils/parserUtils';
 
 describe('Av.by Parser', () => {
   const api = new Api(2);
@@ -141,5 +142,19 @@ describe('Av.by Parser', () => {
     requestStub = sinon.stub(request, 'get').callsFake(async (opts: any) => await parser.ADS);
     await api.updateAds({ url: 'url', name: 'name' });
     assert.deepEqual(api.getAds(), parser.ADS_RESULT);
+  });
+
+  describe('Av.By parser utils', () => {
+    it('should be return correct value if the mark name is BMW', () => {
+      assert.equal(transformBmvAvModel('1-reihe (E81)'), 'Серия 1');
+      assert.equal(transformBmvAvModel('X5 (E53)'), 'X5');
+      assert.equal(transformBmvAvModel('X3'), 'X3');
+    });
+    it('should be return correct value if the mark name is Mercedes', () => {
+      assert.equal(transformMercedesAvModel('190 (W201)'), '190 (W201)');
+      assert.equal(transformMercedesAvModel('C-Klasse (CL203)'), 'C-класс');
+      assert.equal(transformMercedesAvModel('GLC'), 'GLC-класс');
+      assert.equal(transformMercedesAvModel('Vito'), 'Vito');
+    });
   });
 });

@@ -5,6 +5,7 @@ import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
 import { ParserError } from '../../utils/errors/';
+import { transformBmvAvModel, transformMercedesAvModel } from '../../utils/parserUtils';
 
 // tslint:disable-next-line:no-var-requires
 const Agent = require('socks5-https-client/lib/Agent');
@@ -34,7 +35,9 @@ export const getMarks = async () => {
     const marksNames: string[] = $('.brandslist')
       .find('span')
       .map(function() {
-        return $(this).text();
+        let name = $(this).text();
+        name = name === 'Mercedes-Benz' ? 'Mercedes' : name; // for consistency
+        return name;
       })
       .get();
 
@@ -46,63 +49,84 @@ export const getMarks = async () => {
 };
 
 export const getModels = async (marks: IAvMark[]) => {
-  const get = (mark: any) => {
-    return new Promise(resolve => {
-      request
-        .get({
-          agentClass: Agent,
-          agentOptions: {
-            socksHost: 'localhost',
-            socksPort: 9060
-          },
-          uri: mark.url
+  try {
+    const get = async (mark: any) => {
+      const response = await request.get({
+        agentClass: Agent,
+        agentOptions: {
+          socksHost: 'localhost',
+          socksPort: 9060
+        },
+        uri: mark.url
+      });
+      const $ = cheerio.load(response, {
+        normalizeWhitespace: true,
+        xmlMode: true
+      });
+      const modelsURLs: string[] = $('.brandslist')
+        .find('a')
+        .map(function() {
+          return $(this).attr('href');
         })
-        .then(response => {
-          const $ = cheerio.load(response, {
-            normalizeWhitespace: true,
-            xmlMode: true
-          });
-          const modelsURLs: string[] = $('.brandslist')
-            .find('a')
-            .map(function() {
-              return $(this).attr('href');
-            })
-            .get();
-          const modelsNames: string[] = $('.brandslist')
-            .find('span')
-            .map(function() {
-              return $(this).text();
-            })
-            .get();
-          const transformedModels: any[] = _.map(modelsNames, (name, index) => ({
-            name,
-            url: modelsURLs[index]
-          }));
-          resolve({ [mark.name]: transformedModels });
-        });
-    });
-  };
+        .get();
+      const modelsNames: string[] = $('.brandslist')
+        .find('span')
+        .map(function() {
+          return $(this).text();
+        })
+        .get();
+      let transformedModels: any[];
 
-  let models: any[] = [];
-  const date = new Date();
-  for (let i = 0; i < marks.length; i += 3) {
-    const currentMarks = _.slice(marks, i, i + 3);
-    models = _.concat(
-      models,
-      // between each of the loop iteration we should be wait not less then 1 second
-      // and after we can to continue
-      await Promise.all(_.slice(
-        // we take all of the promises results, exclude last, because last promise to return undefined value
-        [..._.map(currentMarks, get), bluebird.delay(1000)],
-        0,
-        -1
-      ) as Array<Promise<any>>)
-    );
-    global.console.log(
-      `:::Loaded ${Math.round(models.length / marks.length * 100)}% of a av.by car models`
-    );
+      // for consistency
+      if (mark.name === 'BMW') {
+        transformedModels = _.map(modelsNames, (name, index) => {
+          const transformedName = transformBmvAvModel(name);
+          return {
+            name: transformedName,
+            url: modelsURLs[index]
+          };
+        });
+      } else if (mark.name === 'Mercedes') {
+        transformedModels = _.map(modelsNames, (name, index) => {
+          const transformedName = transformMercedesAvModel(name);
+          return {
+            name: transformedName,
+            url: modelsURLs[index]
+          };
+        });
+      } else {
+        transformedModels = _.map(modelsNames, (name, index) => ({
+          name,
+          url: modelsURLs[index]
+        }));
+      }
+
+      return { [mark.name]: transformedModels };
+    };
+
+    let models: any[] = [];
+    const date = new Date();
+    for (let i = 0; i < marks.length; i += 3) {
+      const currentMarks = _.slice(marks, i, i + 3);
+      models = _.concat(
+        models,
+        // between each of the loop iteration we should be wait not less then 1 second
+        // and after we can to continue
+        await Promise.all(_.slice(
+          // we take all of the promises results, exclude last, because last promise to return undefined value
+          [..._.map(currentMarks, get), bluebird.delay(1000)],
+          0,
+          -1
+        ) as Array<Promise<any>>)
+      );
+      global.console.log(
+        `:::Loaded ${Math.round(models.length / marks.length * 100)}% of a av.by car models`
+      );
+    }
+    return models;
+  } catch (err) {
+    throw new ParserError(codeErrors.AV_PARSE_ERROR);
   }
-  return models;
 };
 
 export const getBodyTypes = async () => {
