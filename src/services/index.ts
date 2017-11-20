@@ -1,7 +1,7 @@
 import { codeErrors, limitForSavedFilters } from '../config/config';
 import { IAdForClient, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
-import { getAllUsers } from '../repositories/userRepository';
+import { getAllUsersByField } from '../repositories/userRepository';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
@@ -164,7 +164,7 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
 export { AdService, FilterService, UserService };
 
 export const sendNewsletter = async () => {
-  const users: IUser[] = await getAllUsers();
+  const users: IUser[] = await getAllUsersByField({ subscription: true });
   if (!users.length) {
     return;
   }
