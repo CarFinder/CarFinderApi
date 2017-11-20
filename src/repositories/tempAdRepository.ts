@@ -58,6 +58,10 @@ export const dropCollection = async () => {
 };
 
 export const save = async (tempAd: object) => {
-  const temp = new TempAd(tempAd);
-  await temp.save();
+  try {
+    const temp = new TempAd(tempAd);
+    await temp.save();
+  } catch (err) {
+    handleDatabaseError(err);
+  }
 };

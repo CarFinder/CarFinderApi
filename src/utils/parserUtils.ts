@@ -102,7 +102,7 @@ export const transformAvByBodyTypes = (bodyTypes: any[]) => {
   return _.chain(bodyTypes)
     .map(type => {
       const name = _.capitalize(type);
-      return name === 'Легковой фургон'
+      return name === 'Легковой фургон' // we take only first word of the bodytype name, exclude "Легковой фургон"
         ? name
         : _.chain(name)
             .split(' ')

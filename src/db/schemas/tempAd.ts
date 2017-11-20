@@ -38,7 +38,8 @@ const tempAdSchema = new mongoose.Schema(
     },
     sourceUrl: {
       required: true,
-      type: String
+      type: String,
+      unique: true
     },
     year: {
       required: true,

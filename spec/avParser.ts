@@ -11,7 +11,7 @@ describe('Av.by Parser', () => {
       <div class="listing-item-image-in">
         <a href="url"></a>
       </div>
-      <div class="card-price-approx">14 600</div>
+      <div class="card-price-main"><span>14 600 <ins>р.</ins></span></div>
       <div class="card-info">
         <dd>2010</dd>
         <dd>с пробегом</dd>
@@ -54,7 +54,7 @@ describe('Av.by Parser', () => {
         <option>не внедорожник</option>
         <option>другой</option>
       </select>`,
-    BODY_TYPES_RESULT: ['внедорожник', 'не внедорожник'],
+    BODY_TYPES_RESULT: ['внедорожник', 'не внедорожник', 'другой'],
     MARKS: `
       <ul class="brandslist">
         <li class="brandsitem brandsitem--primary">
@@ -126,9 +126,7 @@ describe('Av.by Parser', () => {
   });
 
   it('should be return an array of models', async () => {
-    requestStub = sinon
-      .stub(request, 'get')
-      .callsFake((opts: any) => new Promise(resolve => resolve(parser.MODELS)));
+    requestStub = sinon.stub(request, 'get').callsFake(async (opts: any) => await parser.MODELS);
     await api.updateModels();
     assert.deepEqual(api.getModels() as any, parser.MODELS_RESULT);
   });
@@ -140,9 +138,7 @@ describe('Av.by Parser', () => {
   });
 
   it('should be return an array of ads', async () => {
-    requestStub = sinon
-      .stub(request, 'get')
-      .callsFake((opts: any) => new Promise(resolve => resolve(parser.ADS)));
+    requestStub = sinon.stub(request, 'get').callsFake(async (opts: any) => await parser.ADS);
     await api.updateAds({ url: 'url', name: 'name' });
     assert.deepEqual(api.getAds(), parser.ADS_RESULT);
   });

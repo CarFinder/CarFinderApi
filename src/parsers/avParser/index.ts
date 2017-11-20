@@ -89,7 +89,10 @@ export const getModels = async (marks: IAvMark[]) => {
     const currentMarks = _.slice(marks, i, i + 3);
     models = _.concat(
       models,
+      // between each of the loop iteration we should be wait not less then 1 second
+      // and after we can to continue
       await Promise.all(_.slice(
+        // we take all of the promises results, exclude last, because last promise to return undefined value
         [..._.map(currentMarks, get), bluebird.delay(1000)],
         0,
         -1
@@ -122,7 +125,7 @@ export const getBodyTypes = async () => {
         return $(this).text();
       })
       .get()
-      .slice(1, -1);
+      .slice(1);
     return bodyTypes;
   } catch (e) {
     throw new ParserError(codeErrors.AV_PARSE_ERROR);
@@ -166,6 +169,7 @@ export const getAdsForCurrentModel = async (model: any) => {
         normalizeWhitespace: true,
         xmlMode: true
       });
+
       const adsURLs: string[] = $('.listing-item-image-in')
         .find('a')
         .map(function() {
@@ -173,94 +177,110 @@ export const getAdsForCurrentModel = async (model: any) => {
         })
         .get();
 
-      const get = (url: any) => {
-        return new Promise(resolve => {
-          request
-            .get({
-              agentClass: Agent,
-              agentOptions: {
-                socksHost: 'localhost',
-                socksPort: 9060
-              },
-              url
-            })
-            .then(res => {
-              $ = cheerio.load(res, {
-                normalizeWhitespace: true,
-                xmlMode: true
-              });
-              // car info
-              const adInfo: string[] = $('.card-info')
-                .find('dd')
-                .map(function() {
-                  return $(this)
-                    .text()
-                    .trim();
-                })
-                .get();
-              const images: string[] = $('.fotorama')
-                .find('a')
-                .map(function() {
-                  return $(this).attr('href');
-                })
-                .get();
-              // car description
-              const description: string = $('.js-card-description')
-                .find('p')
-                .text()
-                .trim();
-              let bodyType = _.capitalize(adInfo[6]);
-              bodyType =
-                bodyType === 'Легковой фургон'
-                  ? bodyType
-                  : _.chain(bodyType)
-                      .split(' ')
-                      .shift()
-                      .value();
-              const dates: string[] = $('.card-about-item-dates')
-                .find('dd')
-                .map(function() {
-                  return $(this)
-                    .text()
-                    .trim();
-                })
-                .get();
-              const transformedDates = _.chain(dates)
-                .map(date =>
-                  _.chain(date)
-                    .split('.')
-                    .reverse()
-                    .map((item, i) => (i === 1 ? +item - 1 : +item))
-                    .value()
-                )
-                .value();
-              const price = +$('.card-price-approx')
-                .text()
-                .split(' ')
-                .join('');
-              const ad = {
-                bodyType,
-                creationDate: new Date(...transformedDates[0]),
-                description,
-                images,
-                kms: +adInfo[2].split(' ').shift(),
-                lastTimeUpDate: new Date(...(transformedDates[1] || transformedDates[0])),
-                model: model.name,
-                price,
-                sourceName: 'av.by',
-                sourceUrl: url,
-                year: +adInfo[0]
-              };
-              resolve(ad);
-            });
+      const get = async (url: any) => {
+        const res = await request.get({
+          agentClass: Agent,
+          agentOptions: {
+            socksHost: 'localhost',
+            socksPort: 9060
+          },
+          url
         });
+
+        $ = cheerio.load(res, {
+          normalizeWhitespace: true,
+          xmlMode: true
+        });
+
+        // car info
+        const adInfo: string[] = $('.card-info')
+          .find('dd')
+          .map(function() {
+            return $(this)
+              .text()
+              .trim();
+          })
+          .get();
+
+        // car images
+        const images: string[] = $('.fotorama')
+          .find('a')
+          .map(function() {
+            return $(this).attr('href');
+          })
+          .get();
+
+        // car description
+        const description: string = $('.js-card-description')
+          .find('p')
+          .text()
+          .trim();
+
+        // car bodytype
+        let bodyType = _.capitalize(adInfo[6]);
+        bodyType =
+          bodyType === 'Легковой фургон' // we take only first word of the bodytype name, exclude "Легковой фургон"
+            ? bodyType
+            : _.chain(bodyType)
+                .split(' ')
+                .shift()
+                .value();
+
+        // car update date
+        const dates: string[] = $('.card-about-item-dates')
+          .find('dd')
+          .map(function() {
+            return $(this)
+              .text()
+              .trim();
+          })
+          .get();
+        const transformedDates = _.chain(dates)
+          .map(date =>
+            _.chain(date)
+              .split('.')
+              .reverse()
+              .map((item, i) => (i === 1 ? +item - 1 : +item))
+              .value()
+          )
+          .value();
+        const creationDate = new Date(...transformedDates[0]);
+        const lastTimeUpDate = new Date(...(transformedDates[1] || transformedDates[0]));
+        // car price
+        const price = +$('.card-price-main')
+          .find('span')
+          .text()
+          .trim()
+          .replace(/\s/g, '')
+          .slice(0, -2);
+
+        const ad = {
+          bodyType,
+          creationDate,
+          description,
+          images,
+          kms: +adInfo[2].split(' ').shift(),
+          lastTimeUpDate,
+          model: model.name,
+          price,
+          sourceName: 'av.by',
+          sourceUrl: url,
+          year: +adInfo[0]
+        };
+
+        return ad;
       };
+
       let pageAds: any[] = [];
+
       for (let i = 0; i < adsURLs.length; i += 3) {
-        const currentAds = _.slice(adsURLs, i, i + 3);
+        const currentAds = _.slice(adsURLs, i, i + 3); // we can to take only 3 ads per once time
         pageAds = _.concat(
           pageAds,
+          // between each of the loop iteration we should be wait not less then 1 second
+          // and after we can to continue
           await Promise.all(_.slice(
+            // we take all of the promises results, exclude last, because last promise to return undefined value
             [..._.map(currentAds, get), bluebird.delay(1000)],
             0,
             -1
@@ -274,6 +294,7 @@ export const getAdsForCurrentModel = async (model: any) => {
       }
       ads = _.concat(ads, pageAds);
     }
+
     return ads;
   } catch (e) {
     throw new ParserError(codeErrors.AV_PARSE_ERROR);
