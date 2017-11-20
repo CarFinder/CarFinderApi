@@ -5,7 +5,7 @@ import * as AdService from '../src/services//adService';
 import { addTempAds, dropCollection, updateAds } from '../src/services/tempAdService';
 import * as parserUtils from '../src/utils/parserUtils';
 
-describe.only('Ad update', () => {
+describe('Ad update', () => {
   const adFields = {
     KMS: 20000,
     MARK_ID: '1',
