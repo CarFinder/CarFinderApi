@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
 import { codeErrors } from '../config/config';
@@ -111,7 +112,20 @@ export const getAdByURL = async (url: string) => {
   return await Ad.findOne({ sourceUrl: url });
 };
 
-export const getSoldCarsNumber = async (adFilter: any) => {
-  const time = new Date().getTime() - 30 * 24 * 60 * 60 * 1000;
-  return await Ad.find(adFilter && { soldDate: { $gt: new Date(time) } }).count({});
+export const getSoldCarsNumber = async (adFilter: any, time: string) => {
+  const liquidityData: any = {
+    result: await Ad.find(adFilter)
+      .find({ soldDate: { $gt: time } })
+      .count({}),
+    total: await Ad.find({ isSold: true, soldDate: { $gt: time } }).count({})
+  };
+  const soldCars = await Ad.find(adFilter);
+  const avgTime = soldCars.length
+    ? soldCars
+        .map(car => moment(car.soldDate).diff(car.creationDate))
+        .reduce((car, nextCar) => car + nextCar) / soldCars.length
+    : 0;
+
+  liquidityData.averageTime = moment.duration(avgTime).asDays();
+  return liquidityData;
 };
