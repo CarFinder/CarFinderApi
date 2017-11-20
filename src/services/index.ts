@@ -12,7 +12,9 @@ import {
   getOnlinerAds,
   transformAdsData,
   transformAvByAds,
-  transformOnlinerModelsData
+  transformOnlinerModelsData,
+  updateAvByData,
+  updateOnlinerData
 } from '../utils/parserUtils';
 import * as AdService from './adService';
 import { updateBodyTypes } from './bodyTypeService';
@@ -84,14 +86,18 @@ export const updateUserImage = async (userData: any, token: any) => {
   return payload;
 };
 
-export const updateDBData = async (
+export const updateDBDataFromOnliner = async (
   marks: ITransformedMarks[],
   models: any,
   bodyTypes: string[]
 ) => {
-  const buffer: string[] = [];
   await updateBodyTypes(bodyTypes);
   await formingTempAdsData(marks, models, bodyTypes);
+};
+
+export const updateDBData = async () => {
+  await updateOnlinerData();
+  await updateAvByData();
   await AdService.markSeltAds();
   await AdService.updateAds();
   return;
@@ -106,20 +112,12 @@ export const formingTempAdsData = async (
     const markMaket = { name: mark.name };
     const savedMark: any = await updateMarks(markMaket);
     const markId = savedMark.id;
-    // if mark name is BMW or Mercedes , don't set models
-    // `cause they models setted like series on onliner
-    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await addTempAds(markAds);
-    } else {
-      const listOfModels = models[mark.onlinerMarkId];
-      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-      await updateModels(transformedModels);
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await addTempAds(markAds);
-    }
+    const listOfModels = models[mark.onlinerMarkId];
+    const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+    await updateModels(transformedModels);
+    const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+    const markAds = await transformAdsData(markId, ads, bodyTypes);
+    await addTempAds(markAds);
   }
 };
 

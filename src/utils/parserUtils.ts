@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
-import { updateDBData, updateDBDateFromAvBy } from '../services/';
+import { updateDBData, updateDBDataFromOnliner, updateDBDateFromAvBy } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
@@ -86,7 +86,7 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
 
 // update ads, models, marks, body types, fill db is it is empty
 
-export const updateServiceData = async () => {
+export const updateOnlinerData = async () => {
   const api = new Api(sourceCodes.ONLINER);
   await api.updateMarks();
   const marks = api.getMarks();
@@ -95,7 +95,7 @@ export const updateServiceData = async () => {
   const transfomedMarks = transformOnlinerMarks(marks);
   await api.updateBodyTypes();
   const bodyTypes = api.getBodyTypes();
-  await updateDBData(transfomedMarks, models, bodyTypes);
+  await updateDBDataFromOnliner(transfomedMarks, models, bodyTypes);
 };
 
 export const transformAvByBodyTypes = (bodyTypes: any[]) => {

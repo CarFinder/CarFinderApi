@@ -11,7 +11,8 @@ import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
 import routes from './routes';
-import { updateAvByData, updateServiceData } from './utils/parserUtils';
+import { updateDBData } from './services';
+import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
 
 import { Api } from './parsers';
 global.Promise = bluebird;
@@ -19,8 +20,7 @@ global.Promise = bluebird;
 const server = new Koa();
 
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
-  await updateServiceData();
-  await updateAvByData();
+  await updateDBData();
   await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
 });
 

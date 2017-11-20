@@ -1,7 +1,6 @@
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
 import { Ad, IAdModel, Mark, Model, TempAd } from '../src/db/';
-import { updateDBData } from '../src/services';
 import * as AdService from '../src/services//adService';
 import { addTempAds, dropCollection, updateAds } from '../src/services/tempAdService';
 import * as parserUtils from '../src/utils/parserUtils';
