@@ -1,4 +1,5 @@
 import * as async from 'async';
+import * as moment from 'moment';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
 import { getAdByURL, getAll, markSeltAds, save, update } from '../repositories/adRepository';
@@ -92,6 +93,9 @@ export const getAds = async (
 };
 
 export const getLiquidity = async (filter: any) => {
+  const time = moment()
+    .subtract(1, 'month')
+    .format();
   const adFilter: any = {};
   if (filter.markId) {
     adFilter.markId = filter.markId;
@@ -104,7 +108,7 @@ export const getLiquidity = async (filter: any) => {
   }
   adFilter.isSold = true;
 
-  return await getSoldCarsNumber(adFilter);
+  return await getSoldCarsNumber(adFilter, time);
 };
 
 export { markSeltAds };
