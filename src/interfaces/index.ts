@@ -47,11 +47,13 @@ export interface IBodyType {
 
 export interface IAd {
   bodyTypeId: string;
+  creationDate: Date;
   description?: string;
   images?: string[];
   isSold: boolean;
   markId: string;
   kms?: number;
+  lastTimeUpDate: Date;
   modelId: string;
   price?: number;
   sourceName: string;
