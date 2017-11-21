@@ -9,6 +9,7 @@ import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../
 import * as AdService from './adService';
 import { getAllBodyTypes, updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
+import * as liquidityService from './liquidService';
 import { getAllMarks, updateMarks } from './markService';
 import { getModels, updateModels } from './modelService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
@@ -164,9 +165,17 @@ export const calculateLiquidity = async () => {
   const bodyTypes = await getAllBodyTypes();
   const models = await getModels();
   const totalSold = await AdService.countSoldAds();
-  async.each(models, async model => {
+  await async.each(models, async model => {
     for (const bodyType of bodyTypes) {
-      const totalSoldInConfig = await AdService.countSoldWithFilter(model, bodyType);
+      const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
+      if (totalSoldInConfig !== 0) {
+        const liquidityStatistic = {
+          bodyTypeId: bodyType.id,
+          liquidityCoefficient: totalSoldInConfig / totalSold,
+          modelId: model.id
+        };
+        await liquidityService.save(liquidityStatistic);
+      }
     }
   });
 };

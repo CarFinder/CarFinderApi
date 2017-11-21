@@ -1,5 +1,5 @@
 import * as liquid from '../repositories/liquidityRepository';
 
-export const count = async () => {
-  return await liquid.count();
+export const save = async (payload: any) => {
+  await liquid.save(payload);
 };
