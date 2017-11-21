@@ -6,23 +6,30 @@
     "dev-server": "nodemon -w src -x ts-node  src/index.ts",
     "test:watch": "mocha --opts mocha.opts --watch",
     "start": "ts-node src/index.ts",
-
-    "test":
-      "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
-
+    "test": "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
-    "test:coverage":
-      "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
+    "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
   "engines": {
-    "node": "9.x.x"
+    "node": "8.9.x"
   },
   "nyc": {
-    "include": ["src/**/*.ts"],
-    "extension": [".ts", ".js", ".tsx"],
-    "require": ["ts-node/register"],
-    "reporter": ["text", "html"],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts",
+      ".js",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
     "sourceMap": true,
     "instrument": true,
     "all": true
@@ -48,6 +55,7 @@
     "tslint-config-prettier": "^1.5.0"
   },
   "dependencies": {
+    "@koa/cors": "^2.2.1",
     "@types/async": "^2.0.44",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
