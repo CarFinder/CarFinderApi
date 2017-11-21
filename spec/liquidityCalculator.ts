@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import * as passport from 'passport';
 import * as sinon from 'sinon';
 import { codeErrors } from '../src/config/config';
+import { getLiquidity } from '../src/services/adService';
 import app from './index';
 
 import { Ad, BodyType, Mark, Model } from '../src/db';
@@ -51,7 +52,7 @@ describe('Calculate liquidity', () => {
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: moment('2017-11-10'),
+        soldDate: moment('2017-09-10'),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 0,
         year: adFields.YEAR
@@ -102,5 +103,14 @@ describe('Calculate liquidity', () => {
       .set('content-type', 'application/json')
       .send(filters);
     response.should.have.status(HttpStatus.OK);
+  });
+  it('should return the data in the right format', async () => {
+    const data = await getLiquidity(filters);
+    expect(data).to.have.all.keys('averageTime', 'result', 'total');
+    expect(data.result).to.equal(2);
+    expect(data.total).to.equal(2);
+    expect(data.averageTime)
+      .to.be.above(340)
+      .and.below(350);
   });
 });
