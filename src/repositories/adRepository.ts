@@ -10,7 +10,7 @@ import { SecureError } from '../utils/errors';
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);
-  const date = moment().format('DD-MM-YYYY');
+  const date = moment().toISOString();
   await Ad.update(
     { sourceUrl: { $nin: existingAds } },
     {
