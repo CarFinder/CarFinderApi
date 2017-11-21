@@ -13,6 +13,11 @@ import { db, port, triggerSchedule } from './config/config';
 import routes from './routes';
 import { updateServiceData } from './utils/parserUtils';
 
+// tslint:disable-next-line:no-var-requires
+const cors = require('@koa/cors');
+
+(mongoose as any).Promise = bluebird;
+
 const server = new Koa();
 
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
@@ -23,8 +28,7 @@ const parse = schedule.scheduleJob(triggerSchedule, async () => {
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
 
-(mongoose as any).Promise = bluebird;
-
+server.use(cors());
 server.use(bodyParser());
 server.use(passport.initialize());
 server.use(logger());
