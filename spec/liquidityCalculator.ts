@@ -99,7 +99,7 @@ describe('Calculate liquidity', () => {
   it('should be status OK', async () => {
     const response = await chai
       .request(app)
-      .post('/api/ad/get-liquidity')
+      .post('/api/posts/get-liquidity')
       .set('content-type', 'application/json')
       .send(filters);
     response.should.have.status(HttpStatus.OK);
