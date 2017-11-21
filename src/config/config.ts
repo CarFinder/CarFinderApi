@@ -41,6 +41,7 @@ export const ONLINER_URL: string = `https://ab.onliner.by/`;
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
   RESTORE_PASSWORD: 'RESTORE_PASSWORD',
+  SEND_USER_MESSAGE: 'SEND_USER_MESSAGE',
   UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
 

@@ -11,6 +11,9 @@
     "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
     "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
   },
+  "engines": {
+    "node": "8.9.x"
+  },
   "nyc": {
     "include": [
       "src/**/*.ts"
@@ -53,6 +56,7 @@
   },
   "dependencies": {
     "@types/async": "^2.0.45",
+    "@koa/cors": "^2.2.1",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",
@@ -68,6 +72,7 @@
     "@types/koa-passport": "^2.0.4",
     "@types/koa-router": "^7.0.23",
     "@types/lodash": "^4.14.85",
+    "@types/moment": "^2.13.0", 
     "@types/mongodb": "^2.2.11",
     "@types/mongoose": "^4.7.21",
     "@types/node-fetch": "^1.6.7",

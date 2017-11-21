@@ -87,3 +87,15 @@ export interface IUserImage {
   image: string;
   type: string;
 }
+
+export interface IStats {
+  ads: number;
+  users: number;
+  models: number;
+}
+
+export interface IMessage {
+  name: string;
+  email: string;
+  message: string;
+}
