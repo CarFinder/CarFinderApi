@@ -113,19 +113,18 @@ export const getAdByURL = async (url: string) => {
 };
 
 export const getSoldCarsNumber = async (adFilter: any, time: string) => {
-  const liquidityData: any = {
-    result: await Ad.find(adFilter)
-      .find({ soldDate: { $gt: time } })
-      .count({}),
-    total: await Ad.find({ isSold: true, soldDate: { $gt: time } }).count({})
-  };
   const soldCars = await Ad.find(adFilter);
   const avgTime = soldCars.length
     ? soldCars
         .map(car => moment(car.soldDate).diff(car.creationDate))
         .reduce((car, nextCar) => car + nextCar) / soldCars.length
     : 0;
-
-  liquidityData.averageTime = moment.duration(avgTime).asDays();
+  const liquidityData: any = {
+    averageTime: moment.duration(avgTime).asDays(),
+    result: await Ad.find(adFilter)
+      .find({ soldDate: { $gt: time } })
+      .count({}),
+    total: await Ad.find({ isSold: true, soldDate: { $gt: time } }).count({})
+  };
   return liquidityData;
 };

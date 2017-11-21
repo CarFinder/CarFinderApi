@@ -100,9 +100,6 @@ export const getLiquidity = async (filter: any) => {
   if (filter.markId) {
     adFilter.markId = filter.markId;
   }
-  if (filter.bodyTypeId && filter.bodyTypeId.length) {
-    adFilter.bodyTypeId = { $in: [...filter.bodyTypeId] };
-  }
   if (filter.modelId && filter.modelId.length) {
     adFilter.modelId = { $in: [...filter.modelId] };
   }
