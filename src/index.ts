@@ -14,6 +14,8 @@ import routes from './routes';
 import { updateDBData } from './services';
 import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
 
+import { TempAd } from './db';
+
 import { Api } from './parsers';
 global.Promise = bluebird;
 

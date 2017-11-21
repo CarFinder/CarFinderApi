@@ -7,13 +7,12 @@ export const getAllMarks = async () => {
 };
 
 export const updateMarks = async (mark: IMark) => {
-  const knownMarks: IMarkModel[] = await getAllMarks();
-  if (knownMarks.length === 0) {
+  const knownMark: IMarkModel = await getByName(mark.name);
+  if (!knownMark) {
     await saveMarks(mark);
-  } else {
-    await addNewMark(knownMarks, mark);
+    return await getByName(mark.name);
   }
-  return getByName(mark.name);
+  return knownMark;
 };
 
 const saveMarks = async (mark: IMark) => {

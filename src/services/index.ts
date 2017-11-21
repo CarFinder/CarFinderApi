@@ -114,7 +114,7 @@ export const formingTempAdsData = async (
     const markId = savedMark.id;
     const listOfModels = models[mark.onlinerMarkId];
     const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-    await updateModels(transformedModels);
+    await updateModels(transformedModels, markId);
     const ads: any = await getOnlinerAds(mark.onlinerMarkId);
     const markAds = await transformAdsData(markId, ads, bodyTypes);
     await addTempAds(markAds);
@@ -141,8 +141,14 @@ export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyType
     const savedMark: any = await updateMarks(mark);
     const markId = savedMark.id;
     const markName = savedMark.name;
-    const modelsChosedMark = _.find(listOfModels, { mark: markName }).models;
-    await updateModels(_.map(modelsChosedMark, (model: any) => ({ name: model.name, markId })));
+    const modelsChosedMark = _.find(
+      listOfModels,
+      (item: any) => item.mark.toLowerCase() === markName.toLowerCase()
+    ).models;
+    await updateModels(
+      _.map(modelsChosedMark, (model: any) => ({ name: model.name, markId })),
+      markId
+    );
     const ads = await getAvAdsByModels(modelsChosedMark);
     const transformedAds = await transformAvByAds(ads, markId);
     await addTempAds(transformedAds);

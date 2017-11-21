@@ -10,6 +10,10 @@ const AdSchema = new mongoose.Schema(
       required: true,
       type: String
     },
+    creationDate: {
+      required: true,
+      type: Date
+    },
     description: {
       type: String
     },
@@ -22,6 +26,10 @@ const AdSchema = new mongoose.Schema(
     },
     kms: {
       type: Number
+    },
+    lastTimeUpDate: {
+      required: true,
+      type: Date
     },
     markId: {
       required: true,
