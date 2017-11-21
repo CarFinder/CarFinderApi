@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
 import { codeErrors } from '../config/config';
@@ -9,7 +10,15 @@ import { SecureError } from '../utils/errors';
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);
-  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSold: true }, { multi: true });
+  const date = moment().toISOString();
+  await Ad.update(
+    { sourceUrl: { $nin: existingAds } },
+    {
+      isSold: true,
+      soldDate: date
+    },
+    { multi: true }
+  );
 };
 
 export const save = async (ad: object) => {

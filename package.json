@@ -44,8 +44,8 @@
     "tslint-config-prettier": "^1.5.0"
   },
   "dependencies": {
+    "@types/async": "^2.0.45",
     "@koa/cors": "^2.2.1",
-    "@types/async": "^2.0.44",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",
@@ -60,7 +60,8 @@
     "@types/koa-logger": "^2.0.2",
     "@types/koa-passport": "^2.0.4",
     "@types/koa-router": "^7.0.23",
-    "@types/lodash": "^4.14.77",
+    "@types/lodash": "^4.14.85",
+    "@types/moment": "^2.13.0", 
     "@types/mongodb": "^2.2.11",
     "@types/mongoose": "^4.7.21",
     "@types/node-fetch": "^1.6.7",
@@ -88,6 +89,7 @@
     "koa-passport": "^4.0.1",
     "koa-router": "^7.2.1",
     "lodash": "^4.17.4",
+    "moment": "^2.19.2",
     "mongoose": "^4.11.12",
     "node-fetch": "^1.7.3",
     "node-schedule": "^1.2.5",
