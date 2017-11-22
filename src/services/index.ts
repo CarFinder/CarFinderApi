@@ -7,11 +7,11 @@ import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
 import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
 import * as AdService from './adService';
-import { getAllBodyTypes, updateBodyTypes } from './bodyTypeService';
+import { getAllBodyTypes, getBodyTypeById, updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import * as liquidityService from './liquidService';
-import { getAllMarks, updateMarks } from './markService';
-import { getModels, updateModels } from './modelService';
+import { getAllMarks, getMarkById, updateMarks } from './markService';
+import { getModelById, getModels, updateModels } from './modelService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
@@ -25,6 +25,25 @@ import {
 } from './userService';
 
 import * as UserService from './userService';
+
+export const getMostLiquidAds = async () => {
+  const topLiquidity = await liquidityService.getTopFive();
+  const liquidAdsData = [];
+  for (const liquidModel of topLiquidity) {
+    // get model mark bodytype and images
+    const model = await getModelById(liquidModel.id);
+    const body = await getBodyTypeById(liquidModel.bodyTypeId);
+    const mark = await getMarkById(model.markId);
+    const ad = await AdService.getAdByModelId(model.id);
+    const liquidAdData = {
+      body: body.name,
+      images: ad.images,
+      mark: mark.name,
+      model: model.name
+    };
+    liquidAdsData.push(liquidAdData);
+  }
+};
 
 export const registerUser = async (payload: IUser) => {
   await register(payload);

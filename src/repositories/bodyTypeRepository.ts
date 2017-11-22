@@ -18,3 +18,7 @@ export const getAll = async () => {
 export const getByName = async (name: string) => {
   return await BodyType.findOne({ name });
 };
+
+export const getById = async (id: string) => {
+  return await BodyType.findOne({ _id: id });
+};

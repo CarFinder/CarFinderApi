@@ -19,3 +19,7 @@ export const getAll = async () => {
 export const getByName = async (name: string) => {
   return await Mark.findOne({ name });
 };
+
+export const getById = async (id: string) => {
+  return await Mark.findOne({ _id: id });
+};

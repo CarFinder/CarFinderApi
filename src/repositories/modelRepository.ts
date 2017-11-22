@@ -18,3 +18,7 @@ export const update = async (model: IModel) => {
 export const getByName = async (name: string) => {
   return await Model.findOne({ name });
 };
+
+export const getById = async (id: string) => {
+  return await Model.findOne({ _id: id });
+};

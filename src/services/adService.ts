@@ -5,6 +5,7 @@ import {
   countSold,
   getAdByURL,
   getAll,
+  getByModelId,
   getSold,
   markSeltAds,
   save,
@@ -24,6 +25,10 @@ export const countSoldWithFilter = async (model: string, bodytype: string) => {
     modelId: model
   };
   return await countSold(payload);
+};
+
+export const getAdByModelId = async (modelId: string) => {
+  return await getByModelId(modelId);
 };
 
 export const getSoldAd = async (

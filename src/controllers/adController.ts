@@ -2,7 +2,12 @@ import * as HttpStatus from 'http-status-codes';
 import * as Koa from 'koa';
 
 import { codeErrors } from '../config/config';
-import { AdService, getAds as getAdsFromDb, getSavedFiltersAds } from '../services/';
+import {
+  AdService,
+  getAds as getAdsFromDb,
+  getMostLiquidAds,
+  getSavedFiltersAds
+} from '../services/';
 import { DatabaseError, RequestError } from '../utils/errors';
 import { validateFilterRequest } from '../utils/validators';
 
@@ -22,6 +27,14 @@ export const getAds = async (ctx: Koa.Context) => {
       ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
     }
+  }
+};
+
+export const getMostLiquid = async (ctx: Koa.Context) => {
+  try {
+    const mostLiquid = await getMostLiquidAds();
+  } catch (e) {
+    ctx.body = e;
   }
 };
 

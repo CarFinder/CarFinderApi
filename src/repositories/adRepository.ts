@@ -10,6 +10,10 @@ export const getSold = async (payload: any) => {
   return await Ad.findOne(payload);
 };
 
+export const getByModelId = async (modelId: string) => {
+  return await Ad.findOne({ modelId });
+};
+
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);

@@ -1,9 +1,9 @@
 import * as mongoose from 'mongoose';
 import { ILiquidityModel, Liquidity } from '../db';
 
-export const getTop = async (limit: number) => {
+export const getTopFive = async () => {
   return await Liquidity.find({})
-    .limit(limit)
+    .limit(5)
     .sort({
       liquidityCoefficient: 1
     });

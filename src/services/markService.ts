@@ -1,6 +1,6 @@
 import { IMarkModel } from '../db/schemas/mark';
 import { IMark } from '../interfaces/';
-import { getAll, getByName, update } from '../repositories/markRepository';
+import { getAll, getById, getByName, update } from '../repositories/markRepository';
 
 export const getAllMarks = async () => {
   return await getAll();
@@ -22,6 +22,10 @@ const saveMarks = async (mark: IMark) => {
 
 export const getMarkByName = async (name: string) => {
   return await getByName(name);
+};
+
+export const getMarkById = async (id: string) => {
+  return await getById(id);
 };
 
 const addNewMark = async (knownMarks: IMark[], mark: IMark) => {
