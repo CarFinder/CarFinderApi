@@ -1,6 +1,7 @@
 import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
-import * as _ from 'lodash';
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
 import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
@@ -41,7 +42,10 @@ export const getMarks = async () => {
       })
       .get();
 
-    const marks: any[] = _.map(marksNames, (name, index) => ({ name, url: marksURLs[index] }));
+    const marks: any[] = _.map(marksNames, (name: any, index: number) => ({
+      name,
+      url: marksURLs[index]
+    }));
     return marks;
   } catch (e) {
     throw new ParserError(codeErrors.AV_PARSE_ERROR);
@@ -79,7 +83,7 @@ export const getModels = async (marks: IAvMark[]) => {
 
       // for consistency
       if (mark.name === 'BMW') {
-        transformedModels = _.map(modelsNames, (name, index) => {
+        transformedModels = _.map(modelsNames, (name: any, index: number) => {
           const transformedName = transformBmvAvModel(name);
           return {
             name: transformedName,
@@ -87,7 +91,7 @@ export const getModels = async (marks: IAvMark[]) => {
           };
         });
       } else if (mark.name === 'Mercedes') {
-        transformedModels = _.map(modelsNames, (name, index) => {
+        transformedModels = _.map(modelsNames, (name: any, index: number) => {
           const transformedName = transformMercedesAvModel(name);
           return {
             name: transformedName,
@@ -95,7 +99,7 @@ export const getModels = async (marks: IAvMark[]) => {
           };
         });
       } else {
-        transformedModels = _.map(modelsNames, (name, index) => ({
+        transformedModels = _.map(modelsNames, (name: any, index: number) => ({
           name,
           url: modelsURLs[index]
         }));
@@ -264,11 +268,11 @@ export const getAdsForCurrentModel = async (model: any) => {
           })
           .get();
         const transformedDates = _.chain(dates)
-          .map(date =>
+          .map((date: any) =>
             _.chain(date)
               .split('.')
               .reverse()
-              .map((item, i) => (i === 1 ? +item - 1 : +item))
+              .map((item: any, i: number) => (i === 1 ? +item - 1 : +item))
               .value()
           )
           .value();
@@ -315,9 +319,9 @@ export const getAdsForCurrentModel = async (model: any) => {
           ) as Array<Promise<any>>)
         );
         global.console.log(
-          `:::Loaded ${Math.round(
-            pageAds.length / adsURLs.length * 100
-          )}% of ${model.name} ads on page ${page}`
+          `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ${
+            model.name
+          } ads on page ${page}`
         );
       }
       ads = _.concat(ads, pageAds);
