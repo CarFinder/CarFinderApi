@@ -88,17 +88,16 @@ export const getAdsForCurrentModel = async (modelId: number) => {
         })
         .get();
 
-      const prices = $('.cost-i .small')
-        .text()
-        .replace(/\$ (.*?) €/g, '-')
-        .split('-')
-        .map(el => {
-          el.trim();
-          const transformedPrice = el.replace(/\s+/g, '');
-          if (transformedPrice !== '') {
-            return parseInt(transformedPrice, 10);
-          }
-        });
+      const prices = $('.price-primary')
+        .map((i, el) => {
+          return parseInt(
+            $(el)
+              .text()
+              .replace(/\s/g, ''),
+            10
+          );
+        })
+        .get();
 
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {

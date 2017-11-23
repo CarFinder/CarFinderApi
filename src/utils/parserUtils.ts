@@ -9,7 +9,7 @@ import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
 import { getModelByName, saveNewModel } from '../services/modelService';
 
-export const transformOnlinerDate = (onlinerDate: string): string => {
+export const transformOnlinerDate = (onlinerDate: string): object => {
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);
@@ -18,7 +18,8 @@ export const transformOnlinerDate = (onlinerDate: string): string => {
     arrayofDate[1] = arrayofDate[1] - 12;
   }
   date = arrayofDate.join('-');
-  return moment(date).format('DD-MM-YYYY');
+  const dateObj = moment(date, 'DD-MM-YYYY', true).toDate();
+  return dateObj;
 };
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
