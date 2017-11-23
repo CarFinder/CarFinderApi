@@ -240,6 +240,10 @@ export const getAdsForCurrentModel = async (model: any) => {
           .text()
           .trim();
 
+        if (adInfo[1] === 'новый') {
+          adInfo.splice(2, 0, '0 км');
+        }
+
         // car bodytype
         let bodyType = _.capitalize(adInfo[6]);
         bodyType =

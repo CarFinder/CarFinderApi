@@ -20,7 +20,7 @@ export const updateAds = async () => {
             description: doc.description,
             images: doc.images,
             isSold: false,
-            kns: doc.kms,
+            kms: doc.kms,
             lastTimeUpDate: doc.lastTimeUpDate,
             markId: doc.markId,
             modelId: doc.modelId,
@@ -38,7 +38,7 @@ export const updateAds = async () => {
         description: doc.description,
         images: doc.images,
         isSold: false,
-        kns: doc.kms,
+        kms: doc.kms,
         lastTimeUpDate: doc.lastTimeUpDate,
         markId: doc.markId,
         modelId: doc.modelId,
@@ -57,10 +57,9 @@ export const dropCollection = async () => {
   await TempAd.remove({});
 };
 
-export const save = async (tempAd: object) => {
+export const save = async (tempAd: any) => {
   try {
-    const temp = new TempAd(tempAd);
-    await temp.save();
+    await TempAd.update({ sourceUrl: tempAd.sourceUrl }, { $set: tempAd }, { upsert: true });
   } catch (err) {
     handleDatabaseError(err);
   }

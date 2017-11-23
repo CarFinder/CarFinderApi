@@ -13,12 +13,11 @@ export const transformOnlinerDate = (onlinerDate: string): string => {
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);
-  arrayofDate[1] += 1;
   if (arrayofDate[1] > 12) {
     arrayofDate[1] = arrayofDate[1] - 12;
   }
   date = arrayofDate.join('-');
-  return moment(date).format('DD-MM-YYYY');
+  return moment(date).format('YYYY-MM-DD');
 };
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
@@ -59,11 +58,11 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
   _.forEach(ads, (val: any, key: any) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
-      creationDate: transformOnlinerDate(val.creationDate.date),
+      creationDate: new Date(transformOnlinerDate(val.creationDate.date)),
       description: val.description,
       images: val.photos,
       kms: val.car.odometerState,
-      lastTimeUpDate: transformOnlinerDate(val.lastTimeUp.date),
+      lastTimeUpDate: new Date(transformOnlinerDate(val.lastTimeUp.date)),
       markId,
       modelName: val.car.model.name,
       price: val.price,

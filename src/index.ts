@@ -21,10 +21,15 @@ global.Promise = bluebird;
 
 const server = new Koa();
 
-const parse = schedule.scheduleJob(triggerSchedule, async () => {
+(async () => {
+  // await TempAd.remove({ sourceName: 'av.by', markId: '5a144fc09bf8392dfca54b48' });
   await updateDBData();
-  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
-});
+})();
+
+// const parse = schedule.scheduleJob(triggerSchedule, async () => {
+//   await updateDBData();
+//   await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
+// });
 
 mongoose.connect(db, { useMongoClient: true });
 mongoose.set('debug', true);
