@@ -10,14 +10,16 @@ import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
+import { TempAd } from './db';
 import routes from './routes';
 import { updateDBData } from './services';
 import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
-
-import { TempAd } from './db';
+import { torTriggerer } from './utils/torTriggerer';
 
 import { Api } from './parsers';
 global.Promise = bluebird;
+
+torTriggerer.run();
 
 const server = new Koa();
 
