@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-// tslint:disable-next-line:no-var-requires
-const _ = require('lodash');
-
->>>>>>> e3f1e7abeb14d5d3e51f5c4408f1e362fa5069d5
 import * as moment from 'moment';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
@@ -14,14 +8,10 @@ import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
 import { getModelByName, getModelByNameAndMarkId, saveNewModel } from '../services/modelService';
 
-<<<<<<< HEAD
 // tslint:disable-next-line:no-var-requires
 const _ = require('lodash');
 
 export const transformOnlinerDate = (onlinerDate: string): Date => {
-=======
-export const transformOnlinerDate = (onlinerDate: string): string => {
->>>>>>> e3f1e7abeb14d5d3e51f5c4408f1e362fa5069d5
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);

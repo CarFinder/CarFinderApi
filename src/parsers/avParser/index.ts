@@ -1,40 +1,47 @@
 import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
-<<<<<<< HEAD
-=======
-// tslint:disable-next-line:no-var-requires
-const _ = require('lodash');
->>>>>>> e3f1e7abeb14d5d3e51f5c4408f1e362fa5069d5
 import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
 import { ParserError } from '../../utils/errors/';
 import { transformBmvAvModel, transformMercedesAvModel } from '../../utils/parserUtils';
+import { torTriggerer } from '../../utils/torTriggerer';
 
 // tslint:disable-next-line:no-var-requires
 const Agent = require('socks5-https-client/lib/Agent');
 // tslint:disable-next-line:no-var-requires
 const _ = require('lodash');
 
-export const getMarks = async () => {
+export const sendRequest = async (url: string): Promise<any> => {
   let response: any;
-  try {
-    let isFailed = true;
-    while (isFailed) {
-      try {
-        response = await request.get({
-          agentClass: Agent,
-          agentOptions: {
-            socksHost: 'localhost',
-            socksPort: 9060
-          },
-          uri: AV_URL
-        });
-        isFailed = false;
-      } catch (err) {
-        isFailed = true;
-      }
+  let isFailed = true;
+  let requestCount = 0;
+  while (isFailed || requestCount === 10) {
+    try {
+      response = await request.get({
+        agentClass: Agent,
+        agentOptions: {
+          socksHost: 'localhost',
+          socksPort: 9060
+        },
+        url
+      });
+      isFailed = false;
+    } catch (err) {
+      torTriggerer.close();
+      torTriggerer.run();
+      await bluebird.delay(1000);
+      isFailed = true;
+      requestCount += 1;
     }
+  }
+  return response;
+};
+
+export const getMarks = async () => {
+  try {
+    const response = await sendRequest(AV_URL);
+
     const $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -68,23 +75,8 @@ export const getMarks = async () => {
 export const getModels = async (marks: IAvMark[]) => {
   try {
     const get = async (mark: any) => {
-      let isFailed = true;
-      let response;
-      while (isFailed) {
-        try {
-          response = await request.get({
-            agentClass: Agent,
-            agentOptions: {
-              socksHost: 'localhost',
-              socksPort: 9060
-            },
-            uri: mark.url
-          });
-          isFailed = false;
-        } catch (err) {
-          isFailed = true;
-        }
-      }
+      const response = await sendRequest(mark.url);
+
       const $ = cheerio.load(response, {
         normalizeWhitespace: true,
         xmlMode: true
@@ -156,24 +148,9 @@ export const getModels = async (marks: IAvMark[]) => {
 };
 
 export const getBodyTypes = async () => {
-  let response: any;
   try {
-    let isFailed = true;
-    while (isFailed) {
-      try {
-        response = await request.get({
-          agentClass: Agent,
-          agentOptions: {
-            socksHost: 'localhost',
-            socksPort: 9060
-          },
-          uri: AV_URL
-        });
-        isFailed = false;
-      } catch (err) {
-        isFailed = true;
-      }
-    }
+    const response = await sendRequest(AV_URL);
+
     const $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -193,22 +170,7 @@ export const getBodyTypes = async () => {
 export const getAdsForCurrentModel = async (model: any) => {
   let response: any;
   try {
-    let isFailed = true;
-    while (isFailed) {
-      try {
-        response = await request.get({
-          agentClass: Agent,
-          agentOptions: {
-            socksHost: 'localhost',
-            socksPort: 9060
-          },
-          uri: model.url
-        });
-        isFailed = false;
-      } catch (err) {
-        isFailed = true;
-      }
-    }
+    response = await sendRequest(model.url);
 
     let $ = cheerio.load(response, {
       normalizeWhitespace: true,
@@ -224,22 +186,7 @@ export const getAdsForCurrentModel = async (model: any) => {
     let ads: any[] = [];
 
     for (let page = 1; page <= pagesCount; page++) {
-      isFailed = true;
-      while (isFailed) {
-        try {
-          response = await request.get({
-            agentClass: Agent,
-            agentOptions: {
-              socksHost: 'localhost',
-              socksPort: 9060
-            },
-            uri: `${model.url}/page/${page}`
-          });
-          isFailed = false;
-        } catch (err) {
-          isFailed = true;
-        }
-      }
+      response = await sendRequest(`${model.url}/page/${page}`);
 
       $ = cheerio.load(response, {
         normalizeWhitespace: true,
@@ -254,23 +201,7 @@ export const getAdsForCurrentModel = async (model: any) => {
         .get();
 
       const get = async (url: any) => {
-        let res;
-        isFailed = true;
-        while (isFailed) {
-          try {
-            res = await request.get({
-              agentClass: Agent,
-              agentOptions: {
-                socksHost: 'localhost',
-                socksPort: 9060
-              },
-              url
-            });
-            isFailed = false;
-          } catch (err) {
-            isFailed = true;
-          }
-        }
+        const res = await sendRequest(url);
 
         $ = cheerio.load(res, {
           normalizeWhitespace: true,
@@ -376,9 +307,9 @@ export const getAdsForCurrentModel = async (model: any) => {
           ) as Array<Promise<any>>)
         );
         global.console.log(
-          `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ${
-            model.name
-          } ads on page ${page}`
+          `:::Loaded ${Math.round(
+            pageAds.length / adsURLs.length * 100
+          )}% of ${model.name} ads on page ${page}`
         );
       }
       ads = _.concat(ads, pageAds);

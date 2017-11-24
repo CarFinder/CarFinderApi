@@ -39,9 +39,6 @@ const _ = require('lodash');
 
 import * as UserService from './userService';
 
-// tslint:disable-next-line:no-var-requires
-const _ = require('lodash');
-
 export const registerUser = async (payload: IUser) => {
   await register(payload);
 };
@@ -102,7 +99,7 @@ export const updateDBDataFromOnliner = async (
 
 export const updateDBData = async () => {
   // await updateOnlinerData();
-  await updateAvByData();
+  // await updateAvByData();
   await AdService.markSeltAds();
   await AdService.updateAds();
   return;
