@@ -56,6 +56,7 @@ export interface IAd {
   lastTimeUpDate: Date;
   modelId: string;
   price?: number;
+  soldDate?: Date;
   sourceName: string;
   sourceUrl: string;
   year: number;
