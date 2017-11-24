@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
@@ -9,7 +8,10 @@ import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
 import { getModelByName, getModelByNameAndMarkId, saveNewModel } from '../services/modelService';
 
-export const transformOnlinerDate = (onlinerDate: string): object => {
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
+
+export const transformOnlinerDate = (onlinerDate: string): Date => {
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);
@@ -17,7 +19,7 @@ export const transformOnlinerDate = (onlinerDate: string): object => {
     arrayofDate[1] = arrayofDate[1] - 12;
   }
   date = arrayofDate.join('-');
-  return moment(date).format('YYYY-MM-DD');
+  return moment(date, 'DD-MM-YYYY').toDate();
 };
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
@@ -58,11 +60,11 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
   _.forEach(ads, (val: any, key: any) => {
     transformedAds.push({
       bodyTypeId: val.car.body,
-      creationDate: new Date(transformOnlinerDate(val.creationDate.date)),
+      creationDate: transformOnlinerDate(val.creationDate.date),
       description: val.description,
       images: val.photos,
       kms: val.car.odometerState,
-      lastTimeUpDate: new Date(transformOnlinerDate(val.lastTimeUp.date)),
+      lastTimeUpDate: transformOnlinerDate(val.lastTimeUp.date),
       markId,
       modelName: val.car.model.name,
       price: val.price,
@@ -114,7 +116,7 @@ export const updateOnlinerData = async () => {
 
 export const transformAvByBodyTypes = (bodyTypes: any[]) => {
   return _.chain(bodyTypes)
-    .map(type => {
+    .map((type: any) => {
       const name = _.capitalize(type);
       return name === 'Легковой фургон' // we take only first word of the bodytype name, exclude "Легковой фургон"
         ? name
@@ -128,7 +130,7 @@ export const transformAvByBodyTypes = (bodyTypes: any[]) => {
 };
 
 export const transformAvByMarks = (marks: any[]) => {
-  return _.map(marks, mark => ({ name: mark.name }));
+  return _.map(marks, (mark: any) => ({ name: mark.name }));
 };
 
 export const getAvByAds = async (model: any) => {

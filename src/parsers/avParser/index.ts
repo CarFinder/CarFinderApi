@@ -1,6 +1,5 @@
 import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
-import * as _ from 'lodash';
 import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
@@ -9,18 +8,28 @@ import { transformBmvAvModel, transformMercedesAvModel } from '../../utils/parse
 
 // tslint:disable-next-line:no-var-requires
 const Agent = require('socks5-https-client/lib/Agent');
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
 
 export const getMarks = async () => {
   let response: any;
   try {
-    response = await request.get({
-      agentClass: Agent,
-      agentOptions: {
-        socksHost: 'localhost',
-        socksPort: 9060
-      },
-      url: AV_URL
-    });
+    let isFailed = true;
+    while (isFailed) {
+      try {
+        response = await request.get({
+          agentClass: Agent,
+          agentOptions: {
+            socksHost: 'localhost',
+            socksPort: 9060
+          },
+          uri: AV_URL
+        });
+        isFailed = false;
+      } catch (err) {
+        isFailed = true;
+      }
+    }
     const $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -41,7 +50,10 @@ export const getMarks = async () => {
       })
       .get();
 
-    const marks: any[] = _.map(marksNames, (name, index) => ({ name, url: marksURLs[index] }));
+    const marks: any[] = _.map(marksNames, (name: any, index: number) => ({
+      name,
+      url: marksURLs[index]
+    }));
     return marks;
   } catch (e) {
     throw new ParserError(codeErrors.AV_PARSE_ERROR);
@@ -51,14 +63,23 @@ export const getMarks = async () => {
 export const getModels = async (marks: IAvMark[]) => {
   try {
     const get = async (mark: any) => {
-      const response = await request.get({
-        agentClass: Agent,
-        agentOptions: {
-          socksHost: 'localhost',
-          socksPort: 9060
-        },
-        uri: mark.url
-      });
+      let isFailed = true;
+      let response;
+      while (isFailed) {
+        try {
+          response = await request.get({
+            agentClass: Agent,
+            agentOptions: {
+              socksHost: 'localhost',
+              socksPort: 9060
+            },
+            uri: mark.url
+          });
+          isFailed = false;
+        } catch (err) {
+          isFailed = true;
+        }
+      }
       const $ = cheerio.load(response, {
         normalizeWhitespace: true,
         xmlMode: true
@@ -79,7 +100,7 @@ export const getModels = async (marks: IAvMark[]) => {
 
       // for consistency
       if (mark.name === 'BMW') {
-        transformedModels = _.map(modelsNames, (name, index) => {
+        transformedModels = _.map(modelsNames, (name: any, index: number) => {
           const transformedName = transformBmvAvModel(name);
           return {
             name: transformedName,
@@ -87,7 +108,7 @@ export const getModels = async (marks: IAvMark[]) => {
           };
         });
       } else if (mark.name === 'Mercedes') {
-        transformedModels = _.map(modelsNames, (name, index) => {
+        transformedModels = _.map(modelsNames, (name: any, index: number) => {
           const transformedName = transformMercedesAvModel(name);
           return {
             name: transformedName,
@@ -95,7 +116,7 @@ export const getModels = async (marks: IAvMark[]) => {
           };
         });
       } else {
-        transformedModels = _.map(modelsNames, (name, index) => ({
+        transformedModels = _.map(modelsNames, (name: any, index: number) => ({
           name,
           url: modelsURLs[index]
         }));
@@ -132,14 +153,22 @@ export const getModels = async (marks: IAvMark[]) => {
 export const getBodyTypes = async () => {
   let response: any;
   try {
-    response = await request.get({
-      agentClass: Agent,
-      agentOptions: {
-        socksHost: 'localhost',
-        socksPort: 9060
-      },
-      url: AV_URL
-    });
+    let isFailed = true;
+    while (isFailed) {
+      try {
+        response = await request.get({
+          agentClass: Agent,
+          agentOptions: {
+            socksHost: 'localhost',
+            socksPort: 9060
+          },
+          uri: AV_URL
+        });
+        isFailed = false;
+      } catch (err) {
+        isFailed = true;
+      }
+    }
     const $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -159,14 +188,23 @@ export const getBodyTypes = async () => {
 export const getAdsForCurrentModel = async (model: any) => {
   let response: any;
   try {
-    response = await request.get({
-      agentClass: Agent,
-      agentOptions: {
-        socksHost: 'localhost',
-        socksPort: 9060
-      },
-      url: model.url
-    });
+    let isFailed = true;
+    while (isFailed) {
+      try {
+        response = await request.get({
+          agentClass: Agent,
+          agentOptions: {
+            socksHost: 'localhost',
+            socksPort: 9060
+          },
+          uri: model.url
+        });
+        isFailed = false;
+      } catch (err) {
+        isFailed = true;
+      }
+    }
+
     let $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true
@@ -181,14 +219,23 @@ export const getAdsForCurrentModel = async (model: any) => {
     let ads: any[] = [];
 
     for (let page = 1; page <= pagesCount; page++) {
-      response = await request.get({
-        agentClass: Agent,
-        agentOptions: {
-          socksHost: 'localhost',
-          socksPort: 9060
-        },
-        url: `${model.url}/page/${page}`
-      });
+      isFailed = true;
+      while (isFailed) {
+        try {
+          response = await request.get({
+            agentClass: Agent,
+            agentOptions: {
+              socksHost: 'localhost',
+              socksPort: 9060
+            },
+            uri: `${model.url}/page/${page}`
+          });
+          isFailed = false;
+        } catch (err) {
+          isFailed = true;
+        }
+      }
+
       $ = cheerio.load(response, {
         normalizeWhitespace: true,
         xmlMode: true
@@ -202,14 +249,23 @@ export const getAdsForCurrentModel = async (model: any) => {
         .get();
 
       const get = async (url: any) => {
-        const res = await request.get({
-          agentClass: Agent,
-          agentOptions: {
-            socksHost: 'localhost',
-            socksPort: 9060
-          },
-          url
-        });
+        let res;
+        isFailed = true;
+        while (isFailed) {
+          try {
+            res = await request.get({
+              agentClass: Agent,
+              agentOptions: {
+                socksHost: 'localhost',
+                socksPort: 9060
+              },
+              url
+            });
+            isFailed = false;
+          } catch (err) {
+            isFailed = true;
+          }
+        }
 
         $ = cheerio.load(res, {
           normalizeWhitespace: true,
@@ -264,11 +320,11 @@ export const getAdsForCurrentModel = async (model: any) => {
           })
           .get();
         const transformedDates = _.chain(dates)
-          .map(date =>
+          .map((date: any) =>
             _.chain(date)
               .split('.')
               .reverse()
-              .map((item, i) => (i === 1 ? +item - 1 : +item))
+              .map((item: any, i: number) => (i === 1 ? +item - 1 : +item))
               .value()
           )
           .value();

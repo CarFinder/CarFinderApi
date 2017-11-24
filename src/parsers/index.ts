@@ -64,7 +64,7 @@ export class Api implements IParser {
 
   public async updateMarks() {
     const marks: any = await this.scrapeAndGetMarks();
-    await this.setMarks(marks.slice(40));
+    await this.setMarks(marks);
   }
 
   public async updateModels() {

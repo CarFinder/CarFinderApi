@@ -15,10 +15,21 @@
     "node": "8.9.x"
   },
   "nyc": {
-    "include": [ "src/**/*.ts" ],
-    "extension": [ ".ts", ".js", ".tsx" ],
-    "require": [ "ts-node/register" ],
-    "reporter": [ "text", "html" ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts",
+      ".js",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
     "sourceMap": true,
     "instrument": true,
     "all": true
@@ -44,8 +55,8 @@
     "tslint-config-prettier": "^1.5.0"
   },
   "dependencies": {
-    "@types/async": "^2.0.45",
     "@koa/cors": "^2.2.1",
+    "@types/async": "^2.0.45",
     "@types/axios": "^0.14.0",
     "@types/bcrypt-nodejs": "^0.0.30",
     "@types/bluebird": "^3.5.12",

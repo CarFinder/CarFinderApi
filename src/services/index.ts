@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { codeErrors, limitForSavedFilters } from '../config/config';
 import { sourceCodes } from '../config/config';
 import { IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
@@ -34,6 +33,9 @@ import {
   updateImage,
   updateUserProfile
 } from './userService';
+
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
 
 import * as UserService from './userService';
 
@@ -97,7 +99,7 @@ export const updateDBDataFromOnliner = async (
 
 export const updateDBData = async () => {
   // await updateOnlinerData();
-  // await updateAvByData();
+  await updateAvByData();
   await AdService.markSeltAds();
   await AdService.updateAds();
   return;
@@ -132,11 +134,11 @@ export const getAvAdsByModels = async (models: any[]) => {
 export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyTypes: string[]) => {
   await updateBodyTypes(bodyTypes);
   const listOfModels = _.chain(models)
-    .map(mark => {
+    .map((mark: any) => {
       const markName = Object.keys(mark).shift();
       return { mark: markName, models: mark[markName] };
     })
-    .value();
+    .value() as any[];
   for (const mark of marks) {
     const savedMark: any = await updateMarks(mark);
     const markId = savedMark.id;
