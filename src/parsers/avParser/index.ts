@@ -1,5 +1,10 @@
 import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
+<<<<<<< HEAD
+=======
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
+>>>>>>> e3f1e7abeb14d5d3e51f5c4408f1e362fa5069d5
 import * as request from 'request-promise';
 import { AV_URL, codeErrors, proxy } from '../../config/config';
 import { IAvMark } from '../../interfaces/parserInterface';
@@ -371,9 +376,9 @@ export const getAdsForCurrentModel = async (model: any) => {
           ) as Array<Promise<any>>)
         );
         global.console.log(
-          `:::Loaded ${Math.round(
-            pageAds.length / adsURLs.length * 100
-          )}% of ${model.name} ads on page ${page}`
+          `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ${
+            model.name
+          } ads on page ${page}`
         );
       }
       ads = _.concat(ads, pageAds);

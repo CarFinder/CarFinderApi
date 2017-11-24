@@ -39,6 +39,9 @@ const _ = require('lodash');
 
 import * as UserService from './userService';
 
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
+
 export const registerUser = async (payload: IUser) => {
   await register(payload);
 };
