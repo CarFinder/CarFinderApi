@@ -190,7 +190,7 @@ export const encryptPassword = async (password: string) => {
   return encryptedPassword;
 };
 
-export const uploadImage = (id: string, userData: IUserImage) => {
+export const uploadImage = async (id: string, userData: IUserImage) => {
   const s3Bucket = new AWS.S3();
   const buf = new Buffer(userData.image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
   const params = {
@@ -201,15 +201,15 @@ export const uploadImage = (id: string, userData: IUserImage) => {
     ContentType: userData.type,
     Key: id
   };
-  s3Bucket.putObject(params, (error, data) => {
-    if (error) {
-      throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
-    }
-  });
-  userData.image = s3Bucket.getSignedUrl('getObject', {
-    Bucket: bucket,
-    Key: id
-  });
+  const uploadData = await s3Bucket
+    .upload(params, {}, (error, data) => {
+      if (error) {
+        throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
+      }
+    })
+    .promise();
+
+  userData.image = uploadData.Location;
   return userData;
 };
 
