@@ -202,12 +202,11 @@ export const uploadImage = async (id: string, userData: IUserImage) => {
     Key: id
   };
   const uploadData = await s3Bucket
-    .upload(params, {}, (error, data) => {
-      if (error) {
-        throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
-      }
-    })
-    .promise();
+    .upload(params)
+    .promise()
+    .catch(err => {
+      throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
+    });
 
   userData.image = uploadData.Location;
   return userData;
