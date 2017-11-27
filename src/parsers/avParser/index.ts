@@ -16,7 +16,7 @@ export const sendRequest = async (url: string): Promise<any> => {
   let response: any;
   let isFailed = true;
   let requestCount = 0;
-  while (isFailed || requestCount === 10) {
+  while (isFailed && requestCount !== 10) {
     try {
       response = await request.get({
         agentClass: Agent,
@@ -131,7 +131,7 @@ export const getModels = async (marks: IAvMark[]) => {
         // between each of the loop iteration we should be wait not less then 1 second
         // and after we can to continue
         await Promise.all(_.slice(
-          // we take all of the promises results, exclude last, because last promise to return undefined value
+          // we take all of the promises results, exclude last, because last promise should be return undefined value
           [..._.map(currentMarks, get), bluebird.delay(1000)],
           0,
           -1
@@ -307,9 +307,9 @@ export const getAdsForCurrentModel = async (model: any) => {
           ) as Array<Promise<any>>)
         );
         global.console.log(
-          `:::Loaded ${Math.round(
-            pageAds.length / adsURLs.length * 100
-          )}% of ${model.name} ads on page ${page}`
+          `:::Loaded ${Math.round(pageAds.length / adsURLs.length * 100)}% of ${
+            model.name
+          } ads on page ${page}`
         );
       }
       ads = _.concat(ads, pageAds);

@@ -44,9 +44,7 @@ describe('Onliner Parser', () => {
             <p>внедорожник, бензин 3.7 л</p>
           </td>
           <td>
-            <div class="cost-i">
-              <p class="small">7000 $<br> 6018 €<br></p>
-            </div>
+            <span class="price-primary">7000</span>
           </td>
         </tr>
         <tr class="carRow">
@@ -54,9 +52,7 @@ describe('Onliner Parser', () => {
             <p>внедорожник, бензин 3.7 л</p>
           </td>
           <td>
-            <div class="cost-i">
-              <p class="small">8000 $<br> 7018 €<br></p>
-            </div>
+            <span class="price-primary">8000</span>
           </td>
         </tr>
       `
@@ -98,49 +94,27 @@ describe('Onliner Parser', () => {
     MODELS_RESULT: { '183': [{ "'33 Hot Rod": '2581' }, { '818': '2583' }] }
   };
 
-  let puppeteerStub: sinon.SinonStub;
   let requestStub: sinon.SinonStub;
 
   afterEach(done => {
-    puppeteerStub.restore();
-    if (requestStub) {
-      requestStub.restore();
-    }
+    requestStub.restore();
     done();
   });
 
   it('should be return an array of marks', async () => {
-    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
-      close: () => '',
-      newPage: () => ({
-        content: () => parser.MARKS,
-        goto: (url: string, options: any) => ''
-      })
-    });
+    requestStub = sinon.stub(request, 'get').callsFake((opts: any) => parser.MARKS);
     await api.updateMarks();
     assert.deepEqual(api.getMarks() as any, parser.MARKS_RESULT);
   });
 
   it('should be return an array of models', async () => {
-    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
-      close: () => '',
-      newPage: () => ({
-        content: () => parser.MODELS,
-        goto: (url: string, options: any) => ''
-      })
-    });
+    requestStub = sinon.stub(request, 'get').callsFake(async (opts: any) => await parser.MODELS);
     await api.updateModels();
     assert.deepEqual(api.getModels() as any, parser.MODELS_RESULT);
   });
 
   it('should be return an array of body types', async () => {
-    puppeteerStub = sinon.stub(puppeteer, 'launch').returns({
-      close: () => '',
-      newPage: () => ({
-        content: () => parser.BODY_TYPES,
-        goto: (url: string, options: any) => ''
-      })
-    });
+    requestStub = sinon.stub(request, 'get').callsFake((opts: any) => parser.BODY_TYPES);
     await api.updateBodyTypes();
     assert.deepEqual(api.getBodyTypes() as any, parser.BODY_TYPES_RESULT);
   });

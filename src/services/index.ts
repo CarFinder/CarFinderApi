@@ -98,8 +98,8 @@ export const updateDBDataFromOnliner = async (
 };
 
 export const updateDBData = async () => {
-  // await updateOnlinerData();
-  // await updateAvByData();
+  await updateOnlinerData();
+  await updateAvByData();
   await AdService.markSeltAds();
   await AdService.updateAds();
   return;
