@@ -201,15 +201,13 @@ export const uploadImage = async (id: string, userData: IUserImage) => {
     ContentType: userData.type,
     Key: id
   };
-  const uploadData = await s3Bucket
-    .upload(params)
-    .promise()
-    .catch(err => {
-      throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
-    });
-
-  userData.image = uploadData.Location;
-  return userData;
+  try {
+    const uploadData = await s3Bucket.upload(params).promise();
+    userData.image = uploadData.Location;
+    return userData;
+  } catch {
+    throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
+  }
 };
 
 export const transformDataForMongo = (data: any) => {
