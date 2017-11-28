@@ -16,8 +16,6 @@ import { updateServiceData } from './utils/parserUtils';
 
 const server = new Koa();
 
-calculateLiquidity();
-
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   await updateServiceData();
   await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');

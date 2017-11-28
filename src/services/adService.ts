@@ -20,7 +20,7 @@ export const getAllAds = async () => {
 
 export const countSoldWithFilter = async (model: string, bodytype: string) => {
   const payload = {
-    bodytTypeId: bodytype,
+    bodyTypeId: bodytype,
     isSold: true,
     modelId: model
   };

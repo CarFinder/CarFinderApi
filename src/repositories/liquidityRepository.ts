@@ -5,11 +5,14 @@ export const getTopFive = async () => {
   return await Liquidity.find({})
     .limit(5)
     .sort({
-      liquidityCoefficient: 1
+      liquidityCoefficient: -1
     });
 };
 
 export const save = async (liquidity: any) => {
-  const liq = new Liquidity(liquidity);
-  await liq.save();
+  await Liquidity.findOneAndUpdate(
+    { bodyTypeId: liquidity.bodyTypeId, modelId: liquidity.modelId },
+    liquidity,
+    { upsert: true }
+  );
 };

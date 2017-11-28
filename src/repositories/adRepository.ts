@@ -106,7 +106,7 @@ export const get = async (
   sort?: any
 ): Promise<IAdModel[]> => {
   return (await Ad.find(filter || {})
-    .limit(limit || 20)
+    .limit(limit === null ? null : limit || 20)
     .skip(skip || 0)
     .sort(sort || { year: 1 })) as IAdModel[];
 };

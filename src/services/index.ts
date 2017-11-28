@@ -26,23 +26,47 @@ import {
 
 import * as UserService from './userService';
 
-export const getMostLiquidAds = async () => {
+export const getMostLiquidAds = async (): Promise<any> => {
   const topLiquidity = await liquidityService.getTopFive();
   const liquidAdsData = [];
   for (const liquidModel of topLiquidity) {
     // get model mark bodytype and images
-    const model = await getModelById(liquidModel.id);
+    const model = await getModelById(liquidModel.modelId);
     const body = await getBodyTypeById(liquidModel.bodyTypeId);
     const mark = await getMarkById(model.markId);
     const ad = await AdService.getAdByModelId(model.id);
+    const url = `/catalog?markId=${model.markId}&modelId=${liquidModel.modelId}&bodyTypeId=${
+      liquidModel.bodyTypeId
+    }`;
+    const filter = {
+      bodyTypeId: liquidModel.bodyTypeId,
+      markId: mark.id,
+      modelId: liquidModel.modelId
+    };
+    const ads = await getAds(filter, null);
+    const adPrices = ads.map((item: any) => item.price);
+    adPrices.sort((item: any, nextItem: any) => {
+      if (item > nextItem) {
+        return 1;
+      }
+      if (item < nextItem) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    const medianIndex = Math.round(adPrices.length / 2);
     const liquidAdData = {
       body: body.name,
-      images: ad.images,
+      image: ad.images[0],
       mark: mark.name,
-      model: model.name
+      median: adPrices[medianIndex],
+      model: model.name,
+      url
     };
     liquidAdsData.push(liquidAdData);
   }
+  return liquidAdsData;
 };
 
 export const registerUser = async (payload: IUser) => {

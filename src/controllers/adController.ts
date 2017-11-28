@@ -33,6 +33,7 @@ export const getAds = async (ctx: Koa.Context) => {
 export const getMostLiquid = async (ctx: Koa.Context) => {
   try {
     const mostLiquid = await getMostLiquidAds();
+    ctx.body = mostLiquid;
   } catch (e) {
     ctx.body = e;
   }
