@@ -35,7 +35,7 @@ export const getMostLiquidAds = async (): Promise<any> => {
     const body = await getBodyTypeById(liquidModel.bodyTypeId);
     const mark = await getMarkById(model.markId);
     const ad = await AdService.getAdByModelId(model.id);
-    const url = `/catalog?markId=${model.markId}&modelId=${liquidModel.modelId}&bodyTypeId=${
+    const url = `/catalog?mark=${model.markId}&model=${liquidModel.modelId}&body=${
       liquidModel.bodyTypeId
     }`;
     const filter = {
