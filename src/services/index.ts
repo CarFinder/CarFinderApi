@@ -43,24 +43,12 @@ export const getMostLiquidAds = async (): Promise<any> => {
       markId: mark.id,
       modelId: liquidModel.modelId
     };
-    const ads = await getAds(filter, null);
-    const adPrices = ads.map((item: any) => item.price);
-    adPrices.sort((item: any, nextItem: any) => {
-      if (item > nextItem) {
-        return 1;
-      }
-      if (item < nextItem) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-    const medianIndex = Math.round(adPrices.length / 2);
+
     const liquidAdData = {
       body: body.name,
       image: ad.images[0],
       mark: mark.name,
-      median: adPrices[medianIndex],
+      median: liquidModel.median,
       model: model.name,
       url
     };
@@ -208,13 +196,28 @@ export const calculateLiquidity = async () => {
   const bodyTypes = await getAllBodyTypes();
   const models = await getModels();
   const totalSold = await AdService.countSoldAds();
+
   await async.each(models, async model => {
     for (const bodyType of bodyTypes) {
       const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
+      const ads = await getAds({ modelId: model.id, bodyTypeId: bodyType.id }, null);
+      const adPrices = ads.map((item: any) => item.price);
+      adPrices.sort((item: any, nextItem: any) => {
+        if (item > nextItem) {
+          return 1;
+        }
+        if (item < nextItem) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      const medianIndex = Math.round(adPrices.length / 2);
       if (totalSoldInConfig !== 0) {
         const liquidityStatistic = {
           bodyTypeId: bodyType.id,
           liquidityCoefficient: totalSoldInConfig / totalSold,
+          median: adPrices[medianIndex],
           modelId: model.id
         };
         await liquidityService.save(liquidityStatistic);

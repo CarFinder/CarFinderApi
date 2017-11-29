@@ -12,6 +12,7 @@ export interface IUser {
 export interface ILiquidity {
   bodyTypeId: string;
   liquidityCoefficient: number;
+  median: number;
   modelId: string;
 }
 

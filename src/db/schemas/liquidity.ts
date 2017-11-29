@@ -13,6 +13,10 @@ const LiquiditySchema = new mongoose.Schema({
     required: true,
     type: Number
   },
+  median: {
+    required: true,
+    type: Number
+  },
   modelId: {
     required: true,
     type: String
