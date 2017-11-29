@@ -8,16 +8,11 @@ export class TorTriggerer {
   constructor() {
     this.run = () => {
       this.tor = spawn('tor');
-
-      this.tor.on('close', () => {
-        process.exit();
-      });
     };
 
     this.close = () => {
       // kill tor
       this.tor.kill();
-      process.kill(this.tor.pid + 1);
     };
   }
 }

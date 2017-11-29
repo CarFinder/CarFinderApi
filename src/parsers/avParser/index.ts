@@ -58,6 +58,7 @@ export const getMarks = async () => {
       .map(function() {
         let name = $(this).text();
         name = name === 'Mercedes-Benz' ? 'Mercedes' : name; // for consistency
+        name = name === 'Lada (ВАЗ)' ? 'ВАЗ' : name;
         return name;
       })
       .get();
@@ -94,7 +95,6 @@ export const getModels = async (marks: IAvMark[]) => {
         })
         .get();
       let transformedModels: any[];
-
       // for consistency
       if (mark.name === 'BMW') {
         transformedModels = _.map(modelsNames, (name: any, index: number) => {
@@ -171,7 +171,6 @@ export const getAdsForCurrentModel = async (model: any) => {
   let response: any;
   try {
     response = await sendRequest(model.url);
-
     let $ = cheerio.load(response, {
       normalizeWhitespace: true,
       xmlMode: true

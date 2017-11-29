@@ -21,15 +21,16 @@ import { sendMessageToSlack } from './utils/slack';
 import { Api } from './parsers';
 global.Promise = bluebird;
 
-torTriggerer.run();
-
 const server = new Koa();
 
 const parse = schedule.scheduleJob(triggerSchedule, async () => {
   try {
+    torTriggerer.run();
     await updateDBData();
   } catch (err) {
     sendMessageToSlack(`The parser has been fallen with message: ${err}`);
+  } finally {
+    torTriggerer.close();
   }
   await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
 });
