@@ -4,8 +4,6 @@ import * as request from 'request-promise';
 import * as sinon from 'sinon';
 import { Api } from '../src/parsers/';
 
-import puppeteer = require('puppeteer');
-
 describe('Onliner Parser', () => {
   const api = new Api(1);
   const parser = {
