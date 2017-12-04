@@ -80,6 +80,8 @@ describe('Repositories', () => {
     const ads: any[] = [
       {
         bodyTypeId: 'repotestbodytypeidforad1',
+        creationDate: new Date().getDate(),
+        lastTimeUpDate: new Date().getDate(),
         markId: 'repotestmarkididforad1',
         modelId: 'repotestmodelididforad1',
         sourceName: 'repotestsourcenameidforad1',
@@ -88,6 +90,8 @@ describe('Repositories', () => {
       },
       {
         bodyTypeId: 'repotestbodytypeidforad2',
+        creationDate: new Date().getDate(),
+        lastTimeUpDate: new Date().getDate(),
         markId: 'repotestmarkididforad2',
         modelId: 'repotestmodelididforad2',
         sourceName: 'repotestsourcenameidforad2',
@@ -96,6 +100,8 @@ describe('Repositories', () => {
       },
       {
         bodyTypeId: 'repotestbodytypeidforad3',
+        creationDate: new Date().getDate(),
+        lastTimeUpDate: new Date().getDate(),
         markId: 'repotestmarkididforad3',
         modelId: 'repotestmodelididforad3',
         sourceName: 'repotestsourcenameidforad3',
