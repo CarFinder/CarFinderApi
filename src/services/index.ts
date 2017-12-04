@@ -183,6 +183,7 @@ export const sendNewsletter = async () => {
       await sendMailsWithNewsletter(user.name, user.email, ads);
     })
   );
+};
 
 export const calculateLiquidity = async (filter: any) => {
   return await AdService.getLiquidity(filter);
