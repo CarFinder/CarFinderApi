@@ -177,10 +177,13 @@ export const getAdsForCurrentModel = async (model: any) => {
     });
 
     const pagesCount =
-      +$('.pages-arrows-index')
-        .text()
-        .split(' ')
-        .pop() || 1;
+      parseInt(
+        $('.pages-arrows-index')
+          .text()
+          .split(' ')
+          .pop(),
+        10
+      ) || 1;
 
     let ads: any[] = [];
 
@@ -266,25 +269,28 @@ export const getAdsForCurrentModel = async (model: any) => {
         const creationDate = new Date(...transformedDates[0]);
         const lastTimeUpDate = new Date(...(transformedDates[1] || transformedDates[0]));
         // car price
-        const price = +$('.card-price-main')
-          .find('span')
-          .text()
-          .trim()
-          .replace(/\s/g, '')
-          .slice(0, -2);
+        const price = parseInt(
+          $('.card-price-main')
+            .find('span')
+            .text()
+            .trim()
+            .replace(/\s/g, '')
+            .slice(0, -2),
+          10
+        );
 
         const ad = {
           bodyType,
           creationDate,
           description,
           images,
-          kms: +adInfo[2].split(' ').shift(),
+          kms: parseInt(adInfo[2].split(' ').shift(), 10),
           lastTimeUpDate,
           model: model.name,
           price,
           sourceName: 'av.by',
           sourceUrl: url,
-          year: +adInfo[0]
+          year: parseInt(adInfo[0], 10)
         };
 
         return ad;

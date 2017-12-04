@@ -94,9 +94,8 @@ describe('Onliner Parser', () => {
 
   let requestStub: sinon.SinonStub;
 
-  afterEach(done => {
+  afterEach(() => {
     requestStub.restore();
-    done();
   });
 
   it('should be return an array of marks', async () => {

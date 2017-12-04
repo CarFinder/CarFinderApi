@@ -19,7 +19,6 @@ import { torTriggerer } from './utils/torTriggerer';
 import { sendMessageToSlack } from './utils/slack';
 
 import { Api } from './parsers';
-global.Promise = bluebird;
 
 const server = new Koa();
 
