@@ -11,4 +11,4 @@ services:
             - .:/src   
         # which port should be accessible from the outside?
         ports:
-            - 3000
+            - 2999

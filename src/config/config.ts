@@ -8,9 +8,9 @@ export const limitForSavedFilters = 2;
 export const mail = {
   auth: {
     pass: process.env.MAIL_PASS,
-    user: process.env.MAIL_USER
+    user: process.env.MAIL_USER,
   },
-  service: 'Gmail'
+  service: 'Gmail',
 };
 
 // execute every 3 day
@@ -29,11 +29,11 @@ export const codeErrors = {
   MONGO_DUPLICATE_ERROR: 11000,
   ONLINER_PARSE_ERROR: 106,
   REQUIRED_FIELD: 110,
-  VALIDATION_ERROR: 105
+  VALIDATION_ERROR: 105,
 };
 
 export enum sourceCodes {
-  ONLINER = 1
+  ONLINER = 1,
 }
 
 export const ONLINER_URL: string = `https://ab.onliner.by/`;
@@ -41,13 +41,13 @@ export const ONLINER_URL: string = `https://ab.onliner.by/`;
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
   RESTORE_PASSWORD: 'RESTORE_PASSWORD',
-  UPDATE_EMAIL: 'UPDATE_EMAIL'
+  UPDATE_EMAIL: 'UPDATE_EMAIL',
 };
 
 export const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY,
   region: process.env.AWS_REGION,
-  secretAccessKey: process.env.AWS_SECRET_KEY
+  secretAccessKey: process.env.AWS_SECRET_KEY,
 };
 
 export const bucket = process.env.AWS_BUCKET;
