@@ -57,7 +57,10 @@ export const dropCollection = async () => {
   await TempAd.remove({});
 };
 
-export const save = async (tempAd: object) => {
-  const temp = new TempAd(tempAd);
-  await temp.save();
+export const save = async (tempAd: any) => {
+  try {
+    await TempAd.update({ sourceUrl: tempAd.sourceUrl }, { $set: tempAd }, { upsert: true });
+  } catch (err) {
+    handleDatabaseError(err);
+  }
 };

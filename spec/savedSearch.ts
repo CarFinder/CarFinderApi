@@ -326,7 +326,9 @@ describe('Saved Search', () => {
       const ads = [
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
@@ -336,7 +338,9 @@ describe('Saved Search', () => {
         },
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
@@ -346,7 +350,9 @@ describe('Saved Search', () => {
         },
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
