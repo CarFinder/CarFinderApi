@@ -16,5 +16,5 @@ export const getAll = async () => {
 };
 
 export const getByName = async (name: string) => {
-  return await BodyType.findOne({ name });
+  return await BodyType.findOne({ name: new RegExp(name, 'i') });
 };

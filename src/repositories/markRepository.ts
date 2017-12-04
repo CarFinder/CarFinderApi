@@ -17,5 +17,5 @@ export const getAll = async () => {
 };
 
 export const getByName = async (name: string) => {
-  return await Mark.findOne({ name });
+  return await Mark.findOne({ name: new RegExp(`^${name}$`, 'i') });
 };

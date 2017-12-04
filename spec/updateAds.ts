@@ -5,7 +5,7 @@ import * as AdService from '../src/services//adService';
 import { addTempAds, dropCollection, updateAds } from '../src/services/tempAdService';
 import * as parserUtils from '../src/utils/parserUtils';
 
-describe('Ad update', async () => {
+describe('Ad update', () => {
   const adFields = {
     BODY_NAME: 'superpcutecoupe',
     KMS: 20000,
@@ -21,76 +21,92 @@ describe('Ad update', async () => {
     name: adFields.BODY_NAME
   };
 
-  const body = await BodyType.create(bodyObj);
-  const bodyTypeId = body._id;
+  let bodyTypeId;
+  let ads: any;
+  let newAds: any;
 
-  const ads = [
-    {
-      bodyTypeId,
-      description: 'descrip',
-      images: ['url'],
-      kms: adFields.KMS,
-      markId: adFields.MARK_ID,
-      modelId: adFields.MODEL_ID,
-      price: adFields.PRICE,
-      sourceName: adFields.SOURCE_NAME,
-      sourceUrl: adFields.SOURCE_URL + 0,
-      year: adFields.YEAR
-    },
-    {
-      bodyTypeId,
-      description: 'descrip',
-      images: ['url'],
-      kms: adFields.KMS,
-      markId: adFields.MARK_ID,
-      modelId: adFields.MODEL_ID,
-      price: adFields.PRICE,
-      sourceName: adFields.SOURCE_NAME,
-      sourceUrl: adFields.SOURCE_URL + 1,
-      year: adFields.YEAR
-    },
-    {
-      bodyTypeId,
-      description: 'descrip',
-      images: ['url'],
-      kms: adFields.KMS,
-      markId: adFields.MARK_ID,
-      modelId: adFields.MODEL_ID,
-      price: adFields.PRICE,
-      sourceName: adFields.SOURCE_NAME,
-      sourceUrl: adFields.SOURCE_URL + 2,
-      year: adFields.YEAR
-    }
-  ];
+  before(async () => {
+    const body = await BodyType.create(bodyObj);
+    bodyTypeId = body._id;
 
-  const newAds = [
-    {
-      bodyTypeId,
-      description: 'yaaaaahhooo',
-      images: ['url'],
-      kms: adFields.KMS,
-      markId: adFields.MARK_ID,
-      modelId: adFields.MODEL_ID,
-      price: adFields.PRICE,
-      sourceName: adFields.SOURCE_NAME,
-      sourceUrl: adFields.SOURCE_URL + 1,
-      year: adFields.YEAR
-    },
-    {
-      bodyTypeId,
-      description: 'yaaaaahhooo',
-      images: ['url'],
-      kms: adFields.KMS,
-      markId: adFields.MARK_ID,
-      modelId: adFields.MODEL_ID,
-      price: adFields.PRICE,
-      sourceName: adFields.SOURCE_NAME,
-      sourceUrl: adFields.SOURCE_URL + 2,
-      year: adFields.YEAR
-    }
-  ];
+    ads = [
+      {
+        bodyTypeId,
+        creationDate: new Date().getDate(),
+        description: 'descrip',
+        images: ['url'],
+        kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
+        markId: adFields.MARK_ID,
+        modelId: adFields.MODEL_ID,
+        price: adFields.PRICE,
+        sourceName: adFields.SOURCE_NAME,
+        sourceUrl: adFields.SOURCE_URL + 0,
+        year: adFields.YEAR
+      },
+      {
+        bodyTypeId,
+        creationDate: new Date().getDate(),
+        description: 'descrip',
+        images: ['url'],
+        kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
+        markId: adFields.MARK_ID,
+        modelId: adFields.MODEL_ID,
+        price: adFields.PRICE,
+        sourceName: adFields.SOURCE_NAME,
+        sourceUrl: adFields.SOURCE_URL + 1,
+        year: adFields.YEAR
+      },
+      {
+        bodyTypeId,
+        creationDate: new Date().getDate(),
+        description: 'descrip',
+        images: ['url'],
+        kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
+        markId: adFields.MARK_ID,
+        modelId: adFields.MODEL_ID,
+        price: adFields.PRICE,
+        sourceName: adFields.SOURCE_NAME,
+        sourceUrl: adFields.SOURCE_URL + 2,
+        year: adFields.YEAR
+      }
+    ];
 
-  await BodyType.remove({});
+    newAds = [
+      {
+        bodyTypeId,
+        creationDate: new Date().getDate(),
+        description: 'yaaaaahhooo',
+        images: ['url'],
+        kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
+        markId: adFields.MARK_ID,
+        modelId: adFields.MODEL_ID,
+        price: adFields.PRICE,
+        sourceName: adFields.SOURCE_NAME,
+        sourceUrl: adFields.SOURCE_URL + 1,
+        year: adFields.YEAR
+      },
+      {
+        bodyTypeId,
+        creationDate: new Date().getDate(),
+        description: 'yaaaaahhooo',
+        images: ['url'],
+        kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
+        markId: adFields.MARK_ID,
+        modelId: adFields.MODEL_ID,
+        price: adFields.PRICE,
+        sourceName: adFields.SOURCE_NAME,
+        sourceUrl: adFields.SOURCE_URL + 2,
+        year: adFields.YEAR
+      }
+    ];
+
+    await BodyType.remove({});
+  });
 
   describe('should set flag false to selt car', () => {
     before(async () => {

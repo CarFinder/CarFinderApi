@@ -69,7 +69,9 @@ describe('Return number of ads, users and models from DB', () => {
     const ads = [
       {
         bodyTypeId: body._id,
+        creationDate: new Date().getDate(),
         kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
@@ -79,7 +81,9 @@ describe('Return number of ads, users and models from DB', () => {
       },
       {
         bodyTypeId: body._id,
+        creationDate: new Date().getDate(),
         kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
@@ -89,7 +93,9 @@ describe('Return number of ads, users and models from DB', () => {
       },
       {
         bodyTypeId: body._id,
+        creationDate: new Date().getDate(),
         kms: adFields.KMS,
+        lastTimeUpDate: new Date().getDate(),
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,

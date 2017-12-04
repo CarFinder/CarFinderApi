@@ -1,24 +1,25 @@
-import * as _ from 'lodash';
 import * as moment from 'moment';
 import { sourceCodes } from '../config/config';
 import { IOnlinerMark, ITransformedAd, ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers/';
-import { updateDBData } from '../services/';
+import { updateDBData, updateDBDataFromOnliner, updateDBDateFromAvBy } from '../services/';
 import { getBodyTypeByName } from '../services/bodyTypeService';
 import { getMarkByName } from '../services/markService';
 import { updateMarks } from '../services/markService';
-import { getModelByName, saveNewModel } from '../services/modelService';
+import { getModelByName, getModelByNameAndMarkId, saveNewModel } from '../services/modelService';
 
-export const transformOnlinerDate = (onlinerDate: string): string => {
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
+
+export const transformOnlinerDate = (onlinerDate: string): Date => {
   let date = onlinerDate.substring(0, 10);
   const arrayofDate: any = date.split('-');
   arrayofDate[1] = parseInt(arrayofDate[1], 10);
-  arrayofDate[1] += 1;
   if (arrayofDate[1] > 12) {
     arrayofDate[1] = arrayofDate[1] - 12;
   }
   date = arrayofDate.join('-');
-  return moment(date).format('DD-MM-YYYY');
+  return moment(date, 'DD-MM-YYYY').toDate();
 };
 
 export const transformOnlinerModelsData = (models: any, markId: string) => {
@@ -101,7 +102,7 @@ export const transformAdsData = async (markId: string, ads: object, bodyTypes: s
 
 // update ads, models, marks, body types, fill db is it is empty
 
-export const updateServiceData = async () => {
+export const updateOnlinerData = async () => {
   const api = new Api(sourceCodes.ONLINER);
   await api.updateMarks();
   const marks = api.getMarks();
@@ -110,5 +111,82 @@ export const updateServiceData = async () => {
   const transfomedMarks = transformOnlinerMarks(marks);
   await api.updateBodyTypes();
   const bodyTypes = api.getBodyTypes();
-  await updateDBData(transfomedMarks, models, bodyTypes);
+  await updateDBDataFromOnliner(transfomedMarks, models, bodyTypes);
+};
+
+export const transformAvByBodyTypes = (bodyTypes: any[]) => {
+  return _.chain(bodyTypes)
+    .map((type: any) => {
+      const name = _.capitalize(type);
+      return name === 'Легковой фургон' // we take only first word of the bodytype name, exclude "Легковой фургон"
+        ? name
+        : _.chain(name)
+            .split(' ')
+            .shift()
+            .value();
+    })
+    .uniq()
+    .value();
+};
+
+export const transformAvByMarks = (marks: any[]) => {
+  return _.map(marks, (mark: any) => ({ name: mark.name }));
+};
+
+export const getAvByAds = async (model: any) => {
+  const api = new Api(sourceCodes.AV);
+  await api.updateAds(model);
+  return api.getAds();
+};
+
+export const transformAvByAds = async (ads: any[], markId: string) => {
+  let transformedAds: any[] = [];
+  for (const ad of ads) {
+    const model: any = await getModelByNameAndMarkId(ad.model, markId);
+    const bodyType: any = await getBodyTypeByName(ad.bodyType);
+    const transformedAd = {
+      bodyTypeId: bodyType.id,
+      creationDate: ad.creationDate,
+      description: ad.description,
+      images: ad.images,
+      kms: ad.kms,
+      lastTimeUpDate: ad.lastTimeUpDate,
+      markId,
+      modelId: model.id,
+      price: ad.price,
+      sourceName: ad.sourceName,
+      sourceUrl: ad.sourceUrl,
+      year: ad.year
+    };
+    transformedAds = [...transformedAds, transformedAd];
+  }
+  return transformedAds;
+};
+
+export const updateAvByData = async () => {
+  const api = new Api(sourceCodes.AV);
+  await api.updateBodyTypes();
+  const trandformedBodyTypes = transformAvByBodyTypes(api.getBodyTypes());
+  await api.updateMarks();
+  const marks = transformAvByMarks(api.getMarks());
+  await api.updateModels();
+  const models = api.getModels();
+  await updateDBDateFromAvBy(marks, models, trandformedBodyTypes);
+};
+
+export const transformBmvAvModel = (name: string): string => {
+  let transformedName;
+  transformedName = name.indexOf('-') === -1 ? name.split(' ').shift() : name;
+  transformedName = transformedName.indexOf('-') !== -1 ? `Серия ${name[0]}` : transformedName;
+  return transformedName;
+};
+
+export const transformMercedesAvModel = (name: string): string => {
+  if (name.length <= 3) {
+    return `${name}-класс`;
+  }
+  if (name.indexOf('-') !== -1) {
+    return `${name.split('-').shift()}-класс`;
+  }
+  return name;
 };

@@ -9,6 +9,7 @@ const tempAdSchema = new mongoose.Schema(
       type: String
     },
     creationDate: {
+      required: true,
       type: Date
     },
     description: {
@@ -25,7 +26,8 @@ const tempAdSchema = new mongoose.Schema(
       type: Number
     },
     lastTimeUpDate: {
-      type: String
+      required: true,
+      type: Date
     },
     markId: {
       required: true,
@@ -47,7 +49,8 @@ const tempAdSchema = new mongoose.Schema(
     },
     sourceUrl: {
       required: true,
-      type: String
+      type: String,
+      unique: true
     },
     year: {
       required: true,
