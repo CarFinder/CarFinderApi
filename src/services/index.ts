@@ -207,4 +207,8 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   }
 };
 
+export const calculateLiquidity = async (filter: any) => {
+  return await AdService.getLiquidity(filter);
+};
+
 export { AdService, FilterService, StatsService, UserService };
