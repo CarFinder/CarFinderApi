@@ -1,3 +1,4 @@
+import * as bluebird from 'bluebird';
 import * as chai from 'chai';
 import { assert, expect } from 'chai';
 import chaiHttp = require('chai-http');
@@ -40,47 +41,54 @@ describe('Ad', () => {
         name: adFields.MARK_NAME
       };
       const body = await BodyType.create(bodyObj);
-      bodyTypeId = body._id;
+      bodyTypeId = body.id;
       const mark = await Mark.create(markObj);
       const modelObj = {
-        markId: mark._id,
+        markId: mark.id,
         name: adFields.MODEL_NAME
       };
       const model = await Model.create(modelObj);
-      modelId = model._id;
+      modelId = model.id;
+
       const ads = [
         {
-          bodyTypeId: body._id,
+          bodyTypeId: body.id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
-          markId: mark._id,
-          modelId: model._id,
+          lastTimeUpDate: new Date().getDate(),
+          markId: mark.id,
+          modelId: model.id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
           sourceUrl: adFields.SOURCE_URL + 0,
           year: adFields.YEAR
         },
         {
-          bodyTypeId: body._id,
+          bodyTypeId: body.id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
-          markId: mark._id,
-          modelId: model._id,
+          lastTimeUpDate: new Date().getDate(),
+          markId: mark.id,
+          modelId: model.id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
           sourceUrl: adFields.SOURCE_URL + 1,
           year: adFields.YEAR
         },
         {
-          bodyTypeId: body._id,
+          bodyTypeId: body.id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
-          markId: mark._id,
-          modelId: model._id,
+          lastTimeUpDate: new Date().getDate(),
+          markId: mark.id,
+          modelId: model.id,
           price: adFields.PRICE,
           sourceName: adFields.SOURCE_NAME,
           sourceUrl: adFields.SOURCE_URL + 2,
           year: adFields.YEAR
         }
       ];
-      markId = mark._id;
+      markId = mark.id;
       await Ad.create(ads);
     });
     after(async () => {

@@ -166,7 +166,6 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
       const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
       const mark = await FilterService.getMarkById(ad.markId);
       const model = await FilterService.getModelById(ad.modelId);
-
       return {
         _id: ad._id,
         bodyType: bodyType.name,
