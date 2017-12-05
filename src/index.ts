@@ -14,23 +14,47 @@ import routes from './routes';
 import { calculateLiquidity } from './services';
 import { updateServiceData } from './utils/parserUtils';
 
-const server = new Koa();
+import * as cluster from 'cluster';
+import * as os from 'os';
 
-const parse = schedule.scheduleJob(triggerSchedule, async () => {
-  await updateServiceData();
-  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
-  await calculateLiquidity();
-});
+if (cluster.isMaster) {
+  const cpuCount = os.cpus().length;
+  for (let pInd = 0; pInd < cpuCount; pInd += 1) {
+    cluster.fork();
+  }
+  const parse = schedule.scheduleJob(triggerSchedule, async () => {
+    await updateServiceData();
+    await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
+    await calculateLiquidity();
+  });
 
-mongoose.connect(db, { useMongoClient: true });
-mongoose.set('debug', true);
+  cluster.on('online', (worker) => {
+    global.console.log('Worker ' + worker.process.pid + ' is online');
+  });
 
-(mongoose as any).Promise = bluebird;
+  cluster.on('exit', (worker) => {
+    global.console.log('Worker %d died :(', worker.id);
+    cluster.fork();
+  });
 
-server.use(bodyParser());
-server.use(passport.initialize());
-server.use(logger());
 
-server.use(routes.routes());
+} else {
+  const server = new Koa();
 
-export const app: any = server.listen(port);
+  mongoose.connect(db, { useMongoClient: true });
+  mongoose.connect(db, { useMongoClient: true });
+  mongoose.set('debug', true);
+
+  (mongoose as any).Promise = bluebird;
+
+  server.use(bodyParser());
+  server.use(passport.initialize());
+  server.use(logger());
+
+  server.use(routes.routes());
+
+  server.listen(port);
+}
+
+
+
