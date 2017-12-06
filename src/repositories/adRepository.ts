@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
 import { codeErrors } from '../config/config';
@@ -17,7 +18,15 @@ export const getByModelId = async (modelId: string) => {
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
   const existingAds = response.map(item => item.sourceUrl);
-  await Ad.update({ sourceUrl: { $nin: existingAds } }, { isSold: true }, { multi: true });
+  const date = moment().toISOString();
+  await Ad.update(
+    { sourceUrl: { $nin: existingAds } },
+    {
+      isSold: true,
+      soldDate: date
+    },
+    { multi: true }
+  );
 };
 
 export const save = async (ad: object) => {
@@ -113,4 +122,21 @@ export const get = async (
 
 export const getAdByURL = async (url: string) => {
   return await Ad.findOne({ sourceUrl: url });
+};
+
+export const getSoldCarsNumber = async (adFilter: any, time: string) => {
+  const soldCars = await Ad.find(adFilter);
+  const avgTime = soldCars.length
+    ? soldCars
+        .map(car => moment(car.soldDate).diff(car.creationDate))
+        .reduce((car, nextCar) => car + nextCar) / soldCars.length
+    : 0;
+  const liquidityData: any = {
+    averageTime: moment.duration(avgTime).asDays(),
+    result: await Ad.find(adFilter)
+      .find({ soldDate: { $gt: time } })
+      .count({}),
+    total: await Ad.find({ isSold: true, soldDate: { $gt: time } }).count({})
+  };
+  return liquidityData;
 };

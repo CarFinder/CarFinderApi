@@ -22,6 +22,7 @@ export const url = 'localhost:3001';
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
   AUTH_ERROR: 102,
+  AV_PARSE_ERROR: 107,
   IMAGE_UPLOAD_ERROR: 106,
   INCORRECT_EMAIL_OR_PASS: 101,
   INTERNAL_DB_ERROR: 120,
@@ -33,15 +34,18 @@ export const codeErrors = {
 };
 
 export enum sourceCodes {
-  ONLINER = 1,
+  AV = 2,
+  ONLINER = 1
 }
 
 export const ONLINER_URL: string = `https://ab.onliner.by/`;
+export const AV_URL: string = `https://cars.av.by/`;
 
 export const emailActions = {
   CONFIRM_REGISTRATION: 'CONFIRM_REGISTRATION',
   RESTORE_PASSWORD: 'RESTORE_PASSWORD',
-  UPDATE_EMAIL: 'UPDATE_EMAIL',
+  SEND_USER_MESSAGE: 'SEND_USER_MESSAGE',
+  UPDATE_EMAIL: 'UPDATE_EMAIL'
 };
 
 export const awsConfig = {

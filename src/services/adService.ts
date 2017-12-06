@@ -1,17 +1,24 @@
 import * as async from 'async';
+import * as moment from 'moment';
 import { IAdModel } from '../db/';
 import { IAd } from '../interfaces/';
+
 import {
   countSold,
+  get,
   getAdByURL,
   getAll,
+  getByFilter,
   getByModelId,
   getSold,
+  getSoldCarsNumber,
   markSeltAds,
   save,
   update
 } from '../repositories/adRepository';
-import { get, getByFilter } from '../repositories/adRepository';
+
+
+
 import * as tempAdRepository from '../repositories/tempAdRepository';
 
 export const getAllAds = async () => {
@@ -127,6 +134,22 @@ export const getAds = async (
     sortParams = sort;
   }
   return await get(searchFilter, limit, skip, sortParams);
+};
+
+export const getLiquidity = async (filter: any) => {
+  const time = moment()
+    .subtract(1, 'month')
+    .format();
+  const adFilter: any = {};
+  if (filter.markId) {
+    adFilter.markId = filter.markId;
+  }
+  if (filter.modelId && filter.modelId.length) {
+    adFilter.modelId = { $in: [...filter.modelId] };
+  }
+  adFilter.isSold = true;
+
+  return await getSoldCarsNumber(adFilter, time);
 };
 
 export { markSeltAds };

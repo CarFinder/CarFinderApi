@@ -1,6 +1,8 @@
 export interface Imark {
-  id: number;
-  model: string;
+  id?: number;
+  model?: string;
+  name?: string;
+  url?: string;
 }
 
 export interface Imodel {
@@ -41,4 +43,9 @@ export interface ITransformedMarks {
 export interface IOnlinerMark {
   id?: number;
   name?: string;
+}
+
+export interface IAvMark {
+  url?: string;
+  name: string;
 }

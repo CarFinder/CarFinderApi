@@ -1,48 +1,50 @@
-import axios from 'axios';
+import * as bluebird from 'bluebird';
 import cheerio = require('cheerio');
 import FormData = require('form-data');
 import * as _ from 'lodash';
-import fetch from 'node-fetch';
-import puppeteer = require('puppeteer');
 import * as request from 'request-promise';
 import { codeErrors, ONLINER_URL, proxy } from '../../config/config';
 import { ParserError } from '../../utils/errors/';
 
-request.defaults({
-  proxy: proxy.split(',')
-});
+export const sendRequest = async (url: string): Promise<any> => {
+  let response: any;
+  let isFailed = true;
+  let requestCount = 0;
+  while (isFailed && requestCount !== 10) {
+    try {
+      response = await request.get({
+        url
+      });
+      isFailed = false;
+    } catch (err) {
+      await bluebird.delay(1000);
+      isFailed = true;
+      requestCount += 1;
+    }
+  }
+  return response;
+};
 
 export const getMarks = async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  const res = await page.content();
+  const res = await sendRequest(ONLINER_URL);
 
   // match manufactures
   const modelsData = res.match(/var\s+Manufactures \= \[.*\]/g);
   const arrayOfMathedMarks = modelsData[0].match(/[{][^\}]*[}]/g);
-  const arrayOfMarks = arrayOfMathedMarks.map(mark => JSON.parse(mark));
-  await browser.close();
+  const arrayOfMarks = arrayOfMathedMarks.map((mark: any) => JSON.parse(mark));
   return arrayOfMarks;
 };
 
 export const getModels = async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  const res: string = await page.content();
+  const res: string = await sendRequest(ONLINER_URL);
   // match manufactures models
   const modelsData: any = res.match(/var\s+ManufacturesModel \= \{.*\}/g);
   const models: any = modelsData[0].match(/\{.*\}/g);
-  await browser.close();
   return JSON.parse(models[0]);
 };
 
 export const getBodyTypes = async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(ONLINER_URL, { waitUntil: 'networkidle' });
-  const res = await page.content();
+  const res = await sendRequest(ONLINER_URL);
   const $ = cheerio.load(res, {
     normalizeWhitespace: true,
     xmlMode: true
@@ -92,17 +94,16 @@ export const getAdsForCurrentModel = async (modelId: number) => {
         })
         .get();
 
-      const prices = $('.cost-i .small')
-        .text()
-        .replace(/\$ (.*?) €/g, '-')
-        .split('-')
-        .map(el => {
-          el.trim();
-          const transformedPrice = el.replace(/\s+/g, '');
-          if (transformedPrice !== '') {
-            return parseInt(transformedPrice, 10);
-          }
-        });
+      const prices = $('.price-primary')
+        .map((i, el) => {
+          return parseInt(
+            $(el)
+              .text()
+              .replace(/\s/g, ''),
+            10
+          );
+        })
+        .get();
 
       const keys = Object.keys(newAds);
       keys.forEach((key, index) => {

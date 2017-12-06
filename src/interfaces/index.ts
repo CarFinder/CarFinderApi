@@ -63,6 +63,7 @@ export interface IAd {
   lastTimeUpDate: Date;
   modelId: string;
   price?: number;
+  soldDate?: Date;
   sourceName: string;
   sourceUrl: string;
   year: number;
@@ -92,4 +93,16 @@ export interface ISavedFilterAds {
 export interface IUserImage {
   image: string;
   type: string;
+}
+
+export interface IStats {
+  ads: number;
+  users: number;
+  models: number;
+}
+
+export interface IMessage {
+  name: string;
+  email: string;
+  message: string;
 }

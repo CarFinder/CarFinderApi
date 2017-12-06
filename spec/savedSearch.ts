@@ -326,7 +326,9 @@ describe('Saved Search', () => {
       const ads = [
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
@@ -336,7 +338,9 @@ describe('Saved Search', () => {
         },
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
@@ -346,7 +350,9 @@ describe('Saved Search', () => {
         },
         {
           bodyTypeId: body._id,
+          creationDate: new Date().getDate(),
           kms: adFields.KMS,
+          lastTimeUpDate: new Date().getDate(),
           markId: mark._id,
           modelId: model._id,
           price: adFields.PRICE,
@@ -373,7 +379,7 @@ describe('Saved Search', () => {
     it('should return an empty array, if there is no saved filters for such user', async () => {
       const response = await chai
         .request(app)
-        .get('/api/ad/saved/')
+        .get('/api/posts/saved/')
         .set('content-type', 'application/json')
         .set('authorization', `Bearer ${tokenForAnotherUser}`);
       const data = response.body;
@@ -385,7 +391,7 @@ describe('Saved Search', () => {
     it('should return only two ads if user has any saved seach filters', async () => {
       const response = await chai
         .request(app)
-        .get('/api/ad/saved/')
+        .get('/api/posts/saved/')
         .set('content-type', 'application/json')
         .set('authorization', `Bearer ${validToken}`);
       const data = response.body;

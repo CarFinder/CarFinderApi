@@ -1,17 +1,28 @@
 import * as async from 'async';
 import { codeErrors, limitForSavedFilters } from '../config/config';
-import { ISavedFilterAds, IUser } from '../interfaces/index';
+import { sourceCodes } from '../config/config';
+import { IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
+import { Api } from '../parsers';
 import { decodeToken } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { DatabaseError } from '../utils/errors';
-import { getOnlinerAds, transformAdsData, transformOnlinerModelsData } from '../utils/parserUtils';
+import {
+  getAvByAds,
+  getOnlinerAds,
+  transformAdsData,
+  transformAvByAds,
+  transformOnlinerModelsData,
+  updateAvByData,
+  updateOnlinerData
+} from '../utils/parserUtils';
 import * as AdService from './adService';
 import { getAllBodyTypes, getBodyTypeById, updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
 import * as liquidityService from './liquidService';
 import { getAllMarks, getMarkById, updateMarks } from './markService';
 import { getModelById, getModels, updateModels } from './modelService';
+import * as StatsService from './statsService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
   confirm,
@@ -19,10 +30,14 @@ import {
   register,
   restorePassword,
   sendEmailConfirmation,
+  sendMessage,
   sendPasswordEmail,
   updateImage,
   updateUserProfile
 } from './userService';
+
+// tslint:disable-next-line:no-var-requires
+const _ = require('lodash');
 
 import * as UserService from './userService';
 
@@ -65,6 +80,10 @@ export const sendRestorePasswordEmail = async (payload: string) => {
   await sendPasswordEmail(payload);
 };
 
+export const sendUserMessage = async (data: IMessage) => {
+  await sendMessage(data);
+};
+
 export const restoreUserPassword = async (payload: { password: string; token: string }) => {
   const data = decodeToken(payload.token);
   await restorePassword(payload.password, data.email);
@@ -102,14 +121,18 @@ export const updateUserImage = async (userData: any, token: any) => {
   return payload;
 };
 
-export const updateDBData = async (
+export const updateDBDataFromOnliner = async (
   marks: ITransformedMarks[],
   models: any,
   bodyTypes: string[]
 ) => {
-  const buffer: string[] = [];
   await updateBodyTypes(bodyTypes);
   await formingTempAdsData(marks, models, bodyTypes);
+};
+
+export const updateDBData = async () => {
+  await updateOnlinerData();
+  await updateAvByData();
   await AdService.markSeltAds();
   await AdService.updateAds();
   return;
@@ -124,20 +147,46 @@ export const formingTempAdsData = async (
     const markMaket = { name: mark.name };
     const savedMark: any = await updateMarks(markMaket);
     const markId = savedMark.id;
-    // if mark name is BMW or Mercedes , don't set models
-    // `cause they models setted like series on onliner
-    if (mark.name === 'BMW' || mark.name === 'Mercedes') {
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await addTempAds(markAds);
-    } else {
-      const listOfModels = models[mark.onlinerMarkId];
-      const transformedModels = transformOnlinerModelsData(listOfModels, markId);
-      await updateModels(transformedModels);
-      const ads: any = await getOnlinerAds(mark.onlinerMarkId);
-      const markAds = await transformAdsData(markId, ads, bodyTypes);
-      await addTempAds(markAds);
-    }
+    const listOfModels = models[mark.onlinerMarkId];
+    const transformedModels = transformOnlinerModelsData(listOfModels, markId);
+    await updateModels(transformedModels, markId);
+    const ads: any = await getOnlinerAds(mark.onlinerMarkId);
+    const markAds = await transformAdsData(markId, ads, bodyTypes);
+    await addTempAds(markAds);
+  }
+};
+
+export const getAvAdsByModels = async (models: any[]) => {
+  let ads: any[] = [];
+  for (const model of models) {
+    ads = [...ads, ...(await getAvByAds(model))];
+  }
+  return ads;
+};
+
+export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyTypes: string[]) => {
+  await updateBodyTypes(bodyTypes);
+  const listOfModels = _.chain(models)
+    .map((mark: any) => {
+      const markName = Object.keys(mark).shift();
+      return { mark: markName, models: mark[markName] };
+    })
+    .value() as any[];
+  for (const mark of marks) {
+    const savedMark: any = await updateMarks(mark);
+    const markId = savedMark.id;
+    const markName = savedMark.name;
+    const modelsChosedMark = _.find(
+      listOfModels,
+      (item: any) => item.mark.toLowerCase() === markName.toLowerCase()
+    ).models;
+    await updateModels(
+      _.map(modelsChosedMark, (model: any) => ({ name: model.name, markId })),
+      markId
+    );
+    const ads = await getAvAdsByModels(modelsChosedMark);
+    const transformedAds = await transformAvByAds(ads, markId);
+    await addTempAds(transformedAds);
   }
 };
 
@@ -150,7 +199,6 @@ export const getAds = async (filter?: any, limit?: number, skip?: number, sort?:
       const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
       const mark = await FilterService.getMarkById(ad.markId);
       const model = await FilterService.getModelById(ad.modelId);
-
       return {
         _id: ad._id,
         bodyType: bodyType.name,
@@ -192,7 +240,8 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   }
 };
 
-export const calculateLiquidity = async () => {
+
+export const calculateAllLiquidity = async () => {
   const bodyTypes = await getAllBodyTypes();
   const models = await getModels();
   const totalSold = await AdService.countSoldAds();
@@ -226,4 +275,9 @@ export const calculateLiquidity = async () => {
   });
 };
 
-export { AdService, FilterService, UserService };
+export const calculateLiquidity = async (filter: any) => {
+  return await AdService.getLiquidity(filter);
+};
+
+export { AdService, FilterService, StatsService, UserService };
+

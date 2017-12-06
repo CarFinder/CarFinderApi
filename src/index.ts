@@ -10,9 +10,19 @@ import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
+import { TempAd } from './db';
 import routes from './routes';
-import { calculateLiquidity } from './services';
-import { updateServiceData } from './utils/parserUtils';
+import { calculateAllLiquidity } from './services';
+import { updateDBData } from './services';
+import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
+import { sendMessageToSlack } from './utils/slack';
+import { torTriggerer } from './utils/torTriggerer';
+
+// tslint:disable-next-line:no-var-requires
+const cors = require('@koa/cors');
+
+import { Api } from './parsers';
+
 
 import * as cluster from 'cluster';
 import * as os from 'os';
@@ -22,11 +32,19 @@ if (cluster.isMaster) {
   for (let pInd = 0; pInd < cpuCount; pInd += 1) {
     cluster.fork();
   }
-  const parse = schedule.scheduleJob(triggerSchedule, async () => {
-    await updateServiceData();
-    await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
-    await calculateLiquidity();
-  });
+
+const parse = schedule.scheduleJob(triggerSchedule, async () => {
+  try {
+    torTriggerer.run();
+    await updateDBData();
+  } catch (err) {
+    sendMessageToSlack(`The parser has been fallen with message: ${err}`);
+  } finally {
+    torTriggerer.close();
+  }
+  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
+  await calculateAllLiquidity();
+});
 
   cluster.on('online', (worker) => {
     global.console.log('Worker ' + worker.process.pid + ' is online');
@@ -47,6 +65,7 @@ if (cluster.isMaster) {
 
   (mongoose as any).Promise = bluebird;
 
+  server.use(cors());
   server.use(bodyParser());
   server.use(passport.initialize());
   server.use(logger());
@@ -55,6 +74,3 @@ if (cluster.isMaster) {
 
   server.listen(port);
 }
-
-
-

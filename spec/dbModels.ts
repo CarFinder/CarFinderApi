@@ -23,6 +23,8 @@ describe('Database Models', () => {
     it('should be valid if required fields are not empty', done => {
       const ad = new Ad({
         bodyTypeId: 'bodyTypeId',
+        creationDate: new Date().getDate(),
+        lastTimeUpDate: new Date().getDate(),
         markId: 'markId',
         modelId: 'modelId',
         sourceName: 'sourceName',
