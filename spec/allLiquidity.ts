@@ -13,7 +13,7 @@ import * as adRepository from '../src/repositories/adRepository';
 import * as bodyTypeRepository from '../src/repositories/bodyTypeRepository';
 import * as tempAaRepository from '../src/repositories/tempAdRepository';
 
-describe.only('Calculation liquidity of all cars', () => {
+describe('Calculation liquidity of all cars', () => {
   const adFields = {
     KMS: 20000,
     LAST_TIME_UP_DATE: new Date().getDate(),
