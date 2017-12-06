@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { Ad, BodyType, IAdModel, Liquidity, Mark, Model } from '../src/db/';
-import { calculateAllLiquidity } from '../src/services';
+import { calculateAllLiquidity,getMostLiquidAds } from '../src/services';
 import * as AdService from '../src/services//adService';
 import * as parserUtils from '../src/utils/parserUtils';
 
@@ -13,7 +13,7 @@ import * as adRepository from '../src/repositories/adRepository';
 import * as bodyTypeRepository from '../src/repositories/bodyTypeRepository';
 import * as tempAaRepository from '../src/repositories/tempAdRepository';
 
-describe('Calculation liquidity of all cars', () => {
+describe.only('Calculation liquidity of all cars', () => {
   const adFields = {
     KMS: 20000,
     LAST_TIME_UP_DATE: new Date().getDate(),
@@ -101,6 +101,11 @@ describe('Calculation liquidity of all cars', () => {
       const liqu = await Liquidity.find({});
       assert.equal(liqu.length, 2);
       assert.equal(liqu[0].liquidityCoefficient, 0.5);
+    });
+
+    it('should get five first most liuid ads', async () => {
+      const mostLiquid = await getMostLiquidAds();
+      assert.equal(mostLiquid.length, 2);
     });
 
     after(async () => {
