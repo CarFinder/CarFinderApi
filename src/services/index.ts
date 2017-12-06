@@ -193,7 +193,6 @@ export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyType
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;
-
   return Promise.all(
     adsFromDb.map(async ad => {
       const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
@@ -249,7 +248,7 @@ export const calculateAllLiquidity = async () => {
   await async.each(models, async model => {
     for (const bodyType of bodyTypes) {
       const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
-      const ads = await getAds({ modelId: model.id, bodyTypeId: bodyType.id }, null);
+      const ads = await getAds({ modelId: [model.id], bodyTypeId: [bodyType.id] }, null);
       const adPrices = ads.map((item: any) => item.price);
       adPrices.sort((item: any, nextItem: any) => {
         if (item > nextItem) {

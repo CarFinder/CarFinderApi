@@ -10,7 +10,8 @@
     "test": "env-cmd .env mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
     "debug": "tsc --watch",
     "test:coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts && nyc report --reporter=text-lcov | coveralls",
-    "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts"
+    "coverage": "nyc  mocha --env NODE_ENV=test --timeout 15000 -r ts-node/register spec/**/*.ts",
+    "build:container":"./build-container.sh"
   },
   "engines": {
     "node": "8.9.x"
