@@ -239,13 +239,12 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
   }
 };
 
-
 export const calculateAllLiquidity = async () => {
   const bodyTypes = await getAllBodyTypes();
   const models = await getModels();
   const totalSold = await AdService.countSoldAds();
 
-  await async.each(models, async model => {
+  for (const model of models) {
     for (const bodyType of bodyTypes) {
       const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
       const ads = await getAds({ modelId: [model.id], bodyTypeId: [bodyType.id] }, null);
@@ -271,7 +270,7 @@ export const calculateAllLiquidity = async () => {
         await liquidityService.save(liquidityStatistic);
       }
     }
-  });
+  }
 };
 
 export const calculateLiquidity = async (filter: any) => {
@@ -279,4 +278,3 @@ export const calculateLiquidity = async (filter: any) => {
 };
 
 export { AdService, FilterService, StatsService, UserService };
-

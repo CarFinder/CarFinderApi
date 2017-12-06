@@ -17,7 +17,7 @@ export const getByName = async (name: string) => {
 
 export const getById = async (id: string) => {
   return await Model.findOne({_id: id});
-}
+};
 
 export const getByNameAndMarkId = async (name: string, markId: string) => {
   return await Model.findOne({ markId, name });
