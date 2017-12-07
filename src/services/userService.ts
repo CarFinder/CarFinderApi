@@ -97,7 +97,7 @@ export const restorePassword = async (password: string, email: string) => {
 export const updateImage = async (email: string, userData: IUserImage) => {
   try {
     const user = await get(email);
-    const imageUrl = uploadImage(user.id, userData);
+    const imageUrl = await uploadImage(user.id, userData);
     return imageUrl;
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);

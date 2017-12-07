@@ -190,18 +190,17 @@ export const encryptPassword = async (password: string) => {
   return encryptedPassword;
 };
 
-export const uploadImage = async (id: string, userData: IUserImage) => {
+export const uploadImage = async (id: string, userData: any) => {
   const s3Bucket = new AWS.S3();
-  const buf = new Buffer(userData.image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-  const params = {
-    ACL: 'public-read',
-    Body: buf,
-    Bucket: bucket,
-    ContentEncoding: 'base64',
-    ContentType: userData.type,
-    Key: id
-  };
   try {
+    const params = {
+      ACL: 'public-read',
+      Body: userData.buffer,
+      Bucket: bucket,
+      ContentEncoding: userData.encoding,
+      ContentType: userData.mimetype,
+      Key: id
+    };
     const uploadData = await s3Bucket.upload(params).promise();
     userData.image = uploadData.Location;
     return userData;
