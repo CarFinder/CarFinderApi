@@ -191,6 +191,7 @@ export const encryptPassword = async (password: string) => {
 };
 
 export const uploadImage = async (id: string, userData: any) => {
+  const updatedUserData = { image: '' };
   const s3Bucket = new AWS.S3();
   try {
     const params = {
@@ -202,8 +203,8 @@ export const uploadImage = async (id: string, userData: any) => {
       Key: id
     };
     const uploadData = await s3Bucket.upload(params).promise();
-    userData.image = uploadData.Location;
-    return userData;
+    updatedUserData.image = uploadData.Location;
+    return updatedUserData;
   } catch {
     throw new RequestError(codeErrors.IMAGE_UPLOAD_ERROR);
   }
