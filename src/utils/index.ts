@@ -11,7 +11,7 @@ import {
   mail,
   url
 } from '../config/config';
-import { IUser, IUserImage } from '../interfaces/index';
+import { IUser } from '../interfaces/index';
 import { DatabaseError, RequestError, SecureError } from './errors';
 
 const transport = nodemailer.createTransport(mail);
