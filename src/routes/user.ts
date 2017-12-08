@@ -20,7 +20,6 @@ import { getToken } from '../utils/';
 
 const router = new Router();
 const storage = multer.memoryStorage();
-
 const upload = multer({ storage });
 
 router.post('/register', signUp);
