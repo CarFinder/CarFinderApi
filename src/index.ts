@@ -47,11 +47,11 @@ const parse = schedule.scheduleJob(triggerSchedule, async () => {
 });
 
   cluster.on('online', (worker) => {
-    global.console.log('Worker ' + worker.process.pid + ' is online');
+    global.console.log(`Worker   ${worker.process.pid}  is online`);
   });
 
   cluster.on('exit', (worker) => {
-    global.console.log('Worker %d died :(', worker.id);
+    global.console.log(`Worker ${worker.id} died :(` );
     cluster.fork();
   });
 

@@ -36,7 +36,8 @@ export const getMostLiquid = async (ctx: Koa.Context) => {
     const mostLiquid = await getMostLiquidAds();
     ctx.body = mostLiquid;
   } catch (e) {
-    ctx.body = e;
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = {error: new RequestError(codeErrors.REQUIRED_FIELD).data};
   }
 };
 

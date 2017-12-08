@@ -28,7 +28,6 @@ export const updateAds = async () => {
             sourceName: doc.sourceName,
             sourceUrl: doc.sourceUrl,
             year: doc.year
-
           }
         }
       );
