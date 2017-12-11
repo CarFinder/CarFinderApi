@@ -107,6 +107,39 @@ describe('Repositories', () => {
       });
     });
   });
+  describe('BodyType Repositories', () => {
+    const bodyTypes = [
+      {
+        name: 'BodyTypeRepoTest1'
+      },
+      {
+        name: 'BodyTypeRepoTest2'
+      }
+    ];
+    const bodyTypeEntry = {
+      name: 'BodyTypeRepoTest3'
+    };
+    before(async () => {
+      await BodyType.create(bodyTypes);
+    });
+    it('shoud save a new body type entry', async () => {
+      await bodyTypeRepository.save(bodyTypeEntry);
+      const result = await bodyTypeRepository.getByName(bodyTypeEntry.name);
+      assert.equal(result.name, bodyTypeEntry.name);
+      assert.exists(result._id);
+    });
+    it('shoud return an array of all bodytypes', async () => {
+      const result = await bodyTypeRepository.getAll();
+      assert.lengthOf(result, 3);
+    });
+    after(async () => {
+      await BodyType.remove({
+        name: {
+          $in: [bodyTypes[0].name, bodyTypes[1].name, bodyTypeEntry.name]
+        }
+      });
+    })
+  });
   describe('Ad Repositories', () => {
     const ads: any[] = [
       {
