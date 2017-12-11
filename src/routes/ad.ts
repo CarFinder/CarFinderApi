@@ -8,6 +8,6 @@ const router = new Router();
 router.post('/', getAds);
 router.get('/saved', getSavedSearchAds);
 router.get('/most_liquid', getMostLiquid);
-router.post('/get-liquidity', getLiquidity);
+router.post('/get_liquidity', getLiquidity);
 
 export default router;
