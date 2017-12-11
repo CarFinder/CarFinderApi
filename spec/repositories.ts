@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { codeErrors } from '../src/config/config';
 import { Ad, BodyType, Mark, Model } from '../src/db';
 import { User } from '../src/db';
 import { IAd } from '../src/interfaces';
@@ -21,22 +22,31 @@ describe('Repositories', () => {
         name: 'MarkRepoTest666'
       }
     ];
+    const markEntry = {
+      name: 'MarkRepoTest999'
+    };
     before(async () => {
       await Mark.create(marks);
     });
+    it('should save a new mark entry', async () => {
+      await markRepository.update(markEntry);
+      const savedMark = await markRepository.getByName(markEntry.name);
+      assert.equal(savedMark.name, markEntry.name);
+      assert.exists(savedMark._id);
+    });
     it('should return an array of marks', async () => {
       const result = await markRepository.getAll();
-      assert.lengthOf(result, 3);
+      assert.lengthOf(result, 4);
     });
     it('should return an object with mark if name passed is valid', async () => {
       const result = await markRepository.getByName(marks[0].name);
-      assert(result.name, marks[0].name);
+      assert.equal(result.name, marks[0].name);
       assert.exists(result._id);
     });
     after(async () => {
       await Mark.remove({
         name: {
-          $in: [marks[0].name, marks[1].name, marks[2].name]
+          $in: [marks[0].name, marks[1].name, marks[2].name, markEntry.name]
         }
       });
     });
@@ -56,16 +66,24 @@ describe('Repositories', () => {
         name: 'ModelRepoTest666'
       }
     ];
-    before(async () => {
-      await Model.create(models);
+    it('should save a new mark entries', async () => {
+      await modelRepository.update(models);
+      const savedModels = await modelRepository.getAll();
+      assert.lengthOf(savedModels, 3);
     });
     it('should return an array of models', async () => {
       const result = await modelRepository.getAll();
       assert.lengthOf(result, 3);
     });
+    it('should return a model, if markId and name are valid', async () => {
+      const result = await modelRepository.getByNameAndMarkId(models[0].name, models[0].markId);
+      assert.equal(result.name, models[0].name);
+      assert.equal(result.markId, models[0].markId);
+      assert.exists(result._id);
+    });
     it('should return an object with model if name passed is valid', async () => {
       const result = await modelRepository.getByName(models[0].name);
-      assert(result.name, models[0].name);
+      assert.equal(result.name, models[0].name);
       assert.exists(result._id);
     });
     after(async () => {
@@ -109,22 +127,45 @@ describe('Repositories', () => {
         year: 2017
       }
     ];
+    const adEntry = {
+      bodyTypeId: 'repotestbodytypeidforad4',
+      creationDate: new Date().getDate(),
+      lastTimeUpDate: new Date().getDate(),
+      markId: 'repotestmarkididforad4',
+      modelId: 'repotestmodelididforad4',
+      sourceName: 'repotestsourcenameidforad4',
+      sourceUrl: 'repotestsourceurlidforad4',
+      year: 2017
+    };
     before(async () => {
       await Ad.create(ads);
     });
+    it('should save a new ad entry', async () => {
+      await adRepository.save(adEntry);
+      const savedAd = await adRepository.getAdByURL(adEntry.sourceUrl);
+      assert.equal(savedAd.sourceUrl, savedAd.sourceUrl);
+      assert.exists(savedAd._id);
+    });
+    it('should throw a database error, if ad entry is not valid', async () => {
+      try {
+        await adRepository.save(adEntry);
+      } catch (error) {
+        assert.equal(error.code, codeErrors.MONGO_DUPLICATE_ERROR);
+      }
+    });
     it('should return an array of ads', async () => {
       const result = await adRepository.getAll();
-      assert.lengthOf(result, 3);
+      assert.lengthOf(result, 5);
     });
     it('should return an object with model if name passed is valid', async () => {
       const result = await adRepository.getAdByURL(ads[0].sourceUrl);
-      assert(result.sourceUrl, ads[0].sourceUrl);
+      assert.equal(result.sourceUrl, ads[0].sourceUrl);
       assert.exists(result._id);
     });
     after(async () => {
       await Ad.remove({
         sourceUrl: {
-          $in: [ads[0].sourceUrl, ads[1].sourceUrl, ads[2].sourceUrl]
+          $in: [ads[0].sourceUrl, ads[1].sourceUrl, ads[2].sourceUrl, adEntry.sourceUrl]
         }
       });
     });
