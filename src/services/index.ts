@@ -249,16 +249,7 @@ export const calculateAllLiquidity = async () => {
       const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
       const ads = await getAds({ modelId: [model.id], bodyTypeId: [bodyType.id] }, null);
       const adPrices = ads.map((item: any) => item.price);
-      adPrices.sort((item: any, nextItem: any) => {
-        if (item > nextItem) {
-          return 1;
-        }
-        if (item < nextItem) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
+      _.sortBy(adPrices,[(price:number)=>  price])
       const medianIndex = Math.round(adPrices.length / 2);
       if (totalSoldInConfig !== 0) {
         const liquidityStatistic = {
