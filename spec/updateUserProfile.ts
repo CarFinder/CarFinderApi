@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import { assert, expect } from 'chai';
 import chaiHttp = require('chai-http');
+import * as formData from 'form-data';
 import * as HttpStatus from 'http-status-codes';
 import * as mongoose from 'mongoose';
 import * as passport from 'passport';
@@ -120,9 +121,20 @@ describe('User Profile', () => {
   });
 
   describe('Update user image', () => {
-    const imageData = {
-      image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-      type: 'image/gif'
+    const imageData = new formData();
+    const userImage =
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    const imageBuffer = new Buffer(userImage, 'base64');
+    imageData.append('file', imageBuffer);
+    imageData.append('name', 'av.gif');
+
+    const imageFile = {
+      buffer: imageBuffer,
+      encoding: '7bit',
+      fieldname: 'file',
+      mimetype: 'image/gif',
+      originalname: 'av.gif',
+      size: 56
     };
 
     beforeEach(async () => {
@@ -141,8 +153,11 @@ describe('User Profile', () => {
       const response = await chai
         .request(app)
         .post('/api/user/update-user-image')
-        .set('content-type', 'application/json')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
         .set('authorization', `Bearer ${token}`)
+        .field('Content-Type', 'multipart/form-data')
+        .field('fileName', 'av.gif')
+        .attach('file', imageBuffer, 'av.gif')
         .send(imageData);
       const updatedUser = decodeToken(response.body.token);
       updatedUser.should.have.property('email').equal(user.email);
@@ -151,8 +166,8 @@ describe('User Profile', () => {
     });
 
     it('should return an object with valid url', async () => {
-      const res = await updateImage(user.email, imageData);
-      expect(res).to.have.all.keys('image', 'type');
+      const res = await updateImage(user.email, imageFile);
+      expect(res).to.have.all.keys('image');
       expect(res.image).to.match(/s3(.*?)amazonaws/i);
     });
 
