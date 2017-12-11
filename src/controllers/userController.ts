@@ -122,9 +122,10 @@ export const updateSettings = async (ctx: Koa.Context) => {
 };
 
 export const updateImage = async (ctx: Koa.Context) => {
-  const userData = ctx.request.body;
   const userToken = ctx.request.header.authorization.split(' ')[1];
   try {
+    // @ts-ignore
+    const userData = ctx.req.file;
     const user = await updateUserImage(userData, userToken);
     const token = getToken(transformDataForToken(user));
     ctx.status = HttpStatus.OK;
