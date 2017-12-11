@@ -1,6 +1,7 @@
 import * as bluebird from 'bluebird';
 import * as dotenv from 'dotenv';
 import * as schedule from 'node-schedule';
+import winstLogger from './utils/logger';
 dotenv.config();
 import * as https from 'https';
 import * as Koa from 'koa';
@@ -23,7 +24,6 @@ const cors = require('@koa/cors');
 
 import { Api } from './parsers';
 
-
 import * as cluster from 'cluster';
 import * as os from 'os';
 
@@ -33,29 +33,27 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-const parse = schedule.scheduleJob(triggerSchedule, async () => {
-  try {
-    torTriggerer.run();
-    await updateDBData();
-  } catch (err) {
-    sendMessageToSlack(`The parser has been fallen with message: ${err}`);
-  } finally {
-    torTriggerer.close();
-  }
-  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
-  await calculateAllLiquidity();
-});
-
-  cluster.on('online', (worker) => {
-    global.console.log(`Worker   ${worker.process.pid}  is online`);
+  const parse = schedule.scheduleJob(triggerSchedule, async () => {
+    try {
+      torTriggerer.run();
+      await updateDBData();
+    } catch (err) {
+      sendMessageToSlack(`The parser has been fallen with message: ${err}`);
+    } finally {
+      torTriggerer.close();
+    }
+    await https.get(process.env.HEALTH_CHECK_NEWSLETTER);
+    await calculateAllLiquidity();
   });
 
-  cluster.on('exit', (worker) => {
-    global.console.log(`Worker ${worker.id} died :(` );
+  cluster.on('online', worker => {
+    winstLogger.log('info', `Worker   ${worker.process.pid}  is online`);
+  });
+
+  cluster.on('exit', worker => {
+    winstLogger.log('warn', `Worker ${worker.id} died :(`);
     cluster.fork();
   });
-
-
 } else {
   const server = new Koa();
 

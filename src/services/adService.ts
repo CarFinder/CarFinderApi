@@ -41,7 +41,7 @@ export const getAdByModelId = async (modelId: string) => {
 export const getSoldAd = async (
   modelsBuffer: string[],
   bodyTypeIdsBuffer: string[]
-): Promise<any> => {
+): Promise<IAd> => {
   const payload = {
     bodyTypeId: { $nin: bodyTypeIdsBuffer },
     isSold: true,

@@ -89,6 +89,7 @@
     "@types/request": "^2.0.7",
     "@types/request-promise": "^4.1.39",
     "@types/slack-node": "^0.1.2",
+    "@types/winston": "^2.3.7",
     "async": "^2.6.0",
     "aws-sdk": "^2.139.0",
     "axios": "^0.16.2",
@@ -118,6 +119,7 @@
     "slack-node": "^0.1.8",
     "socks5-https-client": "^1.2.1",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "winston": "^2.4.0"
   }
 }
