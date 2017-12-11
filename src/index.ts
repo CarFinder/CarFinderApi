@@ -9,7 +9,7 @@ import * as jwt from 'koa-jwt';
 import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
-import { db, healthCheckUrls, port, triggerSchedule } from './config/config';
+import { db, port, triggerSchedule } from './config/config';
 import routes from './routes';
 import { sendNewsletter } from './services';
 import { updateDBData } from './services';
