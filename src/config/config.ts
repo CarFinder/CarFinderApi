@@ -17,7 +17,7 @@ export const mail = {
 // see more adout config in dosc for node-schedule
 export const triggerSchedule = '13 13 * * 2';
 
-export const url = process.env.NOVE_ENV === 'production' ? 'carfinder.github.io' : 'localhost:3001';
+export const url = process.env.NOVE_ENV === 'production' ? process.env.CLIENT_HOST_URL_PROD : process.env.CLIENT_HOST_URL_DEV;
 
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,

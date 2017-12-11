@@ -31,9 +31,8 @@ const parse = schedule.scheduleJob(triggerSchedule, async () => {
   } finally {
     torTriggerer.close();
   }
-  await https.get(healthCheckUrls.UPDATE);
   await sendNewsletter();
-  await https.get(healthCheckUrls.NEWSLETTER);
+  await https.get(process.env.HEALTH_CHECK_NEWSLETTER);
 });
 
 mongoose.connect(db, { useMongoClient: true });
