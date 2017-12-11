@@ -66,14 +66,27 @@ describe('Repositories', () => {
         name: 'ModelRepoTest666'
       }
     ];
+    const modelEntry = [
+      {
+        markId: 'modelrepotest4',
+        name: 'ModelRepoTest999'
+      },
+      {
+        markId: 'modelrepotest5',
+        name: 'ModelRepoTest777'
+      },
+    ]
+    before(async () => {
+      await Model.create(models);
+    })
     it('should save a new mark entries', async () => {
-      await modelRepository.update(models);
+      await modelRepository.update(modelEntry);
       const savedModels = await modelRepository.getAll();
-      assert.lengthOf(savedModels, 3);
+      assert.lengthOf(savedModels, 5);
     });
     it('should return an array of models', async () => {
       const result = await modelRepository.getAll();
-      assert.lengthOf(result, 3);
+      assert.lengthOf(result, 5);
     });
     it('should return a model, if markId and name are valid', async () => {
       const result = await modelRepository.getByNameAndMarkId(models[0].name, models[0].markId);
@@ -89,7 +102,7 @@ describe('Repositories', () => {
     after(async () => {
       await Model.remove({
         name: {
-          $in: [models[0].name, models[1].name, models[2].name]
+          $in: [models[0].name, models[1].name, models[2].name, modelEntry[0].name, modelEntry[1].name]
         }
       });
     });
