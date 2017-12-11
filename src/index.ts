@@ -18,6 +18,9 @@ import { torTriggerer } from './utils/torTriggerer';
 
 import { sendMessageToSlack } from './utils/slack';
 
+// tslint:disable-next-line:no-var-requires
+const cors = require('@koa/cors');
+
 import { Api } from './parsers';
 
 const server = new Koa();
@@ -40,6 +43,7 @@ mongoose.set('debug', true);
 
 (mongoose as any).Promise = bluebird;
 
+server.use(cors());
 server.use(bodyParser());
 server.use(passport.initialize());
 server.use(logger());
