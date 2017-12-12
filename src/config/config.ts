@@ -19,6 +19,8 @@ export const triggerSchedule = '13 13 * * 2';
 
 export const url = 'localhost:3001';
 
+export const maxFileLength = 2097152;
+
 export const codeErrors = {
   ACCOUNT_NOT_ACTIVATED: 103,
   AUTH_ERROR: 102,

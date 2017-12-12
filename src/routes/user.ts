@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import * as multer from 'koa-multer';
 import * as passport from 'koa-passport';
 import * as Router from 'koa-router';
+import { maxFileLength } from '../config/config';
 import {
   confirmEmail,
   forgotPassword,
@@ -20,7 +21,12 @@ import { getToken } from '../utils/';
 
 const router = new Router();
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({
+  limits: {
+    fileSize: maxFileLength
+  },
+  storage
+});
 
 router.post('/register', signUp);
 
