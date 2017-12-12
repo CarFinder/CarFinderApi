@@ -1,5 +1,5 @@
 import { codeErrors, emailActions } from '../config/config';
-import { IMessage, IUser, IUserImage } from '../interfaces/index';
+import { IMessage, IUser } from '../interfaces/index';
 import { create, get, update } from '../repositories/userRepository';
 import { DatabaseError, RequestError, SecureError } from '../utils/errors';
 import { encryptPassword, sendMail, transformDataForMongo, uploadImage } from '../utils/index';
@@ -94,10 +94,10 @@ export const restorePassword = async (password: string, email: string) => {
   }
 };
 
-export const updateImage = async (email: string, userData: IUserImage) => {
+export const updateImage = async (email: string, userData: any) => {
   try {
     const user = await get(email);
-    const imageUrl = uploadImage(user.id, userData);
+    const imageUrl = await uploadImage(user.id, userData);
     return imageUrl;
   } catch (error) {
     throw new SecureError(codeErrors.INCORRECT_EMAIL_OR_PASS);

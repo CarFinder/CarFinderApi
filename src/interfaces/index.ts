@@ -90,11 +90,6 @@ export interface ISavedFilterAds {
   ads: IAdForClient[];
 }
 
-export interface IUserImage {
-  image: string;
-  type: string;
-}
-
 export interface IStats {
   ads: number;
   users: number;

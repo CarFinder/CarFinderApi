@@ -11,9 +11,8 @@ import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
-import { TempAd } from './db';
 import routes from './routes';
-import { calculateAllLiquidity } from './services';
+import { calculateAllLiquidity, sendNewsletter  } from './services';
 import { updateDBData } from './services';
 import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
 import { sendMessageToSlack } from './utils/slack';
@@ -42,6 +41,7 @@ if (cluster.isMaster) {
     } finally {
       torTriggerer.close();
     }
+    await sendNewsletter();
     await https.get(process.env.HEALTH_CHECK_NEWSLETTER);
     await calculateAllLiquidity();
   });
