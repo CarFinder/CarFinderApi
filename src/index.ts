@@ -10,8 +10,8 @@ import * as logger from 'koa-logger';
 import * as passport from 'koa-passport';
 import * as mongoose from 'mongoose';
 import { db, port, triggerSchedule } from './config/config';
-import { TempAd } from './db';
 import routes from './routes';
+import { sendNewsletter } from './services';
 import { updateDBData } from './services';
 import { updateAvByData, updateOnlinerData } from './utils/parserUtils';
 import { torTriggerer } from './utils/torTriggerer';
@@ -34,7 +34,8 @@ const parse = schedule.scheduleJob(triggerSchedule, async () => {
   } finally {
     torTriggerer.close();
   }
-  await https.get('https://hchk.io/c12a23b6-276d-4269-9316-d3353af47052');
+  await sendNewsletter();
+  await https.get(process.env.HEALTH_CHECK_NEWSLETTER);
 });
 
 mongoose.connect(db, { useMongoClient: true });
