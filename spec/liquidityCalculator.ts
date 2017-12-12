@@ -53,7 +53,9 @@ describe('Calculate liquidity', () => {
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: moment('2017-09-10'),
+        soldDate: moment()
+          .subtract(1, 'day')
+          .format(),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 0,
         year: adFields.YEAR
@@ -67,7 +69,9 @@ describe('Calculate liquidity', () => {
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: moment('2017-11-11'),
+        soldDate: moment()
+          .subtract(10, 'day')
+          .format(),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 1,
         year: adFields.YEAR
@@ -81,7 +85,9 @@ describe('Calculate liquidity', () => {
         markId: mark._id,
         modelId: model._id,
         price: adFields.PRICE,
-        soldDate: moment('2017-11-14'),
+        soldDate: moment()
+          .subtract(2, 'month')
+          .format(),
         sourceName: adFields.SOURCE_NAME,
         sourceUrl: adFields.SOURCE_URL + 2,
         year: adFields.YEAR
@@ -112,8 +118,5 @@ describe('Calculate liquidity', () => {
     expect(data).to.have.all.keys('averageTime', 'result', 'total');
     expect(data.result).to.equal(2);
     expect(data.total).to.equal(2);
-    expect(data.averageTime)
-      .to.be.above(340)
-      .and.below(350);
   });
 });
