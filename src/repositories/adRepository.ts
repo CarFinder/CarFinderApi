@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
-import { codeErrors } from '../config/config';
+import { codeErrors,UNVOLIENT_LIMIT } from '../config/config';
 import { Ad, IAdModel, TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
@@ -114,8 +114,14 @@ export const get = async (
   skip?: number,
   sort?: any
 ): Promise<IAdModel[]> => {
+  let limitForQuery:any;
+  if(limit === UNVOLIENT_LIMIT ) {
+    limitForQuery = UNVOLIENT_LIMIT;
+  } else {
+    limitForQuery = limit;
+  }
   return (await Ad.find(filter || {})
-    .limit(limit === null ? null : limit || 20)
+    .limit(limitForQuery || 20)
     .skip(skip || 0)
     .sort(sort || { year: 1 })) as IAdModel[];
 };

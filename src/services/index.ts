@@ -1,6 +1,5 @@
 import * as async from 'async';
-import { codeErrors, limitForSavedFilters } from '../config/config';
-import { sourceCodes } from '../config/config';
+import { codeErrors, limitForSavedFilters,sourceCodes, UNVOLIENT_LIMIT  } from '../config/config';
 import { IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers';
@@ -247,7 +246,7 @@ export const calculateAllLiquidity = async () => {
   for (const model of models) {
     for (const bodyType of bodyTypes) {
       const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
-      const ads = await getAds({ modelId: [model.id], bodyTypeId: [bodyType.id] }, null);
+      const ads = await getAds({ modelId: [model.id], bodyTypeId: [bodyType.id] }, UNVOLIENT_LIMIT);
       const adPrices = ads.map((item: any) => item.price);
       _.sortBy(adPrices,[(price:number)=>  price])
       const medianIndex = Math.round(adPrices.length / 2);

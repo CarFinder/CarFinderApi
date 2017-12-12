@@ -38,6 +38,10 @@ export enum sourceCodes {
   ONLINER = 1
 }
 
+// unviolent limit in mongo query
+
+export const UNVOLIENT_LIMIT:any = null;
+
 export const ONLINER_URL: string = `https://ab.onliner.by/`;
 export const AV_URL: string = `https://cars.av.by/`;
 
