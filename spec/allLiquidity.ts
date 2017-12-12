@@ -1,4 +1,6 @@
 import { assert, expect } from 'chai';
+import * as chai from 'chai';
+import chaiHttp = require('chai-http');
 import { Ad, BodyType, IAdModel, Liquidity, Mark, Model } from '../src/db/';
 import { calculateAllLiquidity,getMostLiquidAds } from '../src/services';
 import * as AdService from '../src/services//adService';
@@ -12,6 +14,14 @@ import { IBodyType, IModel } from '../src/interfaces';
 import * as adRepository from '../src/repositories/adRepository';
 import * as bodyTypeRepository from '../src/repositories/bodyTypeRepository';
 import * as tempAaRepository from '../src/repositories/tempAdRepository';
+
+import * as passport from "passport";
+import * as sinon from "sinon";
+import app from "./index";
+
+import * as HttpStatus from "http-status-codes";
+
+chai.use(chaiHttp);
 
 describe('Calculation liquidity of all cars', () => {
   const adFields = {
@@ -31,8 +41,12 @@ describe('Calculation liquidity of all cars', () => {
 
   let bodyTypeIds: IBodyType[];
   let markId: string;
+  let passportStub: sinon.SinonStub;
 
   before(async () => {
+    passportStub = sinon.stub(passport, 'authenticate').returns(async (ctx: any, next: any) => {
+      await next();
+    });
     // inserting body types
     for (const bodyType of bodies) {
       await bodyTypeRepository.save({ name: bodyType });
@@ -108,7 +122,15 @@ describe('Calculation liquidity of all cars', () => {
       assert.equal(mostLiquid.length, 2);
     });
 
+    it('should have status OK', async()=> {
+      const response = await chai
+        .request(app)
+        .get('/api/posts/most_liquid')
+      response.should.have.status(HttpStatus.OK);
+    });
+
     after(async () => {
+      passportStub.restore();
       await Liquidity.remove({});
     });
   });
