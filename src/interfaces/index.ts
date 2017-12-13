@@ -9,6 +9,13 @@ export interface IUser {
   subscription?: string;
 }
 
+export interface ILiquidity {
+  bodyTypeId: string;
+  liquidityCoefficient: number;
+  median: number;
+  modelId: string;
+}
+
 export interface IErrorData {
   type: string;
   code: number;

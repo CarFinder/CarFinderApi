@@ -1,5 +1,5 @@
-import { codeErrors, limitForSavedFilters } from '../config/config';
-import { sourceCodes } from '../config/config';
+import * as async from 'async';
+import { codeErrors, limitForSavedFilters,sourceCodes, UNVOLIENT_LIMIT  } from '../config/config';
 import { IAdForClient, IMessage, ISavedFilterAds, IUser } from '../interfaces/index';
 import { ITransformedMarks } from '../interfaces/parserInterface';
 import { Api } from '../parsers';
@@ -18,10 +18,11 @@ import {
   updateOnlinerData
 } from '../utils/parserUtils';
 import * as AdService from './adService';
-import { updateBodyTypes } from './bodyTypeService';
+import { getAllBodyTypes, getBodyTypeById, updateBodyTypes } from './bodyTypeService';
 import * as FilterService from './filterService';
-import { getAllMarks, updateMarks } from './markService';
-import { updateModels } from './modelService';
+import * as liquidityService from './liquidService';
+import { getAllMarks, getMarkById, updateMarks } from './markService';
+import { getModelById, getModels, updateModels } from './modelService';
 import * as StatsService from './statsService';
 import { addTempAds, dropCollection, updateAds } from './tempAdService';
 import {
@@ -40,6 +41,37 @@ import {
 const _ = require('lodash');
 
 import * as UserService from './userService';
+
+export const getMostLiquidAds = async (): Promise<any> => {
+  const topLiquidity = await liquidityService.getTopFive();
+  const liquidAdsData = [];
+  for (const liquidModel of topLiquidity) {
+    // get model mark bodytype and images
+    const model = await getModelById(liquidModel.modelId);
+    const body = await getBodyTypeById(liquidModel.bodyTypeId);
+    const mark = await getMarkById(model.markId);
+    const ad = await AdService.getAdByModelId(model.id);
+    const url = `/catalog?mark=${model.markId}&model=${liquidModel.modelId}&body=${
+      liquidModel.bodyTypeId
+    }`;
+    const filter = {
+      bodyTypeId: liquidModel.bodyTypeId,
+      markId: mark.id,
+      modelId: liquidModel.modelId
+    };
+
+    const liquidAdData = {
+      body: body.name,
+      image: ad.images[0],
+      mark: mark.name,
+      median: liquidModel.median,
+      model: model.name,
+      url
+    };
+    liquidAdsData.push(liquidAdData);
+  }
+  return liquidAdsData;
+};
 
 export const registerUser = async (payload: IUser) => {
   await register(payload);
@@ -162,7 +194,6 @@ export const updateDBDateFromAvBy = async (marks: any[], models: any[], bodyType
 export const getAds = async (filter?: any, limit?: number, skip?: number, sort?: any) => {
   const adsFromDb = await AdService.getAds(filter, limit, skip, sort);
   const length = adsFromDb.length;
-
   return Promise.all(
     adsFromDb.map(async ad => {
       const bodyType = await FilterService.getBodyTypeById(ad.bodyTypeId);
@@ -209,6 +240,32 @@ export const getSavedFiltersAds = async (user: IUser): Promise<ISavedFilterAds[]
     throw new DatabaseError(codeErrors.INTERNAL_DB_ERROR);
   }
 };
+
+
+export const calculateAllLiquidity = async () => {
+  const bodyTypes = await getAllBodyTypes();
+  const models = await getModels();
+  const totalSold = await AdService.countSoldAds();
+
+  for (const model of models) {
+    for (const bodyType of bodyTypes) {
+      const totalSoldInConfig = await AdService.countSoldWithFilter(model.id, bodyType.id);
+      const ads = await getAds({modelId: [model.id], bodyTypeId: [bodyType.id]}, UNVOLIENT_LIMIT);
+      const adPrices = ads.map((item: any) => item.price);
+      _.sortBy(adPrices, [(price: number) => price])
+      const medianIndex = Math.round(adPrices.length / 2);
+      if (totalSoldInConfig !== 0) {
+        const liquidityStatistic = {
+          bodyTypeId: bodyType.id,
+          liquidityCoefficient: totalSoldInConfig / totalSold,
+          median: adPrices[medianIndex],
+          modelId: model.id
+        };
+        await liquidityService.save(liquidityStatistic);
+      }
+    }
+  }
+}
 
 export const sendNewsletter = async () => {
   const users: IUser[] = await getAllUsersByField({ subscription: true });

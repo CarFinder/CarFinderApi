@@ -1,6 +1,6 @@
 import { IBodyTypeModel } from '../db/';
 import { IBodyType } from '../interfaces/';
-import { getAll, getByName, save } from '../repositories/bodyTypeRepository';
+import { getAll, getById, getByName, save } from '../repositories/bodyTypeRepository';
 
 export const updateBodyTypes = async (bodyTypes: string[]) => {
   const knownBodyTypes = await getAll();
@@ -25,4 +25,12 @@ const addNew = async (knownBodyTypes: IBodyType[], type: string) => {
 
 export const getBodyTypeByName = async (name: string) => {
   return await getByName(name);
+};
+
+export const getAllBodyTypes = async () => {
+  return await getAll();
+};
+
+export const getBodyTypeById = async (id: string) => {
+  return await getById(id);
 };

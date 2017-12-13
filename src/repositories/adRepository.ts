@@ -1,11 +1,19 @@
 import * as moment from 'moment';
 import * as mongoose from 'mongoose';
 import { Transform } from 'stream';
-import { codeErrors } from '../config/config';
+import { codeErrors,UNVOLIENT_LIMIT } from '../config/config';
 import { Ad, IAdModel, TempAd } from '../db/';
 import { handleDatabaseError } from '../utils';
 import { ControllUpdateEmitter } from '../utils/controllEvents';
 import { SecureError } from '../utils/errors';
+
+export const getSold = async (payload: any) => {
+  return await Ad.findOne(payload);
+};
+
+export const getByModelId = async (modelId: string) => {
+  return await Ad.findOne({ modelId });
+};
 
 export const markSeltAds = async () => {
   const response = await TempAd.find({}, { sourceUrl: 1, _id: 0 });
@@ -28,6 +36,10 @@ export const save = async (ad: object) => {
       handleDatabaseError(err);
     }
   });
+};
+
+export const countSold = async (payload: any) => {
+  return await Ad.count(payload);
 };
 
 export const getAll = async () => {
@@ -102,8 +114,14 @@ export const get = async (
   skip?: number,
   sort?: any
 ): Promise<IAdModel[]> => {
+  let limitForQuery:any;
+  if(limit === UNVOLIENT_LIMIT ) {
+    limitForQuery = UNVOLIENT_LIMIT;
+  } else {
+    limitForQuery = limit;
+  }
   return (await Ad.find(filter || {})
-    .limit(limit || 20)
+    .limit(limitForQuery || 20)
     .skip(skip || 0)
     .sort(sort || { year: 1 })) as IAdModel[];
 };

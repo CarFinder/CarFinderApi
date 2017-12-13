@@ -6,6 +6,7 @@ import {
   AdService,
   calculateLiquidity,
   getAds as getAdsFromDb,
+  getMostLiquidAds,
   getSavedFiltersAds
 } from '../services/';
 import { DatabaseError, RequestError } from '../utils/errors';
@@ -27,6 +28,16 @@ export const getAds = async (ctx: Koa.Context) => {
       ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = { error: new DatabaseError(codeErrors.INTERNAL_DB_ERROR).data };
     }
+  }
+};
+
+export const getMostLiquid = async (ctx: Koa.Context) => {
+  try {
+    const mostLiquid = await getMostLiquidAds();
+    ctx.body = mostLiquid;
+  } catch (e) {
+    ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+    ctx.body = {error: new RequestError(codeErrors.REQUIRED_FIELD).data};
   }
 };
 

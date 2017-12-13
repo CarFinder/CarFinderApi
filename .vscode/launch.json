@@ -15,7 +15,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-      "args": ["-r", "ts-node/register", "${workspaceRoot}/spec/**/*.ts"],
+      "args": ["-r", "ts-node/register", "${workspaceRoot}/spec/**/*.ts", "--no-timeouts"],
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
       "internalConsoleOptions": "openOnSessionStart",

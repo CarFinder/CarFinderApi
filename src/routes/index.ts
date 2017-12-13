@@ -1,5 +1,6 @@
 import * as Router from 'koa-router';
 
+import { getAds, getMostLiquid, getSavedSearchAds } from '../controllers/adController';
 import { jwtLogin } from '../passport/passportMiddleware';
 
 import ad from './ad';

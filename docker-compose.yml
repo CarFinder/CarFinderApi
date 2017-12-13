@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+   
+    node:
+        image: node:9
+        working_dir: /src
+        command: "npm start"
+        # map host project folder to /app container folder
+        volumes:
+            - .:/src   
+        # which port should be accessible from the outside?
+        ports:
+            - 2999

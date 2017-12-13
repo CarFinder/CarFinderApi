@@ -9,6 +9,8 @@ import * as markRepository from '../src/repositories/markRepository';
 import * as modelRepository from '../src/repositories/modelRepository';
 import * as userRepository from '../src/repositories/userRepository';
 
+import {error} from "util";
+
 describe('Repositories', () => {
   describe('Mark Repositories', () => {
     const marks = [
@@ -119,7 +121,7 @@ describe('Repositories', () => {
     const bodyTypeEntry = {
       name: 'BodyTypeRepoTest3'
     };
-    before(async () => {
+    beforeEach(async () => {
       await BodyType.create(bodyTypes);
     });
     it('shoud save a new body type entry', async () => {
@@ -130,9 +132,24 @@ describe('Repositories', () => {
     });
     it('shoud return an array of all bodytypes', async () => {
       const result = await bodyTypeRepository.getAll();
-      assert.lengthOf(result, 3);
+      assert.lengthOf(result, 2);
     });
-    after(async () => {
+    it('should throw error if body type exist', async()=> {
+      let recError:any;
+      const originalException = process.listeners('uncaughtException').pop();
+      process.removeListener('uncaughtException', originalException);
+      process.once("uncaughtException",  (err) => {
+        recError = err;
+      });
+      try {
+        await bodyTypeRepository.save(bodyTypeEntry);
+        await bodyTypeRepository.save(bodyTypeEntry);
+      } catch (e) {
+        assert.equal(e.code,11000);
+      }
+      process.listeners('uncaughtException').push(originalException);
+    });
+    afterEach(async () => {
       await BodyType.remove({
         name: {
           $in: [bodyTypes[0].name, bodyTypes[1].name, bodyTypeEntry.name]
