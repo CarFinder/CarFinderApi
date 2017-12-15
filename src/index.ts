@@ -26,12 +26,15 @@ import { Api } from './parsers';
 import * as cluster from 'cluster';
 import * as os from 'os';
 
+(mongoose as any).Promise = bluebird;
+mongoose.connect(db, { useMongoClient: true });
+mongoose.set('debug', true);
+
 if (cluster.isMaster) {
   const cpuCount = os.cpus().length;
   for (let pInd = 0; pInd < cpuCount; pInd += 1) {
     cluster.fork();
   }
-
   const parse = schedule.scheduleJob(triggerSchedule, async () => {
     try {
       torTriggerer.run();
@@ -56,12 +59,6 @@ if (cluster.isMaster) {
   });
 } else {
   const server = new Koa();
-
-  mongoose.connect(db, { useMongoClient: true });
-  mongoose.connect(db, { useMongoClient: true });
-  mongoose.set('debug', true);
-
-  (mongoose as any).Promise = bluebird;
 
   server.use(cors());
   server.use(bodyParser());
